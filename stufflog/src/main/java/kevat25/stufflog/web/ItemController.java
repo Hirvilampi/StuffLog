@@ -61,7 +61,7 @@ public class ItemController {
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("locations", lRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
-
+        model.addAttribute("userId", userId);
         return "stufflistuser";
     }
 
