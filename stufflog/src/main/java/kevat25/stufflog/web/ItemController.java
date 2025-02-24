@@ -62,7 +62,7 @@ public class ItemController {
         model.addAttribute("locations", lRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
 
-        return "stufflist";
+        return "stufflistuser";
     }
 
     /*
