@@ -3,8 +3,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
+    <!--
     <title th:text="'List of Your stuff User: '+ ${#strings.defaultString(items[1].userId.username, 'No user')}|">List of your stuff</title>
+   -->
+    <title th:text="'List of Your stuff User: '+ ${userId}">List of your stuff</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <!-- Bootstrap CSS 
@@ -18,7 +20,7 @@
 
 <body>
     <br>
-    <h2 th:text="'&nbsp &nbspYour stuff  &nbsp(user: '+ ${#strings.defaultString(items[1].userId.username, 'No user')}+')'|">&nbsp &nbsp Your stuff</h2>
+    <h2 th:text="'&nbsp &nbspYour stuff  &nbsp(user: '+ ${userId}+')'">&nbsp &nbsp Your stuff</h2>
     <table class="table table-striped">
         <tr>
             <th align="left"></th>
@@ -41,7 +43,7 @@
             <td th:text="sub-loc"></td>
             <td th:text="${#strings.defaultString(item.category?.categoryName, 'No Category')}"></td>
             <td th:text="sub-cat"></td>
-            <td th:text="${#strings.defaultString(item.userId.username, 'No User')}"></td>
+            <td th:text="${userId}"></td>
             <!--      <td><a type="button" class="btn btn-danger" th:href="@{'/delete/{id}'(id=${item.id})}">Delete</a></td>
             <td><a type="button" class="btn btn-primary" th:href="@{'/edit/{id}'(id=${item.id})}">Edit</a></td>
 -->
@@ -50,8 +52,8 @@
 
     <br>
 
-    &nbsp;<a class="btn btn-outline-primary" href="/stufflist">Refresh list </a> &nbsp;&nbsp; 
-    <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${items[1].userId.userId})}">Add new stuff</a>
+    &nbsp;<a class="btn btn-outline-primary" href="/stufflistuser">Refresh list </a> &nbsp;&nbsp;
+    <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${userId})}">Add new stuff</a>
     <!--
 &nbsp;<a class="btn btn-outline-primary" href="/stufflist">Refresh list </a> &nbsp;&nbsp; <a
 class="btn btn-success" th:href="@{'/additem/{id}'(id=${items[1].userId.username})}"> Add new stuff </a>
