@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Add stuff to your list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap CSS 
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+-->
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        form {
+            margin-left: 5px;
+        }
+
+        h1 {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="w-75 p-6" style="background-color: #eee;">
+        <!--th:action="@{/save{id}(id=@{userId})}"
+th:action="@{/save(id=${userId})}"
+th:href="@{'/additem/{id}'(id=${items[1].userId.userId})}"
+th:href="@{'/save/{id}'(id=${userId})}"
+-->
+        <form th:action="@{/save/{id}(id=${userId})}" th:object="${item}" method="post">
+            <h2>Add a new item</h2>
+            <div>
+                <table>
+                    <tr>
+                        <td>
+                            Name&nbsp
+                        </td>
+
+                        <td>
+                            <input type="text" placeholder="item name" th:field="*{itemName}" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            Description&nbsp
+                        </td>
+                        <td>
+                            <input type="text" placeholder="item description" th:field="*{description}" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>User&nbsp</td>
+                        <td td:text="${userId}"></td>
+                    </tr>
+
+
+
+                </table>
+            </div>
+            <th>
+            </th>
+            <th>
+                <tr></tr>
+                <tr></tr>
+            </th>
+            <br>
+            <input type="submit" class="btn btn-success" value="Add Item" />
+        </form>
+
+
+    </div>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title th:text="'List of Your stuff User: '+ ${#strings.defaultString(items[1].userId.username, 'No user')}|">List of your stuff</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap CSS 
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+-->
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+</head>
+
+
+<body>
+    <br>
+    <h2 th:text="'&nbsp &nbspYour stuff  &nbsp(user: '+ ${#strings.defaultString(items[1].userId.username, 'No user')}+')'|">&nbsp &nbsp Your stuff</h2>
+    <table class="table table-striped">
+        <tr>
+            <th align="left"></th>
+            <th align="" left>Item</th>
+            <th align="left">Descripton</th>
+            <th align="left">Location</th>
+            <th align="left">Sublocation</th>
+            <th align="left">Category</th>
+            <th align="left">SubCategory</th>
+            <th align="left">User</th>
+
+            <th align="left"></th>
+            <th align="left"></th>
+        </tr>
+        <tr th:each="item : ${items}">
+            <td></td>
+            <td th:text="${item.itemName}"></td>
+            <td th:text="${item.description}"></td>
+            <td th:text="${#strings.defaultString(item.location?.locationName, 'No Location')}"></td>
+            <td th:text="sub-loc"></td>
+            <td th:text="${#strings.defaultString(item.category?.categoryName, 'No Category')}"></td>
+            <td th:text="sub-cat"></td>
+            <td th:text="${#strings.defaultString(item.userId.username, 'No User')}"></td>
+            <!--      <td><a type="button" class="btn btn-danger" th:href="@{'/delete/{id}'(id=${item.id})}">Delete</a></td>
+            <td><a type="button" class="btn btn-primary" th:href="@{'/edit/{id}'(id=${item.id})}">Edit</a></td>
+-->
+        </tr>
+    </table>
+
+    <br>
+
+    &nbsp;<a class="btn btn-outline-primary" href="/stufflist">Refresh list </a> &nbsp;&nbsp; 
+    <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${items[1].userId.userId})}">Add new stuff</a>
+    <!--
+&nbsp;<a class="btn btn-outline-primary" href="/stufflist">Refresh list </a> &nbsp;&nbsp; <a
+class="btn btn-success" th:href="@{'/additem/{id}'(id=${items[1].userId.username})}"> Add new stuff </a>
+-->
+
+</body>
+
+</html>

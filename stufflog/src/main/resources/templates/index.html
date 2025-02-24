@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>First page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <h2>Welcome to StuffLog</h2>
+
+    <form action="#" th:action="@{/selectuser}" th:object="${selectedUserAccount}" method="post">
+        <label for="userlist">User selection</label>
+        <select id="userlist" th:field="*{userId}" class="form-control">
+            <option value="" disabled selected>Select a user</option>
+            <option th:each="user : ${useraccounts}" th:value="${user.userId}" th:text="${user.username}">
+            </option>
+        </select>
+
+        <input type="submit" class="btn btn-success" value="Select user" />
+
+    </form>
+
+    <a href="/stufflist">List of stuff on all accounts</a>
+
+</body>
+
+</html>
