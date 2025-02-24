@@ -118,7 +118,8 @@ public class ItemController {
             UserAccount userAccount = uaRepository.findById(userId).orElse(null);
             item.setUserAccount(userAccount);
             iRepository.save(item);
-            return "redirect:/stufflist";
+            model.addAttribute("userId", userId);
+            return "redirect:/stufflistuser/" + userAccount.getUserId();
         }
     }
 
