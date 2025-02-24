@@ -52,7 +52,8 @@
 
     <br>
 
-    &nbsp;<a class="btn btn-outline-primary" href="/stufflistuser">Refresh list </a> &nbsp;&nbsp;
+    &nbsp;<a class="btn btn-outline-primary" th:href="@{{id}(id=${userId})}">Refresh list </a>
+    &nbsp;&nbsp;
     <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${userId})}">Add new stuff</a>
     <!--
 &nbsp;<a class="btn btn-outline-primary" href="/stufflist">Refresh list </a> &nbsp;&nbsp; <a
