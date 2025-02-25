@@ -1,17 +1,24 @@
 package kevat25.stufflog.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import kevat25.stufflog.model.LocationRepository;
+import kevat25.stufflog.model.SubCategory;
+import kevat25.stufflog.model.SubCategoryRepository;
 import kevat25.stufflog.model.CategoryRepository;
 import kevat25.stufflog.model.UserAccount;
 import kevat25.stufflog.model.UserAccountRepository;
@@ -33,6 +40,9 @@ public class ItemController {
 
     @Autowired
     private CategoryRepository cRepository;
+
+    @Autowired
+    private SubCategoryRepository subCatRepository;
 
     @Autowired
     private LocationRepository lRepository;
@@ -97,7 +107,9 @@ public class ItemController {
     @RequestMapping("/additem/{id}")
     public String addItemForm(@PathVariable("id") Long userId, Model model) {
         model.addAttribute("item", new Item());
+        model.addAttribute("subcategories", subCatRepository.findAll());
         model.addAttribute("categories", cRepository.findAll());
+        model.addAttribute("subcategories", subCatRepository.findAll());
         model.addAttribute("locations", lRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
@@ -111,6 +123,8 @@ public class ItemController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("item", item);
             model.addAttribute("categories", cRepository.findAll());
+            model.addAttribute("subcategories", subCatRepository.findAll());
+            model.addAttribute("locations", lRepository.findAll());
             model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
             model.addAttribute("userId", userId);
             return "additem";
