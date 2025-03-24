@@ -49,7 +49,6 @@ public class Item {
     @JoinColumn(name = "location_id")
     private Location location;
 
-
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "sizeof_id")
@@ -62,7 +61,7 @@ public class Item {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "state_id")
+    @JoinColumn(name = "state_id", nullable = true)
     private State state;
 
 
@@ -220,6 +219,14 @@ public class Item {
 
     public void setRentalprice(Double rentalprice) {
         this.rentalprice = rentalprice;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
    

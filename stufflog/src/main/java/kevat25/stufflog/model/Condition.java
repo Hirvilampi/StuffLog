@@ -21,6 +21,7 @@ public class Condition {
     @Column(name = "condition_id")
     private Long conditionId;
 
+    @Column(name ="condition_name")
     private String condition;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "condition")
