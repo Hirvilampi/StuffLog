@@ -1,6 +1,7 @@
 package kevat25.stufflog.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,26 +17,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import kevat25.stufflog.model.LocationRepository;
-import kevat25.stufflog.model.SubCategory;
-import kevat25.stufflog.model.SubCategoryRepository;
-import kevat25.stufflog.model.CategoryRepository;
-import kevat25.stufflog.model.UserAccount;
-import kevat25.stufflog.model.UserAccountRepository;
-import kevat25.stufflog.model.Item;
-import kevat25.stufflog.model.ItemRepository;
-
+import kevat25.stufflog.model.*;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
+
 
 @Configuration
 @Controller
 public class ItemController {
 
+    private final SizeOfRepository sizeOfRepository;
+
+    private final SubLocationRepository subLocationRepository;
+
     @Autowired
     private ItemRepository iRepository;
 
-    public ItemController(ItemRepository iRepository) {
+    public ItemController(ItemRepository iRepository, SubLocationRepository subLocationRepository, SizeOfRepository sizeOfRepository) {
         this.iRepository = iRepository;
+        this.subLocationRepository = subLocationRepository;
+        this.sizeOfRepository = sizeOfRepository;
     }
 
     @Autowired
@@ -49,6 +53,9 @@ public class ItemController {
 
     @Autowired
     private UserAccountRepository uaRepository;
+
+    @Autowired
+    private ConditionRepository conditionRepository;
 
     @RequestMapping(value = { "/", "index" })
     public String userSelection(Model model) {
@@ -64,8 +71,8 @@ public class ItemController {
         return "redirect:/stufflistuser/" + userAccount.getUserId();
     }
 
-    @RequestMapping(value = { "/stufflistuser/{id}" }, method = RequestMethod.GET)
-    public String showUsersStuff(@PathVariable("id") Long userId, Model model) {
+    @RequestMapping(value = { "/stufflistuser/{userid}" }, method = RequestMethod.GET)
+    public String showUsersStuff(@PathVariable("userid") Long userId, Model model) {
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
         model.addAttribute("items", iRepository.findAllByUserAccount(userAccount));
         model.addAttribute("categories", cRepository.findAll());
@@ -136,5 +143,46 @@ public class ItemController {
             return "redirect:/stufflistuser/" + userAccount.getUserId();
         }
     }
+
+    @GetMapping("/showitem/{id}")
+    public String showItem(@PathVariable("id") Long itemId, Model model) {
+        Item item = iRepository.findById(itemId).orElse(null);
+        model.addAttribute("item", item);
+        model.addAttribute("locations",lRepository.findAll());
+        model.addAttribute("sublocations", subLocationRepository.findAll());
+        model.addAttribute("condition", conditionRepository.findAll());
+        model.addAttribute("sizeof", sizeOfRepository.findAll());
+        model.addAttribute("category", cRepository.findAll());
+        model.addAttribute("subcategory", subCatRepository.findAll());
+        model.addAttribute("userId", item.getUserAccount().getUserId());
+        System.out.println("useid "+item.getUserAccount().getUserId());
+ //       model.addAttribute("useraccount", uaRepository.findById(item.getUserAccount().getUserId()).orElse(null));
+        return "showitem";
+    }
+
+    @PostMapping("putitem/{userId}/{id}")
+    public String putitem(@Valid @ModelAttribute Item item, @PathVariable("userId") Long kayttLong, @PathVariable("id") Long itemId, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            System.out.println("vituiks män.. ");            
+            return "showitem/"+itemId;
+        } else {
+            // load item details
+            item.setItemId(itemId);
+            // load user_account info if it exits
+            boolean userexists = uaRepository.findById(kayttLong).isPresent();
+            if (userexists) {
+
+            }
+            Optional<UserAccount> useraccountoptional = uaRepository.findById(kayttLong);
+            UserAccount userAccount = useraccountoptional.get();
+            item.setUserAccount(userAccount);
+            iRepository.save(item);
+            System.out.println("kayttlong on "+kayttLong+ " username "+userAccount.getUsername());
+        }
+        return "redirect:/stufflistuser/"+kayttLong;
+    }
+
+    
+    
 
 }

@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "Item")
+@Table(name = "item")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,17 @@ public class Item {
     @NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan")
     private String itemName;
 
-    @Column(name = "description", length = 500)
+    @Column(name = "description", length = 500, nullable=true)
     private String description;
+
+    @Column(name = "purchase_price", nullable = true)
+    private Double purchaseprice;
+    
+    @Column(name = "selling_price", nullable = true)
+    private Double price;
+
+    @Column(name ="rental_price", nullable = true)
+    private Double rentalprice;
 
     @ManyToOne
     @JsonIgnore
@@ -40,6 +49,7 @@ public class Item {
     @JoinColumn(name = "location_id")
     private Location location;
 
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "sizeof_id")
@@ -50,8 +60,12 @@ public class Item {
     @JoinColumn(name = "condition_id")
     private Condition condition;
 
-    @Column(name = "price")
-    private int price;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "state_id")
+    private State state;
+
+
 
     // constructors, getters and setters
 
@@ -102,6 +116,7 @@ public class Item {
         this.location = location;
     }
 
+
     public Item(Location location) {
         this.location = location;
     }
@@ -114,7 +129,7 @@ public class Item {
         this.condition = condition;
     }
 
-    public Item(int price) {
+    public Item(Double price) {
         this.price = price;
     }
 
@@ -175,11 +190,11 @@ public class Item {
         this.condition = condition;
     }
 
-    public int getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -189,6 +204,22 @@ public class Item {
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
+    }
+
+    public Double getPurchaseprice() {
+        return purchaseprice;
+    }
+
+    public void setPurchaseprice(Double purchaseprice) {
+        this.purchaseprice = purchaseprice;
+    }
+
+    public Double getRentalprice() {
+        return rentalprice;
+    }
+
+    public void setRentalprice(Double rentalprice) {
+        this.rentalprice = rentalprice;
     }
 
    

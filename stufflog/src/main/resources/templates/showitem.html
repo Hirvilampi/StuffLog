@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <!-- Bootstrap CSS -->
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    <title>Edit book</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+
+    <style>
+        form {
+            margin-left: 5px;
+        }
+
+        h1 {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1> Your item </h1>
+
+
+    <form action="#" th:action="@{/putitem/{userId}/{id}(userId=${userId},id=${item.itemId})}" th:object="${item}" method="post">
+        <input type="hidden" th:field="*{itemId}" class="form-control" />
+        <p>
+            Item <input type="text" th:field="*{itemName}" />
+            <div th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Error</div>
+        </p>
+
+
+        <input class="btn btn-success" type="submit" value="Save Item" />
+    </form>
+
+
+
+</body>
+
+</html>

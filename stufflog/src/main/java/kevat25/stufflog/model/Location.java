@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.persistence.CascadeType;
 
 @Entity
-@Table(name = "Location")
+@Table(name = "location")
 public class Location {
 
     @Id

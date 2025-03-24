@@ -20,6 +20,8 @@ import kevat25.stufflog.model.Category;
 import kevat25.stufflog.model.CategoryRepository;
 import kevat25.stufflog.model.SubCategory;
 import kevat25.stufflog.model.SubCategoryRepository;
+import kevat25.stufflog.model.SubLocation;
+import kevat25.stufflog.model.SubLocationRepository;
 import kevat25.stufflog.model.UserAccount;
 import kevat25.stufflog.model.UserAccountRepository;
 import kevat25.stufflog.model.Item;
@@ -37,7 +39,7 @@ public class StufflogApplication {
 	@Bean
 	public CommandLineRunner sufflog(ConditionRepository condRepository, LocationRepository locRepository,
 			SizeOfRepository sRepository, CategoryRepository catRepository, SubCategoryRepository subCatRepository,
-			ItemRepository iRepository, UserAccountRepository uaRepository) {
+			ItemRepository iRepository, UserAccountRepository uaRepository, SubLocationRepository subLocRepository) {
 		return (args) -> {
 			log.info("create few conditions");
 
@@ -81,7 +83,7 @@ public class StufflogApplication {
 			sizeNames.forEach(sizename -> sRepository.save(new SizeOf(sizename)));
 
 			List<String> categories = Arrays.asList(
-					"Clothes", "Hobbies", "Sports", "Tools", "Music");
+					"Clothes", "Hobbies", "Sports", "Tools", "Music", "Maternity", "Baby", "Outdoor");
 			categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
 
 			List<String> subCatNames = Arrays.asList(
@@ -92,18 +94,26 @@ public class StufflogApplication {
 					"Cd:s", "Instruments");
 			subCatNames.forEach(subname -> subCatRepository.save(new SubCategory(subname)));
 
+			List<String> subLocNames = Arrays.asList("cabinet", "wardrobe", "chest", "trunk", "wall", "desk");
+			subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
+
 			log.info("save few items");
 			iRepository.save(new Item("Soccer ball", adminuser));
 			iRepository.save(new Item("Drill", adminuser, loc2));
 			iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, loc1));
 			iRepository.save(new Item("Vacuum cleaner", regularuser));
-	/*			
-			iRepository.save(new Item("Soccer ball", uaRepository.findByUserAccount(adminuser)));
-			iRepository.save(new Item("Drill", uaRepository.findByUserAccount(adminuser), loc2));
-			iRepository.save(new Item("Hockey Stick", "Farrow flex60", uaRepository.findByUserAccount(adminuser), loc1));
-			iRepository.save(new Item("Vacuum cleaner", uaRepository.findByUserAccount(regularuser)));
-			iRepository.save(new Item("Soccer ball", "1"));
-			iRepository.save(new Item("Vacuum cleaner", "2")); */
+			/*
+			 * iRepository.save(new Item("Soccer ball",
+			 * uaRepository.findByUserAccount(adminuser)));
+			 * iRepository.save(new Item("Drill", uaRepository.findByUserAccount(adminuser),
+			 * loc2));
+			 * iRepository.save(new Item("Hockey Stick", "Farrow flex60",
+			 * uaRepository.findByUserAccount(adminuser), loc1));
+			 * iRepository.save(new Item("Vacuum cleaner",
+			 * uaRepository.findByUserAccount(regularuser)));
+			 * iRepository.save(new Item("Soccer ball", "1"));
+			 * iRepository.save(new Item("Vacuum cleaner", "2"));
+			 */
 			// iRepository.save(new Item("Farrow", "flex60", loc1));
 			// iRepository.save(new Item("Tent", "4 people", loc3));
 

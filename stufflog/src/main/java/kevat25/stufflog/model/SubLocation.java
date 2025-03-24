@@ -32,6 +32,7 @@ public class SubLocation {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sublocation")
     @JsonIgnore
     private List<Location> locations;
+    
 
     // getters, setters and constructors
 
