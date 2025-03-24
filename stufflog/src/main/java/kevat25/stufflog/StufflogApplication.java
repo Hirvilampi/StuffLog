@@ -82,14 +82,11 @@ public class StufflogApplication {
 			locRepository.save(loc5);
 
 			List<String> sizeNames = Arrays.asList(
-					"XXXL", "XXL", "XL", "L", "M", "S", "XS", "XXS", "XXXS");
+					 "NONE", "XXXS", "XXS","XS","S","M", "L",  "XL", "XXL","XXXL", "20", "21", "22", "23",
+					 "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", 
+					 "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53",
+					 "54", "55", "56", "57" );
 			sizeNames.forEach(sizename -> sRepository.save(new SizeOf(sizename)));
-
-			List<Double> sizeNumeric = Arrays.asList(
-					16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0,
-					31.0, 32.0, 33.0, 34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0, 42.0, 43.0, 44.0, 45.0,
-					46.0, 47.0, 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0, 56.0, 57.0);
-			sizeNumeric.forEach(sizenumeric -> sRepository.save(new SizeOf(sizenumeric)));
 
 			List<String> categories = Arrays.asList(
 					"Art", "Baby", "Cars", "Clothes", "Games", "Hobbies", "Music", "Maternity", "Outdoor", "Sports",
@@ -107,9 +104,10 @@ public class StufflogApplication {
 			List<String> subLocNames = Arrays.asList("cabinet", "wardrobe", "chest", "trunk", "wall", "desk");
 			subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
 
-			List<String> states = Arrays.asList(
-					"Own use", "For sale", "Sold", "For rent");
-			states.forEach(statename -> stateRepository.save(new State(statename)));
+			
+			List<String> statesnew = Arrays.asList(
+					"In use", "For sale", "Sold", "For rent");
+			statesnew.forEach(statename -> stateRepository.save(new State(statename)));
 
 			log.info("save few items");
 			iRepository.save(new Item("Soccer ball", adminuser));

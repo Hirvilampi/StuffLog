@@ -69,24 +69,12 @@
             <tr>
                 <th align="right">Size</th>
                 <th align="left">
-                    
                     <select id="sizelist" th:field="*{sizeof}" class="form-control">
                         <option th:each="size: ${sizeofs}" th:value="${size.sizeofId}" th:text="${size.sizeName}">
                         </option>
                     </select>
-
-                    <!--
-                    <input type="hidden" th:field="*{sizeofs}" class="form-control" />
-                    <input  size="30" type="text" th:field="*{sizeName}" />
-                    <div th:if="${#fields.hasErrors('sizeName')}" th:errors="*{sizeName}">Error</div>
-                
-                    <select id="catlist" th:field="*{sizees}" class="form-control">
-                        <option th:each="sizees: ${sizeofs}" th:value="${sizees.sizeofId}"
-                            th:text="${sizees.sizeName}">
-                        </option>
-                    </select>
-                    -->
                 </th>
+                <th align="right"><a href="/addsize" target="_blank">Add New Size</a> </th>
             </tr>
             <tr>
                 <th align="right">Condition</th>
@@ -100,14 +88,11 @@
             </tr>
             <tr>
                 <th align="right">State</th>
-                <th>
-                
+                <th align="left">
                     <select id="statelist" th:field="*{state}" class="form-control">
-                        <option th:each="stat: ${states}" th:value="${stat.stateId}"
-                            th:text="${stat.stateName}">
+                        <option th:each="stat: ${states}" th:value="${stat.stateId}" th:text="${stat.stateName}">
                         </option>
                     </select>
-
                 </th>
             </tr>
             <tr>

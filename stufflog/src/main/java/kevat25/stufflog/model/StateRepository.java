@@ -4,4 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface StateRepository extends CrudRepository<State, Long> {
     
+    List<State> findByStateName(String stateName);
 }

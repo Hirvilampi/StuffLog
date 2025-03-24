@@ -150,6 +150,10 @@ public class ItemController {
     @GetMapping("/showitem/{id}")
     public String showItem(@PathVariable("id") Long itemId, Model model) {
         Item item = iRepository.findById(itemId).orElse(null);
+        if (item == null) {
+            // tähän errorin käsittely - ehkä kokonaan vaan ResponseEntity<?> jne
+            return "error";
+        }
         model.addAttribute("item", item);
         model.addAttribute("locations",lRepository.findAll());
         model.addAttribute("sublocations", subLocationRepository.findAll());
