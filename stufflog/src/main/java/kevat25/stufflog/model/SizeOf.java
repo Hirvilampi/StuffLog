@@ -22,8 +22,11 @@ public class SizeOf {
     @Column(name = "sizeof_id")
     private Long sizeofId;
 
-    @Column(name = "sizeName", nullable = false)
+    @Column(name = "sizeName", nullable = true)
     private String sizeName;
+
+    @Column(name = "sizeNumeric", nullable = true)
+    private Double sizeNumeric;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sizeof")
     @JsonIgnore
@@ -38,6 +41,11 @@ public class SizeOf {
         this.sizeName = sizeName;
     }
 
+    
+    public SizeOf(Double sizeNumeric) {
+        this.sizeNumeric = sizeNumeric;
+    }
+
     public SizeOf(String sizeName, List<Item> items) {
         this.sizeName = sizeName;
         this.items = items;
@@ -45,6 +53,10 @@ public class SizeOf {
 
     public Long getSizeofId() {
         return sizeofId;
+    }
+
+    public void setSizeofId(Long sizeofId) {
+        this.sizeofId = sizeofId;
     }
 
     public String getSizeName() {
@@ -55,6 +67,14 @@ public class SizeOf {
         this.sizeName = sizeName;
     }
 
+    public Double getSizeNumeric() {
+        return sizeNumeric;
+    }
+
+    public void setSizeNumeric(Double sizeNumeric) {
+        this.sizeNumeric = sizeNumeric;
+    }
+
     public List<Item> getItems() {
         return items;
     }
@@ -63,4 +83,6 @@ public class SizeOf {
         this.items = items;
     }
 
+
+    
 }

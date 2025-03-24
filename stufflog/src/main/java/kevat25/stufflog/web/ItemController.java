@@ -57,6 +57,9 @@ public class ItemController {
     @Autowired
     private ConditionRepository conditionRepository;
 
+    @Autowired
+    private StateRepository stateRepository;
+
     @RequestMapping(value = { "/", "index" })
     public String userSelection(Model model) {
         model.addAttribute("useraccounts", uaRepository.findAll());
@@ -150,10 +153,11 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("locations",lRepository.findAll());
         model.addAttribute("sublocations", subLocationRepository.findAll());
-        model.addAttribute("condition", conditionRepository.findAll());
-        model.addAttribute("sizeof", sizeOfRepository.findAll());
-        model.addAttribute("category", cRepository.findAll());
-        model.addAttribute("subcategory", subCatRepository.findAll());
+        model.addAttribute("conditions", conditionRepository.findAll());
+        model.addAttribute("states", stateRepository.findAll());
+        model.addAttribute("sizeofs", sizeOfRepository.findAll());
+        model.addAttribute("categories", cRepository.findAll());
+        model.addAttribute("subcategories", subCatRepository.findAll());
         model.addAttribute("userId", item.getUserAccount().getUserId());
         System.out.println("useid "+item.getUserAccount().getUserId());
  //       model.addAttribute("useraccount", uaRepository.findById(item.getUserAccount().getUserId()).orElse(null));

@@ -25,29 +25,31 @@ public class State {
     @Column(name = "state_id")
     private Long stateId;
 
-    @Column(name = "state")
+    @Column(name = "state_name")
     @NotNull
     @Size(max = 20)
-    private String state;
+    private String stateName;
 
     @Column(name = "entry_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime date;
 
     @JsonIgnoreProperties("item")
-    @OneToMany
+    @OneToMany(mappedBy = "state")
     private List<Item> items;
+
+
 
     public State() {
     }
 
     public State(@NotNull @Size(max = 20) String state, LocalDateTime date) {
-        this.state = state;
+        this.stateName = state;
         this.date = date;
     }
 
     public State(@NotNull @Size(max = 20) String state) {
-        this.state = state;
+        this.stateName = state;
     }
 
     public Long getStateId() {
@@ -59,11 +61,11 @@ public class State {
     }
 
     public String getState() {
-        return state;
+        return stateName;
     }
 
     public void setState(String state) {
-        this.state = state;
+        this.stateName = state;
     }
 
     public LocalDateTime getDate() {
@@ -76,7 +78,7 @@ public class State {
 
     @Override
     public String toString() {
-        return "State [stateId=" + stateId + ", state=" + state + ", date=" + date + "]";
+        return "State [stateId=" + stateId + ", state=" + stateName + ", date=" + date + "]";
     }
 
 }

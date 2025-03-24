@@ -26,6 +26,8 @@ import kevat25.stufflog.model.UserAccount;
 import kevat25.stufflog.model.UserAccountRepository;
 import kevat25.stufflog.model.Item;
 import kevat25.stufflog.model.ItemRepository;
+import kevat25.stufflog.model.State;
+import kevat25.stufflog.model.StateRepository;
 
 @SpringBootApplication
 public class StufflogApplication {
@@ -39,7 +41,8 @@ public class StufflogApplication {
 	@Bean
 	public CommandLineRunner sufflog(ConditionRepository condRepository, LocationRepository locRepository,
 			SizeOfRepository sRepository, CategoryRepository catRepository, SubCategoryRepository subCatRepository,
-			ItemRepository iRepository, UserAccountRepository uaRepository, SubLocationRepository subLocRepository) {
+			ItemRepository iRepository, UserAccountRepository uaRepository, SubLocationRepository subLocRepository,
+			StateRepository stateRepository) {
 		return (args) -> {
 			log.info("create few conditions");
 
@@ -82,8 +85,15 @@ public class StufflogApplication {
 					"XXXL", "XXL", "XL", "L", "M", "S", "XS", "XXS", "XXXS");
 			sizeNames.forEach(sizename -> sRepository.save(new SizeOf(sizename)));
 
+			List<Double> sizeNumeric = Arrays.asList(
+					16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0,
+					31.0, 32.0, 33.0, 34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0, 42.0, 43.0, 44.0, 45.0,
+					46.0, 47.0, 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0, 56.0, 57.0);
+			sizeNumeric.forEach(sizenumeric -> sRepository.save(new SizeOf(sizenumeric)));
+
 			List<String> categories = Arrays.asList(
-					"Clothes", "Hobbies", "Sports", "Tools", "Music", "Maternity", "Baby", "Outdoor");
+					"Art", "Baby", "Cars", "Clothes", "Games", "Hobbies", "Music", "Maternity", "Outdoor", "Sports",
+					"Travel", "Tools");
 			categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
 
 			List<String> subCatNames = Arrays.asList(
@@ -96,6 +106,10 @@ public class StufflogApplication {
 
 			List<String> subLocNames = Arrays.asList("cabinet", "wardrobe", "chest", "trunk", "wall", "desk");
 			subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
+
+			List<String> states = Arrays.asList(
+					"Own use", "For sale", "Sold", "For rent");
+			states.forEach(statename -> stateRepository.save(new State(statename)));
 
 			log.info("save few items");
 			iRepository.save(new Item("Soccer ball", adminuser));

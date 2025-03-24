@@ -25,8 +25,9 @@
     <table class="table table-striped">
         <tr>
             <th align="left"></th>
-            <th align="left" >Item</th>
+            <th align="left">Item</th>
             <th align="left">Descripton</th>
+            <th align="left">Size</th>
             <th align="left">Location</th>
             <th align="left">Sublocation</th>
             <th align="left">Category</th>
@@ -42,6 +43,7 @@
                 <a th:href="@{'/showitem/{id}'(id=${item.itemId})}" th:text="${item.itemName}"></a>
             </td>
             <td th:text="${item.description}"></td>
+            <td th:text="${#strings.defaultString(item.sizeof?.sizeName, 'No Size')}"></td>
             <td th:text="${#strings.defaultString(item.location?.locationName, 'No Location')}"></td>
             <td th:text="${#strings.defaultString(item.location?.sublocation?.sublocationName, 'No SubLocation')}"></td>
             <td th:text="${#strings.defaultString(item.category?.categoryName, 'No Category')}"></td>
