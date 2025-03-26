@@ -70,16 +70,23 @@ public class StufflogApplication {
 			condRepository.save(cond7);
 			condRepository.save(cond8);
 
-			Location loc1 = new Location("Storage");
-			Location loc2 = new Location("Study");
-			Location loc3 = new Location("Living room");
-			Location loc4 = new Location("Master bedroom");
-			Location loc5 = new Location("Hall");
+
+
+			SubLocation sublocnone = new SubLocation("No Sub-location");
+			subLocRepository.save(sublocnone);
+			Location loc1 = new Location("No location", sublocnone);
+			Location loc2 = new Location("Study", sublocnone);
+			Location loc3 = new Location("Living room", sublocnone);
+			Location loc4 = new Location("Master bedroom", sublocnone);
+			Location loc5 = new Location("Hall", sublocnone);
+			Location loc6 = new Location("Storage", sublocnone);
 			locRepository.save(loc1);
 			locRepository.save(loc2);
 			locRepository.save(loc3);
 			locRepository.save(loc4);
 			locRepository.save(loc5);
+			locRepository.save(loc6);
+
 
 			List<String> sizeNames = Arrays.asList(
 					 "NONE", "XXXS", "XXS","XS","S","M", "L",  "XL", "XXL","XXXL", "20", "21", "22", "23",
@@ -101,7 +108,8 @@ public class StufflogApplication {
 					"Cd:s", "Instruments");
 			subCatNames.forEach(subname -> subCatRepository.save(new SubCategory(subname)));
 
-			List<String> subLocNames = Arrays.asList("cabinet", "wardrobe", "chest", "trunk", "wall", "desk");
+
+			List<String> subLocNames = Arrays.asList("cabinet", "chest", "desk", "trunk", "wall", "wardrobe");
 			subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
 
 			

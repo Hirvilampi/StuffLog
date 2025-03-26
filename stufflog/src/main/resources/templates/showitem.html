@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 
+
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head>
@@ -19,6 +20,33 @@
             margin-left: 5px;
         }
     </style>
+
+<script>
+    function addSubLocation() {
+        let subName = document.getElementById("newSubName").value;
+        if (!subName) return; // Prevent empty input
+    
+        fetch('/addSublocation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sublocationName: subName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        let subLocationList = document.getElementById("sublocationList");
+
+        let newOption = document.createElement("option");
+        newOption.text = data.sublocationName;
+        newOption.value = data.sublocationId;
+
+        subLocationList.appendChild(newOption);
+    })
+    .catch(error => console.error('Error:', error));
+    }
+    </script>
+
 </head>
 
 <body>
@@ -65,6 +93,21 @@
                     </select>
                 </th>
                 <th align="right"><a href="/addlocation" target="_blank">Add New Location</a> </th>
+            </tr>
+            <tr>
+                <th align="right">Sub-location</th>
+                <th align="left">
+                    <select id="sublocationList" th:field="*{location.sublocation.sublocationId}" class="form-control">
+                        <option th:each="sub : ${sublocations}" th:value="${sub.sublocationId}"
+                        th:text="${sub.sublocationName}">Select sub-location</option>
+  
+                    </select>
+                </th>
+                    <th align="left">
+                        <input type="text" id="newSubName" placeholder="Enter new sub-location">
+                        <button type="button" onclick="addSubLocation()">Add</button>
+                    </th>
+                
             </tr>
             <tr>
                 <th align="right">Size</th>

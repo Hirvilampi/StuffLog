@@ -1,30 +1,26 @@
 package kevat25.stufflog.model;
 
-
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 import jakarta.persistence.CascadeType;
 
 @Entity
-@Table(name = "Sub Location")
+@Table(name = "SubLocation")
 public class SubLocation {
 
     @Id
     @Column(name="sublocation_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long sublocationId;
+    private Long sublocationId;
 
     @Column(name = "sublocationName")
     private String sublocationName;
@@ -32,10 +28,8 @@ public class SubLocation {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sublocation")
     @JsonIgnore
     private List<Location> locations;
-    
 
-    // getters, setters and constructors
-
+    // constructors
     public SubLocation() {
     }
 
@@ -52,7 +46,7 @@ public class SubLocation {
         this.locations = locations;
     }
 
-    public long getSublocatioid() {
+    public Long getSublocationId() {
         return sublocationId;
     }
 
@@ -71,5 +65,6 @@ public class SubLocation {
     public void setLocations(List<Location> locations) {
         this.locations = locations;
     }
+
 
 }
