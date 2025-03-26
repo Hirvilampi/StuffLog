@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,8 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
 @Configuration
 @Controller
 public class ItemController {
@@ -36,7 +36,8 @@ public class ItemController {
     @Autowired
     private ItemRepository iRepository;
 
-    public ItemController(ItemRepository iRepository, SubLocationRepository subLocationRepository, SizeOfRepository sizeOfRepository) {
+    public ItemController(ItemRepository iRepository, SubLocationRepository subLocationRepository,
+            SizeOfRepository sizeOfRepository) {
         this.iRepository = iRepository;
         this.subLocationRepository = subLocationRepository;
         this.sizeOfRepository = sizeOfRepository;
@@ -49,7 +50,7 @@ public class ItemController {
     private SubCategoryRepository subCatRepository;
 
     @Autowired
-    private LocationRepository lRepository;
+    private LocationRepository locRepository;
 
     @Autowired
     private UserAccountRepository uaRepository;
@@ -79,7 +80,7 @@ public class ItemController {
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
         model.addAttribute("items", iRepository.findAllByUserAccount(userAccount));
         model.addAttribute("categories", cRepository.findAll());
-        model.addAttribute("locations", lRepository.findAll());
+        model.addAttribute("locations", locRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
         return "stufflistuser";
@@ -109,7 +110,7 @@ public class ItemController {
     public String showStuff(Model model) {
         model.addAttribute("items", iRepository.findAll());
         model.addAttribute("categories", cRepository.findAll());
-        model.addAttribute("locations", lRepository.findAll());
+        model.addAttribute("locations", locRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findAll());
         return "stufflist";
     }
@@ -120,7 +121,7 @@ public class ItemController {
         model.addAttribute("subcategories", subCatRepository.findAll());
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("subcategories", subCatRepository.findAll());
-        model.addAttribute("locations", lRepository.findAll());
+        model.addAttribute("locations", locRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
 
@@ -134,7 +135,7 @@ public class ItemController {
             model.addAttribute("item", item);
             model.addAttribute("categories", cRepository.findAll());
             model.addAttribute("subcategories", subCatRepository.findAll());
-            model.addAttribute("locations", lRepository.findAll());
+            model.addAttribute("locations", locRepository.findAll());
             model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
             model.addAttribute("userId", userId);
             return "additem";
@@ -155,28 +156,53 @@ public class ItemController {
             return "error";
         }
         model.addAttribute("item", item);
-        model.addAttribute("locations",lRepository.findAll());
+        model.addAttribute("locations", locRepository.findAll());
         model.addAttribute("sublocations", subLocationRepository.findAll());
+        System.out.println("testi alkaa");
+        if (item.getLocation() == null) {
+            Long longlocid = Long.valueOf(1);
+            Optional<Location> locOptional = locRepository.findById(longlocid);
+            if (locOptional.isPresent()){
+                Location locloc = locOptional.get();
+                item.setLocation(locloc);
+            }          
+            
+        }
+        System.out.println("getlocation "+item.getLocation());
+        System.out.println(("ei se tähän tyssännyt"));
+
+        if (item.getLocation().getSublocation() == null) {
+            System.out.println(("sublocatin on kyllä NULLA"));
+            item.getLocation().setSublocation(subLocationRepository.findBySublocationName("No sublocation"));
+        }
+        model.addAttribute("subloc", item.getLocation().getSublocation());
+
+        System.out.println(("eikä tähän"));
         model.addAttribute("conditions", conditionRepository.findAll());
         model.addAttribute("states", stateRepository.findAll());
         model.addAttribute("sizeofs", sizeOfRepository.findAll());
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("subcategories", subCatRepository.findAll());
         model.addAttribute("userId", item.getUserAccount().getUserId());
-        System.out.println("useid "+item.getUserAccount().getUserId());
- //       model.addAttribute("useraccount", uaRepository.findById(item.getUserAccount().getUserId()).orElse(null));
+        System.out.println("useid " + item.getUserAccount().getUserId());
+        // model.addAttribute("useraccount",
+        // uaRepository.findById(item.getUserAccount().getUserId()).orElse(null));
         return "showitem";
     }
 
     @PostMapping("putitem/{userId}/{id}")
-    public String putitem(@Valid @ModelAttribute Item item, @PathVariable("userId") Long kayttLong, @PathVariable("id") Long itemId, BindingResult bindingResult) {
+    public String putitem(@Valid @ModelAttribute Item item, SubLocation sublocation,
+            @RequestParam(value = "location.sublocation.sublocationId", required = false) Long sublocationId,
+            @PathVariable("userId") Long kayttLong,
+            @PathVariable("id") Long itemId, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.out.println("vituiks män.. ");            
-            return "showitem/"+itemId;
+            System.out.println("vituiks män.. ");
+            return "showitem/" + itemId;
         } else {
             // load item details
             item.setItemId(itemId);
-            // load user_account info if it exits
+            // load user_account info if it exits - we have to save the userinfo at the same
+            // time, otherwise we save the info without user and the item disappears
             boolean userexists = uaRepository.findById(kayttLong).isPresent();
             if (userexists) {
 
@@ -184,13 +210,93 @@ public class ItemController {
             Optional<UserAccount> useraccountoptional = uaRepository.findById(kayttLong);
             UserAccount userAccount = useraccountoptional.get();
             item.setUserAccount(userAccount);
-            iRepository.save(item);
-            System.out.println("kayttlong on "+kayttLong+ " username "+userAccount.getUsername());
+
+            System.out.println("kayttlong on " + kayttLong + " username " + userAccount.getUsername());
+
+            System.out.println("sublocid " + sublocationId);
+            System.out.println("sublocation pitää sisällään "+sublocation+" eli esim nimi "+sublocation.getSublocationName());
+            System.out.println("locationid " + item.getLocation().getLocationId() + " locationname "
+                    + item.getLocation().getLocationName());
+            // check location and save the new sublocation -
+            // if there is no location given, we put No location to it
+            boolean locexists = locRepository.findById(item.getLocation().getLocationId()).isPresent();
+            if (!locexists) {
+                Location loc = locRepository.findByLocationName("No location");
+                item.setLocation(loc);
+                locexists = true;
+            } else {
+                Optional<Location> locoptional = locRepository.findById(item.getLocation().getLocationId());
+                Location loc = locoptional.get();
+                item.setLocation(loc);
+            }
+
+            // jos sublocationId on annettu, tallennetaan sublocation item.locationin alle
+
+            if (sublocationId != null){
+                System.out.println("meillä on sublocid");
+                Optional<SubLocation> subLocationoOptional = subLocationRepository.findById(sublocationId);
+                if (subLocationoOptional.isPresent()){
+                    SubLocation subloc = subLocationoOptional.get();
+                    System.out.println("Haettiin sublocation: " + subloc.getSublocationName());
+
+                    //haetaan location
+                    Optional<Location> locOptional = locRepository.findById(item.getLocation().getLocationId());
+                    if (locOptional.isPresent()){
+                        Location loc = locOptional.get();
+                        loc.setSublocation(subloc);
+                        item.setLocation(loc);
+                        locRepository.save(loc);
+                        System.out.println("Sublocation tallennettu locationille.");
+                    } else {
+                        // tähän virheilmoitus REsponseentity tms
+                        System.out.println("subloc ei löytynyt");
+                    }
+                } else {
+                    System.out.println("ei oo sublocid:tä palautettu");
+                }
+            } 
+
+/* 
+            if (locexists) {
+                Optional<Location> locoptional = locRepository.findById(item.getLocation().getLocationId());
+                Location loc = locoptional.get();
+                if (sublocationId != null) {
+                    loc.setSublocation(sublocation);
+                    locRepository.save(loc);
+                } else if (locoptional.isPresent()) {
+                    Optional<SubLocation> sublocoptional = subLocationRepository
+                            .findById(loc.getSublocation().getSublocationId());
+                    if (sublocoptional.isPresent()) {
+                        SubLocation subloc = sublocoptional.get();
+                        loc.setSublocation(subloc);
+                        locRepository.save(loc);
+                    }
+                }
+
+            }
+*/
+System.out.println("iRepo save");
+iRepository.save(item);
+System.out.println("iRepo save OK");
         }
-        return "redirect:/stufflistuser/"+kayttLong;
+        return "redirect:/stufflistuser/" + kayttLong;
     }
 
-    
-    
+    @PostMapping("/addSublocation")
+    public ResponseEntity<SubLocation> addSublocation(@RequestBody String sublocationName) {
+        System.out.println("nimi sublo:"+sublocationName);
+        String parsenimi = sublocationName;
+
+        // sublocationname täytyy parsea, että sadaan sieltä pelkkä nimi ulos   
+        if (sublocationName.length()>20) {
+            parsenimi = sublocationName.substring(20,(sublocationName.length()-2));
+            System.out.println("lyhennetty nimi:"+parsenimi);
+        } else {
+        }
+             
+        SubLocation subloc = new SubLocation(parsenimi);
+        SubLocation savedSub = subLocationRepository.save(subloc);
+        return ResponseEntity.ok(savedSub);
+    }
 
 }
