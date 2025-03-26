@@ -41,22 +41,22 @@ public class Item {
     private UserAccount userAccount;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = true)
     private Location location;
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "sizeof_id")
+    @JoinColumn(name = "sizeof_id", nullable = true)
     private SizeOf sizeof;
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "condition_id")
+    @JoinColumn(name = "condition_id", nullable = true)
     private Condition condition;
 
     @ManyToOne

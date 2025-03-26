@@ -23,7 +23,7 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id")
-    private long locationId;
+    private Long locationId;
 
     @Column(name = "locationName")
     @NotEmpty(message = "Location has to have a name")
@@ -51,7 +51,7 @@ public class Location {
         this.sublocation = sublocation;
     }
 
-    public long getLocationId() {
+    public Long getLocationId() {
         return locationId;
     }
 

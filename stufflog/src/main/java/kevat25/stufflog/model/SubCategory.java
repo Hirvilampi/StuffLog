@@ -43,15 +43,19 @@ public class SubCategory {
         this.categories = categories;
     }
 
-    public Long getSubcategoryId() {
+    public SubCategory(List<Category> categories){
+        this.categories=categories;
+    }
+
+    public Long getSubCategoryId() {
         return subCategoryId;
     }
 
-    public String getSubcategoryName() {
+    public String getSubCategoryName() {
         return subCategoryName;
     }
 
-    public void setSubcategoryName(String subcategoryName) {
+    public void setSubCategoryName(String subcategoryName) {
         this.subCategoryName = subcategoryName;
     }
 
@@ -62,4 +66,6 @@ public class SubCategory {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
+
+    
 }

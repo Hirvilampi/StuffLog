@@ -96,21 +96,22 @@ public class StufflogApplication {
 			sizeNames.forEach(sizename -> sRepository.save(new SizeOf(sizename)));
 
 			List<String> categories = Arrays.asList(
-					"Art", "Baby", "Cars", "Clothes", "Games", "Hobbies", "Music", "Maternity", "Outdoor", "Sports",
+					"No category","Art", "Baby", "Cars", "Clothes", "Games", "Hobbies", "Music", "Maternity", "Outdoor", "Sports",
 					"Travel", "Tools");
 			categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
 
 			List<String> subCatNames = Arrays.asList(
-					"Ice Hockey", "Soccer", "Tennis", "Squash", "Floor ball", "Skiing",
+					"No subcategory","Ice Hockey", "Soccer", "Tennis", "Squash", "Floor ball", "Skiing",
 					"Mom's clothes", "Children", "Outdoor", "Dad's clothes",
 					"Drawing", "Riding", "Bicycle",
 					"Wood", "Iron", "Lawn", "Car",
 					"Cd:s", "Instruments");
 			subCatNames.forEach(subname -> subCatRepository.save(new SubCategory(subname)));
 
-
+			
 			List<String> subLocNames = Arrays.asList("cabinet", "chest", "desk", "trunk", "wall", "wardrobe");
 			subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
+
 
 			
 			List<String> statesnew = Arrays.asList(

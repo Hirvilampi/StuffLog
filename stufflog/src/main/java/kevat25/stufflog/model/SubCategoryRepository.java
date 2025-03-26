@@ -6,5 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface SubCategoryRepository extends CrudRepository<SubCategory, Long> {
 
+    SubCategory findBySubCategoryName(String subCategoryName);
+
 
 }

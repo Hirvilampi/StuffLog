@@ -7,5 +7,7 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
 
     List<Category> findByCategoryName(String categoryName);
 
+    Category findOneByCategoryName(String categoryName);
+
 
 }

@@ -45,6 +45,31 @@
     })
     .catch(error => console.error('Error:', error));
     }
+
+    function addSubCategory() {
+        let subCatName = document.getElementById("newSubCatName").value;
+        if (!subCatName) return; // Prevent empty input
+    
+        fetch('/addSubCategory', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ subCategoryName: subCatName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        let subCategoryList = document.getElementById("subcategoryList");
+
+        let newOption = document.createElement("option");
+        newOption.text = data.subCategoryName;
+        newOption.value = data.subCategoryId;
+
+        subCategoryList.appendChild(newOption);
+    })
+    .catch(error => console.error('Error:', error));
+    }
+
     </script>
 
 </head>
@@ -84,6 +109,22 @@
                 </th>
             </tr>
             <tr>
+                <th align="right">Sub category</th>
+                <th align="left">
+                <select id="subcategoryList" th:field="*{category.subCategory.subCategoryId}" class="form-control">
+                    <option th:each="subc : ${subcategories}" th:value="${subc.subCategoryId}"
+                    th:text="${subc.subCategoryName}">Select sub-location</option>
+                    
+                </select>
+                Add subcategory
+                </th>
+                <th align="left">
+                    <input type="text" id="newSubCatName" placeholder="Enter new sub-category">
+                    <button type="button" onclick="addSubCategory()">Add</button>
+                </th>
+                </th>
+            </tr>
+            <tr>
                 <th align="right">Location</th>
                 <th align="left">
                     <select id="loclist" th:field="*{location}" class="form-control">
@@ -95,7 +136,7 @@
                 <th align="right"><a href="/addlocation" target="_blank">Add New Location</a> </th>
             </tr>
             <tr>
-                <th align="right">Sub-location</th>
+                <th align="right">Sub location</th>
                 <th align="left">
                     <select id="sublocationList" th:field="*{location.sublocation.sublocationId}" class="form-control">
                         <option th:each="sub : ${sublocations}" th:value="${sub.sublocationId}"
