@@ -66,5 +66,4 @@ public class SubLocation {
         this.locations = locations;
     }
 
-
 }
