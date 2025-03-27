@@ -33,11 +33,6 @@ public class Location {
     @JsonIgnore
     private List<Item> items;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "sublocation_id")
-    private SubLocation sublocation;
-
     // Constructors, setters and getters
     public Location() {
     }
@@ -46,10 +41,6 @@ public class Location {
         this.locationName = locationName;
     }
 
-    public Location(@NotEmpty(message = "Location has to have a name") String locationName, SubLocation sublocation) {
-        this.locationName = locationName;
-        this.sublocation = sublocation;
-    }
 
     public Long getLocationId() {
         return locationId;
@@ -71,11 +62,4 @@ public class Location {
         this.items = items;
     }
 
-    public SubLocation getSublocation() {
-        return sublocation;
-    }
-
-    public void setSublocation(SubLocation sublocation) {
-        this.sublocation = sublocation;
-    }
 }

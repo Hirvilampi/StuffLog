@@ -39,6 +39,9 @@ public class Item {
     @Column(name = "rental_price", nullable = true)
     private Double rentalprice;
 
+    @Column(name ="locationinfo, nullable = true")
+    private String locationinfo;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "userAccountId")
@@ -263,5 +266,15 @@ public class Item {
     public void setSubCategories(List<SubCategory> subCategories) {
         this.subCategories = subCategories;
     }
+
+    public String getLocationinfo() {
+        return locationinfo;
+    }
+
+    public void setLocationinfo(String locationinfo) {
+        this.locationinfo = locationinfo;
+    }
+
+    
 
 }

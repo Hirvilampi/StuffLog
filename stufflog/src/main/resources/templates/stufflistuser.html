@@ -29,7 +29,7 @@
             <th align="left">Descripton</th>
             <th align="left">Size</th>
             <th align="left">Location</th>
-            <th align="left">Sublocation</th>
+            <th align="left">Location info</th>
             <th align="left">Category</th>
             <th align="left">SubCategory</th>
             <th align="left">User</th>
@@ -45,7 +45,7 @@
             <td th:text="${item.description}"></td>
             <td th:text="${#strings.defaultString(item.sizeof?.sizeName, 'No Size')}"></td>
             <td th:text="${#strings.defaultString(item.location?.locationName, 'No Location')}"></td>
-            <td th:text="${#strings.defaultString(item.location?.sublocation?.sublocationName, 'No SubLocation')}"></td>
+            <td th:text="${item.locationinfo}"></td>
             <td th:text="${#strings.defaultString(item.category?.categoryName, 'No Category')}"></td>
             <td th:text="sub-cat"></td>
             <td th:text="${userId}"></td>

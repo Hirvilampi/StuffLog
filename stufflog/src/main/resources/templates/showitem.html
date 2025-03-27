@@ -137,17 +137,9 @@
             <tr>
                 <th align="right">Sub location</th>
                 <th align="left">
-                    <select id="sublocationList" th:field="*{location.sublocation.sublocationId}" class="form-control">
-                        <option th:each="sub : ${sublocations}" th:value="${sub.sublocationId}"
-                        th:text="${sub.sublocationName}">Select sub-location</option>
-  
-                    </select>
-                </th>
-                    <th align="left">
-                        <input type="text" id="newSubName" placeholder="Enter new sub-location">
-                        <button type="button" onclick="addSubLocation()">Add</button>
-                    </th>
-                
+                    <input size="30" type="text" th:field="*{locationinfo}" />
+                    <div th:if="${#fields.hasErrors('locationinfo')}" th:errors="*{locationinfo}">Error</div>
+                    </th>        
             </tr>
             <tr>
                 <th align="right">Size</th>

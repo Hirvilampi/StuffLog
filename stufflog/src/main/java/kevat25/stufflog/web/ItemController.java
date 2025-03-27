@@ -173,6 +173,8 @@ public class ItemController {
                 item.setLocation(locloc);
             }
         }
+
+        /* 
         // ladataan reposta sublocation tiedot, jos niitä ei ole. tai asetetaan
         // oletusarvo
         if (item.getLocation().getSublocation() == null) {
@@ -181,6 +183,7 @@ public class ItemController {
         }
         // onko tämä allaoleva tarpeellinen?? luetaanko sitä ollenkaan
         model.addAttribute("subloc", item.getLocation().getSublocation());
+*/
 
         model.addAttribute("conditions", conditionRepository.findAll());
         model.addAttribute("states", stateRepository.findAll());

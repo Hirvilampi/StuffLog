@@ -76,12 +76,12 @@ public class StufflogApplication {
 			subLocRepository.save(sublocnone);
 			SubLocation sublocnone2 = new SubLocation("Blue chest");
 			subLocRepository.save(sublocnone2);
-			Location loc1 = new Location("No location", sublocnone);
-			Location loc2 = new Location("Study", sublocnone);
-			Location loc3 = new Location("Living room", sublocnone);
-			Location loc4 = new Location("Master bedroom", sublocnone);
-			Location loc5 = new Location("Hall", sublocnone);
-			Location loc6 = new Location("Storage", sublocnone2);
+			Location loc1 = new Location("No location");
+			Location loc2 = new Location("Study");
+			Location loc3 = new Location("Living room");
+			Location loc4 = new Location("Master bedroom");
+			Location loc5 = new Location("Hall");
+			Location loc6 = new Location("Storage");
 			locRepository.save(loc1);
 			locRepository.save(loc2);
 			locRepository.save(loc3);
