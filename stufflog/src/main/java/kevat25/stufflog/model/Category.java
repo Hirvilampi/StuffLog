@@ -11,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -33,9 +35,21 @@ public class Category {
     @Column(name="category")
     private List<Item> items;
 
-    @ManyToOne
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+        @JoinTable(
+        name = "category_subcategory",
+        joinColumns = @JoinColumn(name = "category_id"),
+        inverseJoinColumns = @JoinColumn(name = "subcategory_id")
+    )
+    private List<SubCategory> subCategories;
+
+    /* 
+    @OneToMany
     @JoinColumn(name = "subcategory_id")
     private SubCategory subCategory;
+    */
+
 
     public Category() {
     }
@@ -63,7 +77,7 @@ public class Category {
     public void setItems(List<Item> items) {
         this.items = items;
     }
-
+/* 
     public SubCategory getSubCategory() {
         return subCategory;
     }
@@ -71,4 +85,14 @@ public class Category {
     public void setSubCategory(SubCategory subCategory) {
         this.subCategory = subCategory;
     }
+*/
+    public List<SubCategory> getSubCategories() {
+        return subCategories;
+    }
+
+    public void setSubCategories(List<SubCategory> subCategories) {
+        this.subCategories = subCategories;
+    }
+
+    
 }

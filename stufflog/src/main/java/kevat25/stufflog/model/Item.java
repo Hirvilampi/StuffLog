@@ -1,5 +1,7 @@
 package kevat25.stufflog.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,16 +27,16 @@ public class Item {
     @NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan")
     private String itemName;
 
-    @Column(name = "description", length = 500, nullable=true)
+    @Column(name = "description", length = 500, nullable = true)
     private String description;
 
     @Column(name = "purchase_price", nullable = true)
     private Double purchaseprice;
-    
+
     @Column(name = "selling_price", nullable = true)
     private Double price;
 
-    @Column(name ="rental_price", nullable = true)
+    @Column(name = "rental_price", nullable = true)
     private Double rentalprice;
 
     @ManyToOne
@@ -64,7 +68,9 @@ public class Item {
     @JoinColumn(name = "state_id", nullable = true)
     private State state;
 
-
+    @ManyToMany
+    @JoinTable(name = "item_subcategory", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "subcategory_id"))
+    private List<SubCategory> subCategories;
 
     // constructors, getters and setters
 
@@ -75,46 +81,68 @@ public class Item {
         this.itemName = itemName;
     }
 
-    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName, UserAccount userAccount) {
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            UserAccount userAccount) {
         this.itemName = itemName;
         this.userAccount = userAccount;
     }
 
-    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName, UserAccount userAccount, Category category) {
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            UserAccount userAccount, Category category) {
         this.itemName = itemName;
         this.userAccount = userAccount;
         this.category = category;
     }
 
-    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName, String description) {
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            String description) {
         this.itemName = itemName;
         this.description = description;
     }
 
-    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName, Location location) {
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            Location location) {
         this.itemName = itemName;
         this.location = location;
     }
 
-    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName, UserAccount userAccount, Location location) {
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            UserAccount userAccount, Location location) {
         this.itemName = itemName;
         this.userAccount = userAccount;
         this.location = location;
     }
 
-    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName, String description, Location location) {
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            String description, Location location) {
         this.itemName = itemName;
         this.description = description;
         this.location = location;
     }
 
-    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName, String description, UserAccount userAccount, Location location) {
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            String description, UserAccount userAccount, Location location) {
         this.itemName = itemName;
         this.description = description;
         this.userAccount = userAccount;
         this.location = location;
     }
 
+    public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
+            String description, Double purchaseprice, Double price, Double rentalprice, UserAccount userAccount,
+            Category category, Location location, SizeOf sizeof, Condition condition, State state) {
+        this.itemName = itemName;
+        this.description = description;
+        this.purchaseprice = purchaseprice;
+        this.price = price;
+        this.rentalprice = rentalprice;
+        this.userAccount = userAccount;
+        this.category = category;
+        this.location = location;
+        this.sizeof = sizeof;
+        this.condition = condition;
+        this.state = state;
+    }
 
     public Item(Location location) {
         this.location = location;
@@ -155,7 +183,6 @@ public class Item {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public Category getCategory() {
         return category;
@@ -229,5 +256,12 @@ public class Item {
         this.state = state;
     }
 
-   
+    public List<SubCategory> getSubCategories() {
+        return subCategories;
+    }
+    
+    public void setSubCategories(List<SubCategory> subCategories) {
+        this.subCategories = subCategories;
+    }
+
 }

@@ -74,12 +74,14 @@ public class StufflogApplication {
 
 			SubLocation sublocnone = new SubLocation("No Sub-location");
 			subLocRepository.save(sublocnone);
+			SubLocation sublocnone2 = new SubLocation("Blue chest");
+			subLocRepository.save(sublocnone2);
 			Location loc1 = new Location("No location", sublocnone);
 			Location loc2 = new Location("Study", sublocnone);
 			Location loc3 = new Location("Living room", sublocnone);
 			Location loc4 = new Location("Master bedroom", sublocnone);
 			Location loc5 = new Location("Hall", sublocnone);
-			Location loc6 = new Location("Storage", sublocnone);
+			Location loc6 = new Location("Storage", sublocnone2);
 			locRepository.save(loc1);
 			locRepository.save(loc2);
 			locRepository.save(loc3);
@@ -95,10 +97,15 @@ public class StufflogApplication {
 					 "54", "55", "56", "57" );
 			sizeNames.forEach(sizename -> sRepository.save(new SizeOf(sizename)));
 
+	
+
+			System.out.println("tässä kohti vielä toimii");
+
 			List<String> categories = Arrays.asList(
 					"No category","Art", "Baby", "Cars", "Clothes", "Games", "Hobbies", "Music", "Maternity", "Outdoor", "Sports",
 					"Travel", "Tools");
 			categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
+
 
 			List<String> subCatNames = Arrays.asList(
 					"No subcategory","Ice Hockey", "Soccer", "Tennis", "Squash", "Floor ball", "Skiing",
@@ -108,9 +115,14 @@ public class StufflogApplication {
 					"Cd:s", "Instruments");
 			subCatNames.forEach(subname -> subCatRepository.save(new SubCategory(subname)));
 
+			System.out.println("tässä kohti vielä toimii 2");
+
 			
 			List<String> subLocNames = Arrays.asList("cabinet", "chest", "desk", "trunk", "wall", "wardrobe");
 			subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
+
+			List<String> conditions = Arrays.asList("New","Like new","Good","Used","Poor","Broken");
+			conditions.forEach(cond -> condRepository.save(new Condition(cond)));
 
 
 			
@@ -118,11 +130,25 @@ public class StufflogApplication {
 					"In use", "For sale", "Sold", "For rent");
 			statesnew.forEach(statename -> stateRepository.save(new State(statename)));
 
+	
+
 			log.info("save few items");
+
+			Category cattosave = catRepository.save(new Category(categories.get(11)));
+			SizeOf sizeOf = sRepository.save(new SizeOf(sizeNames.get(0)));
+			Condition condition = condRepository.save(new Condition(conditions.get(1)));
+			State state = stateRepository.save(new State(statesnew.get(3)));
+
+			System.out.println("tässä kohti vielä toimii 3");
+
+			iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, adminuser, cattosave, loc6, sizeOf, condition, state ));
+			System.out.println("tässä kohti vielä toimii - siis saatiin tää uus märkäimuri tallennettua");
 			iRepository.save(new Item("Soccer ball", adminuser));
 			iRepository.save(new Item("Drill", adminuser, loc2));
 			iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, loc1));
 			iRepository.save(new Item("Vacuum cleaner", regularuser));
+
+			System.out.println("tässä kohti vielä toimii 4");
 			/*
 			 * iRepository.save(new Item("Soccer ball",
 			 * uaRepository.findByUserAccount(adminuser)));

@@ -64,6 +64,9 @@ public class ItemController {
     @Autowired
     private StateRepository stateRepository;
 
+    @Autowired
+    private CatSubCatRepository catSubCatRepository;
+
     @RequestMapping(value = { "/", "index" })
     public String userSelection(Model model) {
         model.addAttribute("useraccounts", uaRepository.findAll());
@@ -185,19 +188,62 @@ public class ItemController {
         model.addAttribute("categories", cRepository.findAll());
 
         model.addAttribute("subcategories", subCatRepository.findAll());
-        System.out.println("testi alkaa");
+        System.out.println("category haku ja tallennus alkaa");
+        System.out.println("Sisältö: item.getCategory: "+item.getCategory());
         if (item.getCategory() == null) {
             Long longcatid = Long.valueOf(1);
             Optional<Category> catoptional = cRepository.findById(longcatid);
             if (catoptional.isPresent()) {
                 Category cat = catoptional.get();
                 item.setCategory(cat);
+                System.out.println("mitä tallenttettiin categoryyn");
+                System.out.println(item.getCategory());
+                System.out.println(item.getCategory().getCategoryName());
             }
         }
-        if (item.getCategory().getSubCategory() == null) {
-            item.getCategory().setSubCategory(subCatRepository.findBySubCategoryName("No subcategory"));
+
+        Category saveCategory = null;
+        SubCategory saveSubCategory = null;
+        // Tarkistetaan onko gategory asetettu ja onko sub categoria tyhjä
+        System.out.println("subcategory haku ja tallennus alkaa");
+//        System.out.println(item.getCategory().getSubCategories().get(0));
+        if (item.getCategory().getSubCategories()== null){
+            System.out.println("lista on tyhjä");
         }
-        model.addAttribute("subcat", item.getCategory().getSubCategory());
+        if (item.getCategory().getSubCategories()!= null){
+            System.out.println("mitä catin alla olevat subcagoriat on syöny");
+            System.out.println("Listan koko: " + item.getCategory().getSubCategories().size());
+            for (SubCategory subCat : item.getCategory().getSubCategories()) {
+                System.out.println("näytä subcat");
+                System.out.println(subCat.getSubCategoryName());
+            }
+            System.out.println("se lista käytiin läpi");
+        }
+        System.out.println("näitkö subcategorian paikan 0 tiedot??");
+
+        if (item.getCategory() != null) {
+            System.out.println("meillä siis on categoria");
+            for (SubCategory subCat : item.getCategory().getSubCategories()) {
+                saveSubCategory = subCat;
+                System.out.println("näytä subcat");
+                System.out.println(subCat);
+                break;
+            }
+        }
+        /* 
+        if(item.getCategory() != null && !findSubCategory(item.getCategory(),null)){
+            // jos ollaan tässä, on category ja subcategory löytyneet
+             System.out.println("Nullia ei categoriassa eikä subcategoriass. Koetetaan tallentaa");
+                saveCategory = item.getCategory();
+                System.out.println("savecategory onnistui - siinä on tietoa");
+                saveSubCategory = getSubCategory(item.getCategory());
+                System.out.println("savesubcategory onnistui - siinä on tietoa");
+                subCatRepository.save(saveSubCategory);
+        } else {
+            // toista ainakaan ei löytynyt
+        }*/
+   //     System.out.println("!!! subcatiin tuleva arvo, siis nimi:"+saveSubCategory.getSubCategoryName());
+        model.addAttribute("subcat", saveSubCategory);
         System.out.println(("ei se tähän tyssännyt"));
 
         model.addAttribute("userId", item.getUserAccount().getUserId());
@@ -205,6 +251,30 @@ public class ItemController {
         // model.addAttribute("useraccount",
         // uaRepository.findById(item.getUserAccount().getUserId()).orElse(null));
         return "showitem";
+    }
+
+    public SubCategory getSubCategory(Category category){
+        List<SubCategory> subCategories = category.getSubCategories();
+            if (!subCategories.isEmpty()){
+                // oletetaan, etä ensimmäinen subCategoriesiin tallentunut on oikea subcategory
+                return subCategories.get(0);
+            } else {
+
+
+            }
+            return null;
+        }
+        
+    
+
+
+    public boolean findSubCategory(Category category, SubCategory subcategory){
+        for (SubCategory subcat : category.getSubCategories()){
+            if(subcat.getSubCategoryId().equals(subcategory.getSubCategoryId())){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Transactional
@@ -241,7 +311,7 @@ public class ItemController {
                 SubCategory subcat =  subcatopt.get();
                 System.out.println("!!!! subcategory name:"+subcat.getSubCategoryName());
                 Category category = item.getCategory();
-                category.setSubCategory(subcat);
+    //            category.setSubCategory(subcat);
                 cRepository.save(category);
 
             }

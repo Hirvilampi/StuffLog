@@ -111,10 +111,9 @@
             <tr>
                 <th align="right">Sub category</th>
                 <th align="left">
-                <select id="subcategoryList" th:field="*{category.subCategory.subCategoryId}" class="form-control">
+                <select id="subcategoryList" th:field="*{subCategories}" class="form-control" multiple="multiple">
                     <option th:each="subc : ${subcategories}" th:value="${subc.subCategoryId}"
                     th:text="${subc.subCategoryName}">Select sub-location</option>
-                    
                 </select>
                 Add subcategory
                 </th>
