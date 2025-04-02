@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+
+     
+      <!-- Bootstrap CSS -->
+      <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    <title>Edit Item</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+
+    <style>
+        form {
+            margin-left: 5px;
+        }
+
+        h1 {
+            margin-left: 5px;
+        }
+    </style>
+
+<script>
+    <!--
+    function addSubLocation() {
+        let subName = document.getElementById("newSubName").value;
+        if (!subName) return; // Prevent empty input
+    
+        fetch('/addSublocation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sublocationName: subName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        let subLocationList = document.getElementById("sublocationList");
+
+        let newOption = document.createElement("option");
+        newOption.text = data.sublocationName;
+        newOption.value = data.sublocationId;
+
+        subLocationList.appendChild(newOption);
+    })
+    .catch(error => console.error('Error:', error));
+    }
+-->
+
+    function addSubCategory() {
+        let subCatName = document.getElementById("newSubCatName").value;
+        if (!subCatName) return; // Prevent empty input
+    
+        fetch('/addSubCategory', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ subCategoryName: subCatName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        let subCategoryList = document.getElementById("subcategoryList");
+
+        let newOption = document.createElement("option");
+        newOption.text = data.subCategoryName;
+        newOption.value = data.subCategoryId;
+
+        subCategoryList.appendChild(newOption);
+    })
+    .catch(error => console.error('Error:', error));
+    }
+    function addCategory() {
+            let catName = document.getElementById("newCatName").value;
+            if (!catName) return; // Prevent empty input
+            fetch('/addCategory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ categoryName: catName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let categoryList = document.getElementById("categoryList");
+                    let newOption = document.createElement("option");
+                    newOption.text = data.categoryName;
+                    newOption.value = data.categoryId;
+                    categoryList.appendChild(newOption);
+                    newCatName = "";
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function addLocation() {
+            let locName = document.getElementById("newLocName").value;
+            if (!locName) return; // Prevent empty input
+            fetch('/addLocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ locationName: locName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let categoryList = document.getElementById("locationList");
+                    let newOption = document.createElement("option");
+                    newOption.text = data.locationName;
+                    newOption.value = data.locationId;
+                    loclist.appendChild(newOption);
+                    newLocName = "";
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+</head>
+
+<body>
+    <br>
+    <h2 th:text="'Your ' + ${item.itemName} "></h2>
+
+<br>
+    <form action="#" th:action="@{/putitem/{userId}/{id}(userId=${userId},id=${item.itemId})}" th:object="${item}"
+        method="post">
+        <input type="hidden" th:field="*{itemId}" class="form-control" />
+        <table class="table table-striped">
+            <tr>
+                <td align="left">Change item name</td>
+                <td align="left">
+                    <input size="30" type="text" th:field="*{itemName}" />
+                    <div th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">Error</div>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">Description</td>
+                <td align="left">
+                    <input size="30" type="text" th:field="*{description}" />
+                    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Error</div>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">Category</td>
+                <td align="left">
+                    <select id="categoryList" th:field="*{category}" class="form-control">
+                        <option th:each="category: ${categories}" th:value="${category.categoryId}"
+                            th:text="${category.categoryName}">
+                        </option>
+                    </select>
+                </td>
+                <td align="left">
+                    <input type="text" id="newCatName" placeholder="Enter new category">
+                    <button type="button" onclick="addCategory()">Add</button>
+                </td>
+             
+            </tr>
+            <tr>
+                <td align="left">Sub category</td>
+                <td align="left">
+                <select id="subcategoryList" th:field="*{subCategories}" class="form-control">
+                    <option th:each="subc : ${subcategories}" th:value="${subc.subCategoryId}"
+                    th:text="${subc.subCategoryName}">Select sub-location</option>
+                </select>
+                </td>
+                <td align="left">
+                    <input type="text" id="newSubCatName" placeholder="Enter new sub-category">
+                    <button type="button" onclick="addSubCategory()">Add</button>
+                </td>
+              
+            </tr>
+            <tr>
+                <td align="left">Location</td>
+                <td align="left">
+                    <select id="loclist" th:field="*{location}" class="form-control">
+                        <option th:each="location: ${locations}" th:value="${location.locationId}"
+                            th:text="${location.locationName}">
+                        </option>
+                    </select>
+                </td>
+                <td align="left">
+                    <input type="text" id="newLocName" placeholder="Enter new location">
+                    <button type="button" onclick="addLocation()">Add</button>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">Location info</td>
+                <td align="left">
+                    <input size="30" type="text" th:field="*{locationinfo}" />
+                    <div th:if="${#fields.hasErrors('locationinfo')}" th:errors="*{locationinfo}">Error</div>
+                 </td>        
+            </tr>
+            <tr>
+                <td align="left">Size</td>
+                <td align="left">
+                    <select id="sizelist" th:field="*{sizeof}" class="form-control">
+                        <option th:each="size: ${sizeofs}" th:value="${size.sizeofId}" th:text="${size.sizeName}">
+                        </option>
+                    </select>
+                </td>
+<!--
+                <th align="right"><a href="/addsize" target="_blank">Add New Size</a> </th>
+-->
+            </tr>
+            <tr>
+                <td align="left">Condition</td>
+                <td align="left">
+                    <select id="conditionlist" th:field="*{condition}" class="form-control">
+                        <option th:each="cond: ${conditions}" th:value="${cond.conditionId}"
+                            th:text="${cond.condition}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">State</tdth>
+                <td align="left">
+                    <select id="statelist" th:field="*{state}" class="form-control">
+                        <option th:each="stat: ${states}" th:value="${stat.stateId}" th:text="${stat.stateName}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">Purchase price</td>
+                <td align="left">
+                    <input size="10" step="0.01" type="text" th:field="*{purchaseprice}" />
+                    <div th:if="${#fields.hasErrors('purchaseprice')}" th:errors="*{purchaseprice}">Error</div>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">Selling price</td>
+                <td align="left">
+                    <input size="10" step="0.01" type="text" th:field="*{price}" />
+                    <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Error</div>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">Rental price (per day)&nbsp</td>
+                <td align="left">
+                    <input size="10" step="0.01" type="text" th:field="*{rentalprice}" />
+                    <div th:if="${#fields.hasErrors('rentalprice')}" th:errors="*{rentalprice}">Error</div>
+                </td>
+            </tr>
+          
+
+
+
+
+        </table>
+        <p>
+
+        </p>
+
+
+        <input class="btn btn-success" type="submit" value="Save Item" />
+        &nbsp;<a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back to list </a>
+        &nbsp;&nbsp;
+    </form>
+
+
+
+</body>
+
+</html>

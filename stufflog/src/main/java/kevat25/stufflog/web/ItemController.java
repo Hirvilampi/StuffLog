@@ -1,8 +1,11 @@
 package kevat25.stufflog.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -98,6 +101,65 @@ public class ItemController {
         return "stufflistuser";
     }
 
+    @GetMapping(value = {"/rentlist/{userid}"})
+    public String showRentables(@PathVariable("userid") Long userId, Model model){
+        System.out.println("Ollaan siirtymässä rentlistaan");
+        UserAccount userAccount = uaRepository.findById(userId).orElse(null);
+        model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
+        model.addAttribute("userId", userId);
+        Iterable<UserAccount> uaList = uaRepository.findAll();
+        List<UserAccount> normList = StreamSupport.stream(uaList.spliterator(), false)
+                                   .collect(Collectors.toList());
+        List<RentableModel> rentableModels = new ArrayList<>();
+        System.out.println("aletaan tsekkaamaan listaa");
+        for (int i=0; i<normList.size() ; i++){
+            System.out.println("henkilö (normlist) nro: "+i);
+            // haetaan yhden henkilön lista kerrallaan
+            List<Item> items = iRepository.findAllByUserAccount(normList.get(i));
+            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos on For rent
+            for(int x=0; x<items.size(); x++){
+                System.out.println("Item tsekkaus nro: "+x);
+                // haetaan yksi item 
+                Item thisitem = items.get(x);
+                Long ownerid = (long) i;
+                if (thisitem.getState() != null && thisitem.getState().getStateName() != null){
+                    if (thisitem.getState().getStateName().equals("For rent")){
+                        System.out.println("löytyi For rent");
+                        // item on For rent, joten haetaan kaikki RentableModels:n tiedot
+                        RentableModel rModel = new RentableModel(
+                            thisitem.getItemId(), 
+                            thisitem.getItemName(),
+                            thisitem.getState(),
+                             ownerid 
+                            );
+                        if (thisitem.getDescription() != null){
+                            rModel.setItemDescription(thisitem.getDescription());
+                        }
+                        if (thisitem.getRentalprice() != null){
+                            rModel.setRentalPrice(thisitem.getRentalprice());
+                        }
+                        if (thisitem.getCondition() != null){
+                            rModel.setCondition(thisitem.getCondition());
+                        }
+                        if (thisitem.getSizeof() != null){
+                            rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
+                        }
+                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null){
+                            rModel.setCategoryName(thisitem.getCategory().getCategoryName());
+                        }
+                        rModel.setItemOwnerEmail(normList.get(i).getEmail());
+
+                        rentableModels.add(rModel);
+                    }
+                } else {System.out.println("state oli null");}
+
+            }
+            // jos item state on for rent se lisätään rent listaan
+        }
+        model.addAttribute("rentItems", rentableModels);
+        return "rentitems";
+    }
+
     /*
      * @RequestMapping(value = { "/stufflistuser/{id}" }, method =
      * RequestMethod.POST)
@@ -161,8 +223,8 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/showitem/{id}")
-    public String showItem(@PathVariable("id") Long itemId, Model model) {
+    @GetMapping("/edititem/{id}")
+    public String editItem(@PathVariable("id") Long itemId, Model model) {
         Item item = iRepository.findById(itemId).orElse(null);
         if (item == null) {
             // tähän errorin käsittely - ehkä kokonaan vaan ResponseEntity<?> jne
@@ -180,18 +242,6 @@ public class ItemController {
                 item.setLocation(locloc);
             }
         }
-
-        /*
-         * // ladataan reposta sublocation tiedot, jos niitä ei ole. tai asetetaan
-         * // oletusarvo
-         * if (item.getLocation().getSublocation() == null) {
-         * System.out.println(("sublocation on kyllä NULLA"));
-         * item.getLocation().setSublocation(subLocationRepository.
-         * findBySublocationName("No sublocation"));
-         * }
-         * // onko tämä allaoleva tarpeellinen?? luetaanko sitä ollenkaan
-         * model.addAttribute("subloc", item.getLocation().getSublocation());
-         */
 
         model.addAttribute("conditions", conditionRepository.findAll());
         model.addAttribute("states", stateRepository.findAll());
@@ -241,20 +291,88 @@ public class ItemController {
                 break;
             }
         }
-        /*
-         * if(item.getCategory() != null && !findSubCategory(item.getCategory(),null)){
-         * // jos ollaan tässä, on category ja subcategory löytyneet
-         * System.out.
-         * println("Nullia ei categoriassa eikä subcategoriass. Koetetaan tallentaa");
-         * saveCategory = item.getCategory();
-         * System.out.println("savecategory onnistui - siinä on tietoa");
-         * saveSubCategory = getSubCategory(item.getCategory());
-         * System.out.println("savesubcategory onnistui - siinä on tietoa");
-         * subCatRepository.save(saveSubCategory);
-         * } else {
-         * // toista ainakaan ei löytynyt
-         * }
-         */
+
+        // System.out.println("!!! subcatiin tuleva arvo, siis
+        // nimi:"+saveSubCategory.getSubCategoryName());
+        model.addAttribute("subcat", saveSubCategory);
+        System.out.println(("ei se tähän tyssännyt"));
+
+        model.addAttribute("userId", item.getUserAccount().getUserId());
+        System.out.println("useid " + item.getUserAccount().getUserId());
+        // model.addAttribute("useraccount",
+        // uaRepository.findById(item.getUserAccount().getUserId()).orElse(null));
+        return "edititem";
+    }
+
+    @GetMapping("/showitem/{id}")
+    public String showItem(@PathVariable("id") Long itemId, Model model) {
+        Item item = iRepository.findById(itemId).orElse(null);
+        if (item == null) {
+            // tähän errorin käsittely - ehkä kokonaan vaan ResponseEntity<?> jne
+            return "error";
+        }
+        model.addAttribute("item", item);
+        model.addAttribute("locations", locRepository.findAll());
+        model.addAttribute("sublocations", subLocationRepository.findAll());
+        // ladataan location tiedot tai asetaan oletusarvo, jos location tietoa ei ole
+        if (item.getLocation() == null) {
+            Long longlocid = Long.valueOf(1);
+            Optional<Location> locOptional = locRepository.findById(longlocid);
+            if (locOptional.isPresent()) {
+                Location locloc = locOptional.get();
+                item.setLocation(locloc);
+            }
+        }
+
+        model.addAttribute("conditions", conditionRepository.findAll());
+        model.addAttribute("states", stateRepository.findAll());
+        model.addAttribute("sizeofs", sizeOfRepository.findAll());
+        model.addAttribute("categories", cRepository.findAll());
+
+        model.addAttribute("subcategories", subCatRepository.findAll());
+        System.out.println("category haku ja tallennus alkaa");
+        System.out.println("Sisältö: item.getCategory: " + item.getCategory());
+        if (item.getCategory() == null) {
+            Long longcatid = Long.valueOf(1);
+            Optional<Category> catoptional = cRepository.findById(longcatid);
+            if (catoptional.isPresent()) {
+                Category cat = catoptional.get();
+                item.setCategory(cat);
+                System.out.println("mitä tallenttettiin categoryyn");
+                System.out.println(item.getCategory());
+                System.out.println(item.getCategory().getCategoryName());
+            }
+        }
+
+        Category saveCategory = null;
+        SubCategory saveSubCategory = null;
+        // Tarkistetaan onko gategory asetettu ja onko sub categoria tyhjä
+        System.out.println("subcategory haku ja tallennus alkaa");
+        // System.out.println(item.getCategory().getSubCategories().get(0));
+        if (item.getCategory().getSubCategories() == null) {
+            System.out.println("lista on tyhjä");
+        }
+        if (item.getCategory().getSubCategories() != null) {
+            System.out.println("mitä catin alla olevat subcagoriat on syöny");
+            System.out.println("Listan koko: " + item.getCategory().getSubCategories().size());
+            for (SubCategory subCat : item.getCategory().getSubCategories()) {
+                System.out.println("näytä subcat");
+                System.out.println(subCat.getSubCategoryName());
+            }
+            System.out.println("se lista käytiin läpi");
+        }
+        System.out.println("näitkö subcategorian paikan 0 tiedot??");
+
+        if (item.getCategory() != null) {
+            System.out.println("meillä siis on categoria");
+            for (SubCategory subCat : item.getCategory().getSubCategories()) {
+                saveSubCategory = subCat;
+                System.out.println("näytä subcat");
+                System.out.println(subCat);
+                break;
+            }
+        }
+
         // System.out.println("!!! subcatiin tuleva arvo, siis
         // nimi:"+saveSubCategory.getSubCategoryName());
         model.addAttribute("subcat", saveSubCategory);

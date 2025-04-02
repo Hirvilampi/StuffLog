@@ -6,11 +6,12 @@
     <title>Add stuff to your list</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-    <!-- Bootstrap CSS 
+    <!-- Bootstrap CSS -->
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
--->
-    <!-- Bootstrap CSS from CDN -->
+
+    <!-- Bootstrap CSS from CDN
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+     -->
     <style>
         form {
             margin: 1px;
@@ -21,6 +22,7 @@
             margin: 1px;
             margin-left: 5px;
         }
+
     </style>
     <script>
 
@@ -96,23 +98,20 @@
 </head>
 
 <body>
-    <div class="w-75 p-6" style="background-color: #eee;">
-        <!--th:action="@{/save{id}(id=@{userId})}"
-th:action="@{/save(id=${userId})}"
-th:href="@{'/additem/{id}'(id=${items[1].userId.userId})}"
-th:href="@{'/save/{id}'(id=${userId})}"
--->
+    <div class="container" style="width: 85%; margin-top:15px; padding: 20px; border: 2px solid #000">
+        
+
         <form th:action="@{/save/{id}(id=${userId})}" th:object="${item}" method="post">
             <h2>Add a new item</h2>
             <div>
-                <table>
+                <table class="table table-striped">
                     <tr>
                         <td>
                             Name&nbsp
                         </td>
 
                         <td>
-                            <input type="text" size="30" placeholder="item name" th:field="*{itemName}" />
+                            <input type="text" size="30" required placeholder="item name" th:field="*{itemName}" />
                         </td>
 
                     </tr>
@@ -148,7 +147,7 @@ th:href="@{'/save/{id}'(id=${userId})}"
                         <td>
                             Category selection&nbsp
                         <td>
-                            <select id="categorylist" th:field="*{category}" class="form-control">
+                            <select id="categorylist" th:field="*{category}"  class="form-control">
                                 <option value="" disabled selected>Select category</option>
                                 <option th:each="category : ${categories}" th:value="${category.categoryId}"
                                     th:text="${category.categoryName}">
@@ -156,7 +155,7 @@ th:href="@{'/save/{id}'(id=${userId})}"
                             </select>
                         </td>
                         <td align="left">
-                            <input type="text" id="newCatName" placeholder="Enter new category">
+                            <input type="text" size="12" id="newCatName" placeholder="Enter new category">
                             <button type="button" onclick="addCategory()">Add</button>
                         </td>
                     </tr>
@@ -169,7 +168,7 @@ th:href="@{'/save/{id}'(id=${userId})}"
                             </select>
                         </td>
                         <td align="left">
-                            <input type="text" id="newSubCatName" placeholder="Enter new sub-category">
+                            <input type="text" size="12" id="newSubCatName" placeholder="Enter new sub-category">
                             <button type="button" onclick="addSubCategory()">Add</button>
                         </td>
                    
@@ -186,7 +185,7 @@ th:href="@{'/save/{id}'(id=${userId})}"
                             </select>
                         </td>
                         <td align="left">
-                            <input type="text" id="newLocName" placeholder="Enter new location">
+                            <input type="text" size="12" id="newLocName" placeholder="Enter new location">
                             <button type="button" onclick="addLocation()">Add</button>
                         </td>
                     </tr>

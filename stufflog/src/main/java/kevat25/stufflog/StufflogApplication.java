@@ -55,11 +55,13 @@ public class StufflogApplication {
 		return (args) -> {
 			log.info("create few conditions");
 
-			UserAccount adminuser = new UserAccount("Admin", "Admin", "Timo", "Lampinen");
-			UserAccount regularuser = new UserAccount("NotAdmin", "NotAdmin", "Satu", "Lampinen");
+			UserAccount adminuser = new UserAccount("admin", "admin", "Timo", "Lampinen","lampinen.timo@gmail.com");
+			UserAccount regularuser = new UserAccount("user", "user", "Satu", "Lampinen","satu.lampinen81@gmail.com");
+			UserAccount testuser = new UserAccount("test","test","Test","User","noemail@email.no");
 			if (uaRepository.count() == 0)  {
 				uaRepository.save(adminuser);
 				uaRepository.save(regularuser);
+				uaRepository.save(testuser);
 			};
 		
 			Condition cond1 = new Condition("New");
@@ -154,7 +156,10 @@ public class StufflogApplication {
 			SizeOf sizeOf = sRepository.save(new SizeOf(sizeNames.get(0)));
 			Condition condition = condRepository.save(new Condition(conditions.get(1)));
 			State state = stateRepository.save(new State(statesnew.get(3)));
+			State stateforsale = stateRepository.save(new State(statesnew.get(1)));
 			System.out.println("tässä kohti vielä toimii 3");
+
+
 
 			if (iRepository.count() == 0 ){
 				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, adminuser, cattosave, loc6, sizeOf, condition, state ));
@@ -162,7 +167,16 @@ public class StufflogApplication {
 				iRepository.save(new Item("Soccer ball", adminuser));
 				iRepository.save(new Item("Drill", adminuser, loc2));
 				iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, loc1));
-				iRepository.save(new Item("Vacuum cleaner", regularuser));
+				iRepository.save(new Item("Vacuum cleaner", "Quiet hoover",30.0,regularuser,state));
+				iRepository.save(new Item("Sewing machine", "Simens",20.0,regularuser,state));
+				iRepository.save(new Item("Full Face bicycle helmet", "Bell, kids size",70.0,regularuser,stateforsale));
+				iRepository.save(new Item("Tent","4 people, all weather",35.0,testuser,state));
+				iRepository.save(new Item("Packraft","2 people, MRS-packraft with 2 paddles",830.0,testuser,stateforsale));
+				iRepository.save(new Item("Ice Skates","size 36",testuser,loc6));
+				iRepository.save(new Item("Ice Skates","size 37",testuser,loc6));
+				iRepository.save(new Item("Ice Skates","size 38",testuser,loc6));
+				iRepository.save(new Item("Ice Skates","size 39",testuser,loc6));
+				iRepository.save(new Item("Ice Skates","size 40",testuser,loc6));
 			}
 
 

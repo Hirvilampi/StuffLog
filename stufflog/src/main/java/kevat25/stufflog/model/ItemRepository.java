@@ -9,6 +9,8 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
   List<Item> findAllByUserAccount (UserAccount userAccount); 
 
+  Item findByUserAccount (UserAccount userAccount);
+
 
 
 }

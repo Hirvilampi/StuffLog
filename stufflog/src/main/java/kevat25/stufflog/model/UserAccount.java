@@ -38,6 +38,10 @@ public class UserAccount {
     @Size(min = 3, max = 50, message = "must be between 3-50 characters")
     private String surname;
 
+    @Column(name = "email")
+    @Size(min = 7, max = 100, message = "must be between 7-100 characters")
+    private String email;
+
     @JsonIgnoreProperties("userAccount")
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
     private List<Item> items;
@@ -51,11 +55,18 @@ public class UserAccount {
         this.password = password;
     }
 
-    public UserAccount(String username, String password, String firstname, String surname) {
+
+    public UserAccount(
+            @Size(min = 3, max = 50, message = "must be between 3-500 characters") String username,
+            @Size(min = 3, max = 50, message = "must be between 3-500 characters") String password,
+            @Size(min = 3, max = 50, message = "must be between 3-50 characters") String firstname,
+            @Size(min = 3, max = 50, message = "must be between 3-50 characters") String surname,
+            @Size(min = 7, max = 100, message = "must be between 7-100 characters") String email) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;
         this.surname = surname;
+        this.email = email;
     }
 
     public UserAccount(List<Item> iditems) {
@@ -115,10 +126,20 @@ public class UserAccount {
         this.items = items;
     }
 
+
+    
     @Override
     public String toString() {
         return "UserAccount [userId=" + userId + ", username=" + username + ", password=" + password + ", firstname="
                 + firstname + ", surname=" + surname + ", items=" + items + "]";
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 

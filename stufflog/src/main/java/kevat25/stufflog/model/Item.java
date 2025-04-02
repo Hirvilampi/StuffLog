@@ -131,6 +131,17 @@ public class Item {
         this.location = location;
     }
 
+    
+
+    public Item(@NotEmpty(message = "Item has to have name") String itemName, String description, Double rentalprice,
+            UserAccount userAccount, State state) {
+        this.itemName = itemName;
+        this.description = description;
+        this.rentalprice = rentalprice;
+        this.userAccount = userAccount;
+        this.state = state;
+    }
+
     public Item(@NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan") String itemName,
             String description, Double purchaseprice, Double price, Double rentalprice, UserAccount userAccount,
             Category category, Location location, SizeOf sizeof, Condition condition, State state) {
