@@ -1,10 +1,8 @@
 package kevat25.stufflog.model;
 
-
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,13 +17,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.persistence.CascadeType;
 
 @Entity
-@Table(name = "Location")
+@Table(name = "location")
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id")
-    private long locationId;
+    private Long locationId;
 
     @Column(name = "locationName")
     @NotEmpty(message = "Location has to have a name")
@@ -35,13 +33,7 @@ public class Location {
     @JsonIgnore
     private List<Item> items;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "SubLocation_id")
-    private SubLocation sublocation;
-
     // Constructors, setters and getters
-
     public Location() {
     }
 
@@ -49,7 +41,8 @@ public class Location {
         this.locationName = locationName;
     }
 
-    public long getLocationId() {
+
+    public Long getLocationId() {
         return locationId;
     }
 
@@ -67,14 +60,6 @@ public class Location {
 
     public void setItems(List<Item> items) {
         this.items = items;
-    }
-
-    public SubLocation getSublocation() {
-        return sublocation;
-    }
-
-    public void setSublocation(SubLocation sublocation) {
-        this.sublocation = sublocation;
     }
 
 }
