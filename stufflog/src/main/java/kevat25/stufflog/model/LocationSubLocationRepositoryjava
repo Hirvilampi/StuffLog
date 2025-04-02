@@ -1,0 +1,9 @@
+package kevat25.stufflog.model;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface LocationSubLocationRepository extends CrudRepository<LocationSubLocation, Long> {
+
+    SubLocation findByLocationId (Long id);
+
+}

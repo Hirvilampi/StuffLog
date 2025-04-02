@@ -25,9 +25,9 @@ public class SubLocation {
     @Column(name = "sublocationName")
     private String sublocationName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sublocation")
-    @JsonIgnore
-    private List<Location> locations;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sublocation")
+//    @JsonIgnore
+//    private List<Location> locations;
 
     // constructors
     public SubLocation() {
@@ -35,15 +35,6 @@ public class SubLocation {
 
     public SubLocation(String sublocationName) {
         this.sublocationName = sublocationName;
-    }
-
-    public SubLocation(List<Location> locations) {
-        this.locations = locations;
-    }
-
-    public SubLocation(String sublocationName, List<Location> locations) {
-        this.sublocationName = sublocationName;
-        this.locations = locations;
     }
 
     public Long getSublocationId() {
@@ -58,12 +49,5 @@ public class SubLocation {
         this.sublocationName = sublocationName;
     }
 
-    public List<Location> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(List<Location> locations) {
-        this.locations = locations;
-    }
 
 }

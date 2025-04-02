@@ -22,6 +22,7 @@
     </style>
 
 <script>
+    <!--
     function addSubLocation() {
         let subName = document.getElementById("newSubName").value;
         if (!subName) return; // Prevent empty input
@@ -45,6 +46,7 @@
     })
     .catch(error => console.error('Error:', error));
     }
+-->
 
     function addSubCategory() {
         let subCatName = document.getElementById("newSubCatName").value;
@@ -111,10 +113,9 @@
             <tr>
                 <th align="right">Sub category</th>
                 <th align="left">
-                <select id="subcategoryList" th:field="*{category.subCategory.subCategoryId}" class="form-control">
+                <select id="subcategoryList" th:field="*{subCategories}" class="form-control" multiple="multiple">
                     <option th:each="subc : ${subcategories}" th:value="${subc.subCategoryId}"
                     th:text="${subc.subCategoryName}">Select sub-location</option>
-                    
                 </select>
                 Add subcategory
                 </th>
@@ -138,17 +139,9 @@
             <tr>
                 <th align="right">Sub location</th>
                 <th align="left">
-                    <select id="sublocationList" th:field="*{location.sublocation.sublocationId}" class="form-control">
-                        <option th:each="sub : ${sublocations}" th:value="${sub.sublocationId}"
-                        th:text="${sub.sublocationName}">Select sub-location</option>
-  
-                    </select>
-                </th>
-                    <th align="left">
-                        <input type="text" id="newSubName" placeholder="Enter new sub-location">
-                        <button type="button" onclick="addSubLocation()">Add</button>
-                    </th>
-                
+                    <input size="30" type="text" th:field="*{locationinfo}" />
+                    <div th:if="${#fields.hasErrors('locationinfo')}" th:errors="*{locationinfo}">Error</div>
+                    </th>        
             </tr>
             <tr>
                 <th align="right">Size</th>
