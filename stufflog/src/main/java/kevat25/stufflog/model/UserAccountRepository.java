@@ -6,4 +6,5 @@ public interface UserAccountRepository extends CrudRepository<UserAccount, Long>
 
  //   Long findByUserAccount(UserAccount useraccount);
 
+
 }

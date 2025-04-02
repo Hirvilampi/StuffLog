@@ -32,7 +32,7 @@
             <th align="left">Location info</th>
             <th align="left">Category</th>
             <th align="left">SubCategory</th>
-            <th align="left">User</th>
+            <th align="left">State</th>
 
             <th align="left"></th>
             <th align="left"></th>
@@ -47,12 +47,14 @@
             <td th:text="${#strings.defaultString(item.location?.locationName, 'No Location')}"></td>
             <td th:text="${item.locationinfo}"></td>
             <td th:text="${#strings.defaultString(item.category?.categoryName, 'No Category')}"></td>
-            <td th:text="${item.subCategories != null and not #lists.isEmpty(item.subCategories) ? item.subCategories[0].subCategoryName : 'No Subcategory!'}"></td>
+            <td
+                th:text="${item.subCategories != null and not #lists.isEmpty(item.subCategories) ? item.subCategories[0].subCategoryName : 'No Subcategory!'}">
+            </td>
 
 
-            <td th:text="${userId}"></td>
-            <!--      <td><a type="button" class="btn btn-danger" th:href="@{'/delete/{id}'(id=${item.id})}">Delete</a></td>
-            <td><a type="button" class="btn btn-primary" th:href="@{'/edit/{id}'(id=${item.id})}">Edit</a></td>
+            <td th:text="${#strings.defaultString(item.state?.stateName, 'No State')}"></td>
+         <td><a type="button" class="btn btn-danger" th:href="@{'/delete/{userID}/{id}'(userID=${userId}, id=${item.itemId})}">Delete</a></td>
+      <!--               <td><a type="button" class="btn btn-primary" th:href="@{'/edit/{id}'(id=${item.id})}">Edit</a></td>
 -->
         </tr>
     </table>

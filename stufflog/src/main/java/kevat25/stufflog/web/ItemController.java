@@ -174,16 +174,17 @@ public class ItemController {
             }
         }
 
-        /* 
-        // ladataan reposta sublocation tiedot, jos niitä ei ole. tai asetetaan
-        // oletusarvo
-        if (item.getLocation().getSublocation() == null) {
-            System.out.println(("sublocation on kyllä NULLA"));
-            item.getLocation().setSublocation(subLocationRepository.findBySublocationName("No sublocation"));
-        }
-        // onko tämä allaoleva tarpeellinen?? luetaanko sitä ollenkaan
-        model.addAttribute("subloc", item.getLocation().getSublocation());
-*/
+        /*
+         * // ladataan reposta sublocation tiedot, jos niitä ei ole. tai asetetaan
+         * // oletusarvo
+         * if (item.getLocation().getSublocation() == null) {
+         * System.out.println(("sublocation on kyllä NULLA"));
+         * item.getLocation().setSublocation(subLocationRepository.
+         * findBySublocationName("No sublocation"));
+         * }
+         * // onko tämä allaoleva tarpeellinen?? luetaanko sitä ollenkaan
+         * model.addAttribute("subloc", item.getLocation().getSublocation());
+         */
 
         model.addAttribute("conditions", conditionRepository.findAll());
         model.addAttribute("states", stateRepository.findAll());
@@ -192,7 +193,7 @@ public class ItemController {
 
         model.addAttribute("subcategories", subCatRepository.findAll());
         System.out.println("category haku ja tallennus alkaa");
-        System.out.println("Sisältö: item.getCategory: "+item.getCategory());
+        System.out.println("Sisältö: item.getCategory: " + item.getCategory());
         if (item.getCategory() == null) {
             Long longcatid = Long.valueOf(1);
             Optional<Category> catoptional = cRepository.findById(longcatid);
@@ -209,11 +210,11 @@ public class ItemController {
         SubCategory saveSubCategory = null;
         // Tarkistetaan onko gategory asetettu ja onko sub categoria tyhjä
         System.out.println("subcategory haku ja tallennus alkaa");
-//        System.out.println(item.getCategory().getSubCategories().get(0));
-        if (item.getCategory().getSubCategories()== null){
+        // System.out.println(item.getCategory().getSubCategories().get(0));
+        if (item.getCategory().getSubCategories() == null) {
             System.out.println("lista on tyhjä");
         }
-        if (item.getCategory().getSubCategories()!= null){
+        if (item.getCategory().getSubCategories() != null) {
             System.out.println("mitä catin alla olevat subcagoriat on syöny");
             System.out.println("Listan koko: " + item.getCategory().getSubCategories().size());
             for (SubCategory subCat : item.getCategory().getSubCategories()) {
@@ -233,19 +234,22 @@ public class ItemController {
                 break;
             }
         }
-        /* 
-        if(item.getCategory() != null && !findSubCategory(item.getCategory(),null)){
-            // jos ollaan tässä, on category ja subcategory löytyneet
-             System.out.println("Nullia ei categoriassa eikä subcategoriass. Koetetaan tallentaa");
-                saveCategory = item.getCategory();
-                System.out.println("savecategory onnistui - siinä on tietoa");
-                saveSubCategory = getSubCategory(item.getCategory());
-                System.out.println("savesubcategory onnistui - siinä on tietoa");
-                subCatRepository.save(saveSubCategory);
-        } else {
-            // toista ainakaan ei löytynyt
-        }*/
-   //     System.out.println("!!! subcatiin tuleva arvo, siis nimi:"+saveSubCategory.getSubCategoryName());
+        /*
+         * if(item.getCategory() != null && !findSubCategory(item.getCategory(),null)){
+         * // jos ollaan tässä, on category ja subcategory löytyneet
+         * System.out.
+         * println("Nullia ei categoriassa eikä subcategoriass. Koetetaan tallentaa");
+         * saveCategory = item.getCategory();
+         * System.out.println("savecategory onnistui - siinä on tietoa");
+         * saveSubCategory = getSubCategory(item.getCategory());
+         * System.out.println("savesubcategory onnistui - siinä on tietoa");
+         * subCatRepository.save(saveSubCategory);
+         * } else {
+         * // toista ainakaan ei löytynyt
+         * }
+         */
+        // System.out.println("!!! subcatiin tuleva arvo, siis
+        // nimi:"+saveSubCategory.getSubCategoryName());
         model.addAttribute("subcat", saveSubCategory);
         System.out.println(("ei se tähän tyssännyt"));
 
@@ -256,24 +260,19 @@ public class ItemController {
         return "showitem";
     }
 
-    public SubCategory getSubCategory(Category category){
+    public SubCategory getSubCategory(Category category) {
         List<SubCategory> subCategories = category.getSubCategories();
-            if (!subCategories.isEmpty()){
-                // oletetaan, etä ensimmäinen subCategoriesiin tallentunut on oikea subcategory
-                return subCategories.get(0);
-            } else {
-
-
-            }
-            return null;
+        if (!subCategories.isEmpty()) {
+            // oletetaan, etä ensimmäinen subCategoriesiin tallentunut on oikea subcategory
+            return subCategories.get(0);
+        } else {
         }
-        
-    
+        return null;
+    }
 
-
-    public boolean findSubCategory(Category category, SubCategory subcategory){
-        for (SubCategory subcat : category.getSubCategories()){
-            if(subcat.getSubCategoryId().equals(subcategory.getSubCategoryId())){
+    public boolean findSubCategory(Category category, SubCategory subcategory) {
+        for (SubCategory subcat : category.getSubCategories()) {
+            if (subcat.getSubCategoryId().equals(subcategory.getSubCategoryId())) {
                 return true;
             }
         }
@@ -284,7 +283,8 @@ public class ItemController {
     @PostMapping("putitem/{userId}/{id}")
     public String putitem(@Valid @ModelAttribute Item item,
             @RequestParam(value = "location.sublocation.sublocationId", required = false) Long sublocationId,
-//            @RequestParam(value = "category.subCategory.subCategoryId", required = false) Long subcategoryId,
+            // @RequestParam(value = "category.subCategory.subCategoryId", required = false)
+            // Long subcategoryId,
             @PathVariable("userId") Long kayttLong,
             @PathVariable("id") Long itemId, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -302,25 +302,25 @@ public class ItemController {
             System.out.println("description: " + item.getDescription());
             System.out.println("category:" + item.getCategory().getCategoryName());
             System.out.println("location:" + item.getLocation().getLocationName());
-            System.out.println("loc info:"+item.getLocationinfo());
+            System.out.println("loc info:" + item.getLocationinfo());
             System.out.println("size:" + item.getSizeof().getSizeName());
             System.out.println("state:" + item.getState().getStateName());
             System.out.println("condition:" + item.getCondition().getCondition());
-            System.out.println("purhace price:"+item.getPurchaseprice());
-            System.out.println("price:"+item.getPrice());
-            System.out.println("rental price:"+item.getRentalprice());
+            System.out.println("purhace price:" + item.getPurchaseprice());
+            System.out.println("price:" + item.getPrice());
+            System.out.println("rental price:" + item.getRentalprice());
 
-//            System.out.println("subcategory id:"+subcategoryId);
-/*
-            Optional<SubCategory> subcatopt =  subCatRepository.findById(subcategoryId);
-            if (subcatopt.isPresent()){
-                SubCategory subcat =  subcatopt.get();
-                System.out.println("!!!! subcategory name:"+subcat.getSubCategoryName());
-                Category category = item.getCategory();
-    //            category.setSubCategory(subcat);
-                cRepository.save(category);
-            }
- */
+            // System.out.println("subcategory id:"+subcategoryId);
+            /*
+             * Optional<SubCategory> subcatopt = subCatRepository.findById(subcategoryId);
+             * if (subcatopt.isPresent()){
+             * SubCategory subcat = subcatopt.get();
+             * System.out.println("!!!! subcategory name:"+subcat.getSubCategoryName());
+             * Category category = item.getCategory();
+             * // category.setSubCategory(subcat);
+             * cRepository.save(category);
+             * }
+             */
             // load user_account info if it exits - we have to save the userinfo at the same
             // time, otherwise we save the info without user and the item disappears
             boolean userexists = uaRepository.findById(kayttLong).isPresent();
@@ -349,139 +349,6 @@ public class ItemController {
                 item.setLocation(loc);
             }
 
-
-            /*
-             * // jos sublocationId on annettu, tallennetaan sublocation item.locationin
-             * alle
-             * 
-             * if (sublocationId != null) {
-             * System.out.println("meillä on sublocid");
-             * Optional<SubLocation> subLocationoOptional =
-             * subLocationRepository.findById(sublocationId);
-             * if (subLocationoOptional.isPresent()) {
-             * SubLocation subloc = subLocationoOptional.get();
-             * System.out.println("Haettiin sublocation: " + subloc.getSublocationName());
-             * 
-             * // haetaan location
-             * Optional<Location> locOptional =
-             * locRepository.findById(item.getLocation().getLocationId());
-             * if (locOptional.isPresent()) {
-             * System.out.println("Nyt haetaan location ja sitte tallennetaan "+locOptional.
-             * get());
-             * if (!subLocationRepository.existsById(subloc.getSublocationId())) {
-             * subloc = subLocationRepository.save(subloc); // Tallenna subloc, jos sitä ei
-             * ole
-             * }
-             * Location loc = locOptional.get();
-             * System.out.println("subloc on:"+subloc+" loc on:"+loc);
-             * loc.setSublocation(subloc);
-             * item.setLocation(loc);
-             * if (loc.getLocationId() == null) {
-             * System.out.println("⚠️ Virhe: Location ID on null!");
-             * } else if (loc.getLocationName() == null) {
-             * System.out.println("⚠️ Virhe: Location Name on null!");
-             * } else {
-             * System.out.println("✅ Location näyttää hyvältä: " + loc);
-             * }
-             * System.out.println("locrepository save seuraavaksi");
-             * locRepository.save(loc);
-             * System.out.println("Sublocation tallennettu locationille.");
-             * } else {
-             * // tähän virheilmoitus REsponseentity tms
-             * System.out.println("subloc ei löytynyt");
-             * }
-             * } else {
-             * System.out.println("ei oo sublocid:tä palautettu");
-             * }
-             * }
-             * 
-             * // tarkastetaan kagetoria ja sub kategoriaa
-             * // jos ei ole annettu kategoriaa, laitetaan ei kategoiraa paikalle
-             * System.out.println("SEURAAVAKSI --- CATEGORIA JA SUBCATEGORIA");
-             * Optional<Category> catOptional =
-             * cRepository.findById(item.getCategory().getCategoryId());
-             * Category cat;
-             * 
-             * if (catOptional.isEmpty()) {
-             * cat = cRepository.findOneByCategoryName("No category");
-             * if (cat == null) {
-             * cat = new Category();
-             * cat.setCategoryName("No category");
-             * cRepository.save(cat);
-             * }
-             * item.setCategory(cat);
-             * } else {
-             * cat = catOptional.get();
-             * item.setCategory(cat);
-             * }
-             * 
-             * // 🔹 **Haetaan tai tallennetaan SubCategory**
-             * if (subcategoryId != null) {
-             * Optional<SubCategory> subcatOptional =
-             * subCatRepository.findById(subcategoryId);
-             * SubCategory subcat = subcatOptional.orElse(null);
-             * 
-             * if (subcat == null) {
-             * System.out.println("SubCategory ei löytynyt, joten se luodaan.");
-             * subcat = new SubCategory();
-             * subCatRepository.save(subcat);
-             * }
-             * 
-             * cat.setSubCategory(subcat);
-             * cRepository.save(cat); // Tallennetaan, koska muokattiin viittauksia
-             * }
-             */
-            /*
-             * boolean catexists =
-             * cRepository.findById(item.getCategory().getCategoryId()).isPresent();
-             * if (!catexists) {
-             * System.out.println("ei oo subcatid:tä palautettu");
-             * Category cat = cRepository.findOneByCategoryName("No category");
-             * item.setCategory(cat);
-             * System.out.println("subcat id - no category asetettu");
-             * catexists = true;
-             * } else {
-             * System.out.println("categoria on olemassa jo, joten ladataan se");
-             * Optional<Category> catoptional =
-             * cRepository.findById(item.getCategory().getCategoryId());
-             * if (catoptional.isPresent()) {
-             * Category cat = catoptional.get();
-             * item.setCategory(cat);
-             * System.out.println("Kategoria ladatiin");
-             * }
-             * }
-             * 
-             * // jos subcategoryid on annettu tallennetaan tiedot subcategoriaan ja
-             * categorian
-             * // alle
-             * 
-             * if (subcategoryId != null) {
-             * System.out.println("subcategoryId tuli annettuna");
-             * Optional<SubCategory> subcatoptional =
-             * subCatRepository.findById(subcategoryId);
-             * if (subcatoptional.isPresent()) {
-             * System.out.println("löytyi myös sen sub kategoria");
-             * SubCategory subcat = subcatoptional.get();
-             * Optional<Category> catoptional =
-             * cRepository.findById(item.getCategory().getCategoryId());
-             * if (catoptional.isPresent()) {
-             * System.out.println("löytyi kategoria");
-             * Category cat = catoptional.get();
-             * cat.setSubCategory(subcat);
-             * item.setCategory(cat);
-             * cRepository.save(cat);
-             * System.out.
-             * println("kategoria, sub, kategoriaja kaiki tallennettu item ja repot");
-             * } else {
-             * // tähän virheilmoitus
-             * System.out.println("sub cat ei löytynyt");
-             * }
-             * } else {
-             * // virheilmo tähän
-             * System.out.println("Ei ole subcategoryId:tä palautettu");
-             * }
-             * }
-             */
             System.out.println("iRepo save");
             iRepository.save(item);
             System.out.println("iRepo save OK");
@@ -489,6 +356,7 @@ public class ItemController {
         return "redirect:/stufflistuser/" + kayttLong;
     }
 
+    // ei käytössä
     @PostMapping("/addSublocation")
     public ResponseEntity<SubLocation> addSublocation(@RequestBody String sublocationName) {
         System.out.println("nimi sublo:" + sublocationName);
@@ -521,6 +389,20 @@ public class ItemController {
         SubCategory subcat = new SubCategory(parsenimi);
         SubCategory savedSub = subCatRepository.save(subcat);
         return ResponseEntity.ok(savedSub);
+    }
+
+    @RequestMapping(value = "/delete/{userId}/{id}", method = RequestMethod.GET)
+    public String deleteItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long kayttajalLong, Item item, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // errorhändling tähän
+            System.out.println("vituiks män.. ");
+            return "showitem/" + itemId;
+        } else {
+    
+            iRepository.deleteById(itemId);
+            return "redirect:/stufflistuser/"+kayttajalLong;
+
+        }
     }
 
 }
