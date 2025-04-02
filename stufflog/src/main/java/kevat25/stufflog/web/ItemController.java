@@ -284,7 +284,7 @@ public class ItemController {
     @PostMapping("putitem/{userId}/{id}")
     public String putitem(@Valid @ModelAttribute Item item,
             @RequestParam(value = "location.sublocation.sublocationId", required = false) Long sublocationId,
-            @RequestParam(value = "category.subCategory.subCategoryId", required = false) Long subcategoryId,
+//            @RequestParam(value = "category.subCategory.subCategoryId", required = false) Long subcategoryId,
             @PathVariable("userId") Long kayttLong,
             @PathVariable("id") Long itemId, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -302,13 +302,16 @@ public class ItemController {
             System.out.println("description: " + item.getDescription());
             System.out.println("category:" + item.getCategory().getCategoryName());
             System.out.println("location:" + item.getLocation().getLocationName());
+            System.out.println("loc info:"+item.getLocationinfo());
             System.out.println("size:" + item.getSizeof().getSizeName());
             System.out.println("state:" + item.getState().getStateName());
             System.out.println("condition:" + item.getCondition().getCondition());
             System.out.println("purhace price:"+item.getPurchaseprice());
             System.out.println("price:"+item.getPrice());
             System.out.println("rental price:"+item.getRentalprice());
-            System.out.println("subcategory id:"+subcategoryId);
+
+//            System.out.println("subcategory id:"+subcategoryId);
+/*
             Optional<SubCategory> subcatopt =  subCatRepository.findById(subcategoryId);
             if (subcatopt.isPresent()){
                 SubCategory subcat =  subcatopt.get();
@@ -316,9 +319,8 @@ public class ItemController {
                 Category category = item.getCategory();
     //            category.setSubCategory(subcat);
                 cRepository.save(category);
-
             }
-
+ */
             // load user_account info if it exits - we have to save the userinfo at the same
             // time, otherwise we save the info without user and the item disappears
             boolean userexists = uaRepository.findById(kayttLong).isPresent();

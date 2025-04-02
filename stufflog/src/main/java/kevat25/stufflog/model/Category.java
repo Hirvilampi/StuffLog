@@ -1,5 +1,6 @@
 package kevat25.stufflog.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,7 +43,7 @@ public class Category {
         joinColumns = @JoinColumn(name = "category_id"),
         inverseJoinColumns = @JoinColumn(name = "subcategory_id")
     )
-    private List<SubCategory> subCategories;
+    private List<SubCategory> subCategories = new ArrayList<>();;
 
     /* 
     @OneToMany
@@ -52,6 +53,7 @@ public class Category {
 
 
     public Category() {
+        this.subCategories = new ArrayList<>();
     }
 
     public Category(@NotEmpty(message = "Category has to have a name") String categoryName) {

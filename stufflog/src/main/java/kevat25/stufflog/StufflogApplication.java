@@ -47,11 +47,12 @@ public class StufflogApplication {
 			log.info("create few conditions");
 
 			UserAccount adminuser = new UserAccount("Admin", "Admin", "Timo", "Lampinen");
-			uaRepository.save(adminuser);
-
 			UserAccount regularuser = new UserAccount("NotAdmin", "NotAdmin", "Satu", "Lampinen");
-			uaRepository.save(regularuser);
-
+			if (uaRepository.count() == 0)  {
+				uaRepository.save(adminuser);
+				uaRepository.save(regularuser);
+			};
+		
 			Condition cond1 = new Condition("New");
 			Condition cond2 = new Condition("Like new");
 			Condition cond3 = new Condition("Unused");
@@ -61,21 +62,25 @@ public class StufflogApplication {
 			Condition cond7 = new Condition("Poor");
 			Condition cond8 = new Condition("Broken");
 
-			condRepository.save(cond1);
-			condRepository.save(cond2);
-			condRepository.save(cond3);
-			condRepository.save(cond4);
-			condRepository.save(cond5);
-			condRepository.save(cond6);
-			condRepository.save(cond7);
-			condRepository.save(cond8);
-
-
+			if (condRepository.count() == 0 ){
+				condRepository.save(cond1);
+				condRepository.save(cond2);
+				condRepository.save(cond3);
+				condRepository.save(cond4);
+				condRepository.save(cond5);
+				condRepository.save(cond6);
+				condRepository.save(cond7);
+				condRepository.save(cond8);
+			}
 
 			SubLocation sublocnone = new SubLocation("No Sub-location");
-			subLocRepository.save(sublocnone);
 			SubLocation sublocnone2 = new SubLocation("Blue chest");
+			
+			subLocRepository.save(sublocnone);
+
 			subLocRepository.save(sublocnone2);
+
+
 			Location loc1 = new Location("No location");
 			Location loc2 = new Location("Study");
 			Location loc3 = new Location("Living room");
