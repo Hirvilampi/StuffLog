@@ -1,13 +1,16 @@
 package kevat25.stufflog.web;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -81,7 +85,9 @@ public class ItemController {
         return "redirect:/stufflistuser/" + userAccount.getUserId();
     }
 
-    @RequestMapping(value = { "/stufflistuser/{userid}" }, method = RequestMethod.GET)
+    // @RequestMapping(value = { "/stufflistuser/{userid}" }, method =
+    // RequestMethod.GET)
+    @GetMapping(value = { "/stufflistuser/{userid}" })
     public String showUsersStuff(@PathVariable("userid") Long userId, Model model) {
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
         model.addAttribute("items", iRepository.findAllByUserAccount(userAccount));
@@ -124,13 +130,14 @@ public class ItemController {
     @RequestMapping("/additem/{id}")
     public String addItemForm(@PathVariable("id") Long userId, Model model) {
         model.addAttribute("item", new Item());
-        model.addAttribute("subcategories", subCatRepository.findAll());
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("subcategories", subCatRepository.findAll());
         model.addAttribute("locations", locRepository.findAll());
+        model.addAttribute("sizeofs", sizeOfRepository.findAll());
+        model.addAttribute("states", stateRepository.findAll());
+        model.addAttribute("conditions", conditionRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
-
         return "additem";
     }
 
@@ -310,19 +317,6 @@ public class ItemController {
             System.out.println("price:" + item.getPrice());
             System.out.println("rental price:" + item.getRentalprice());
 
-            // System.out.println("subcategory id:"+subcategoryId);
-            /*
-             * Optional<SubCategory> subcatopt = subCatRepository.findById(subcategoryId);
-             * if (subcatopt.isPresent()){
-             * SubCategory subcat = subcatopt.get();
-             * System.out.println("!!!! subcategory name:"+subcat.getSubCategoryName());
-             * Category category = item.getCategory();
-             * // category.setSubCategory(subcat);
-             * cRepository.save(category);
-             * }
-             */
-            // load user_account info if it exits - we have to save the userinfo at the same
-            // time, otherwise we save the info without user and the item disappears
             boolean userexists = uaRepository.findById(kayttLong).isPresent();
             if (userexists) {
 
@@ -374,35 +368,104 @@ public class ItemController {
         return ResponseEntity.ok(savedSub);
     }
 
+    @PostMapping("/addCategory")
+    public ResponseEntity<?> addCategory(@RequestBody String categoryName) {
+        System.out.println("nimi cat:" + categoryName);
+        String parsenimi = categoryName;
+
+        // category täytyy parsea, että sadaan sieltä pelkkä nimi ulos
+        if (categoryName.length() > 20) {
+            parsenimi = categoryName.substring(17, (categoryName.length() - 2));
+            System.out.println("lyhennetty nimi:(" + parsenimi+")");
+        } else {
+        }
+
+        // tähän pitäisi lisätä tsekkaus, ettei lisätä smaa nimeä montaa kertaa
+        Category cat = cRepository.findOneByCategoryName(parsenimi);
+        Category savedcat;
+        if (cat == null) {
+            Category catname = new Category(parsenimi);
+            savedcat  = cRepository.save(catname);
+            System.out.println("tallenneetiin uusi kategoria:" + parsenimi);
+        } else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No duplicate names allowed");
+        }
+        return ResponseEntity.ok(savedcat);
+    }
+
+
     @PostMapping("/addSubCategory")
-    public ResponseEntity<SubCategory> addSubCategory(@RequestBody String subcategoryName) {
+    public ResponseEntity<?> addSubCategory(@RequestBody String subcategoryName) {
         System.out.println("nimi subcat:" + subcategoryName);
         String parsenimi = subcategoryName;
 
-        // sublocationname täytyy parsea, että sadaan sieltä pelkkä nimi ulos
+        // subcategory täytyy parsea, että sadaan sieltä pelkkä nimi ulos
         if (subcategoryName.length() > 20) {
             parsenimi = subcategoryName.substring(20, (subcategoryName.length() - 2));
             System.out.println("lyhennetty nimi:" + parsenimi);
         } else {
         }
 
-        SubCategory subcat = new SubCategory(parsenimi);
-        SubCategory savedSub = subCatRepository.save(subcat);
+        // tähän pitäisi lisätä tsekkaus, ettei lisätä smaa nimeä montaa kertaa
+        SubCategory subc = subCatRepository.findBySubCategoryName(parsenimi);
+        SubCategory savedSub;
+        if (subc == null) {
+            SubCategory subcat = new SubCategory(parsenimi);
+            savedSub = subCatRepository.save(subcat);
+            System.out.println("tallenneetiin uusi sub kategoria:" + parsenimi);
+        } else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No duplicate names allowed");
+        }
         return ResponseEntity.ok(savedSub);
     }
 
+    @PostMapping("/addLocation")
+    public ResponseEntity<?> addLocation(@RequestBody String locationName) {
+        System.out.println("nimi loc:" + locationName);
+        String parsenimi = locationName;
+
+        // category täytyy parsea, että sadaan sieltä pelkkä nimi ulos
+        if (locationName.length() > 20) {
+            parsenimi = locationName.substring(17, (locationName.length() - 2));
+            System.out.println("lyhennetty nimi:(" + parsenimi+")");
+        } else {
+        }
+
+        // tähän pitäisi lisätä tsekkaus, ettei lisätä smaa nimeä montaa kertaa
+        Location loc = locRepository.findByLocationName(parsenimi);
+        Location savedloc;
+        if (loc == null) {
+            Location locname = new Location(parsenimi);
+            savedloc  = locRepository.save(locname);
+            System.out.println("tallenneetiin uusi kategoria:" + parsenimi);
+        } else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No duplicate names allowed");
+        }
+        return ResponseEntity.ok(savedloc);
+    }
+
     @RequestMapping(value = "/delete/{userId}/{id}", method = RequestMethod.GET)
-    public String deleteItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long kayttajalLong, Item item, BindingResult bindingResult) {
+    public String deleteItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long kayttajalLong, Item item,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // errorhändling tähän
             System.out.println("vituiks män.. ");
             return "showitem/" + itemId;
         } else {
-    
+
             iRepository.deleteById(itemId);
-            return "redirect:/stufflistuser/"+kayttajalLong;
+            return "redirect:/stufflistuser/" + kayttajalLong;
 
         }
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidJson(HttpMessageNotReadableException ex) {
+
+        return ResponseEntity.badRequest().body(Map.of("virhe",
+                "Tieto väärässä muodossa, tarkasta syötteiden arvot. IDn tulee olla kokonaislukuja. Mahdollisen hinnan tulee olla joko kokonaisluku tai liukuluku. Päivämäärän ja ajan tulee olla muodossa yyyy-MM-dd'T'HH:mm:ss.   "
+                        + ex.getMessage()));
+
     }
 
 }

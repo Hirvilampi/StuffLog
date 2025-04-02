@@ -6,7 +6,7 @@
 <head>
     <!-- Bootstrap CSS -->
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
-    <title>Edit book</title>
+    <title>Edit Item</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 
@@ -71,7 +71,49 @@
     })
     .catch(error => console.error('Error:', error));
     }
+    function addCategory() {
+            let catName = document.getElementById("newCatName").value;
+            if (!catName) return; // Prevent empty input
+            fetch('/addCategory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ categoryName: catName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let categoryList = document.getElementById("categoryList");
+                    let newOption = document.createElement("option");
+                    newOption.text = data.categoryName;
+                    newOption.value = data.categoryId;
+                    categoryList.appendChild(newOption);
+                    newCatName = "";
+                })
+                .catch(error => console.error('Error:', error));
+        }
 
+        function addLocation() {
+            let locName = document.getElementById("newLocName").value;
+            if (!locName) return; // Prevent empty input
+            fetch('/addLocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ locationName: locName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let categoryList = document.getElementById("locationList");
+                    let newOption = document.createElement("option");
+                    newOption.text = data.locationName;
+                    newOption.value = data.locationId;
+                    loclist.appendChild(newOption);
+                    newLocName = "";
+                })
+                .catch(error => console.error('Error:', error));
+        }
     </script>
 
 </head>
@@ -101,19 +143,22 @@
             <tr>
                 <th align="right">Category</th>
                 <th align="left">
-                    <select id="catlist" th:field="*{category}" class="form-control">
+                    <select id="categoryList" th:field="*{category}" class="form-control">
                         <option th:each="category: ${categories}" th:value="${category.categoryId}"
                             th:text="${category.categoryName}">
                         </option>
                     </select>
                 </th>
-                <th align="right"><a href="/addcategory" target="_blank">Add New Category</a> </th>
+                <td align="left">
+                    <input type="text" id="newCatName" placeholder="Enter new category">
+                    <button type="button" onclick="addCategory()">Add</button>
+                </td>
                 </th>
             </tr>
             <tr>
                 <th align="right">Sub category</th>
                 <th align="left">
-                <select id="subcategoryList" th:field="*{subCategories}" class="form-control" multiple="multiple">
+                <select id="subcategoryList" th:field="*{subCategories}" class="form-control">
                     <option th:each="subc : ${subcategories}" th:value="${subc.subCategoryId}"
                     th:text="${subc.subCategoryName}">Select sub-location</option>
                 </select>
@@ -134,7 +179,10 @@
                         </option>
                     </select>
                 </th>
-                <th align="right"><a href="/addlocation" target="_blank">Add New Location</a> </th>
+                <td align="left">
+                    <input type="text" id="newLocName" placeholder="Enter new location">
+                    <button type="button" onclick="addLocation()">Add</button>
+                </td>
             </tr>
             <tr>
                 <th align="right">Location info</th>

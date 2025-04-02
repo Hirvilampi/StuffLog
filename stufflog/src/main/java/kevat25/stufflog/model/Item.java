@@ -24,7 +24,7 @@ public class Item {
     private Long itemId;
 
     @Column(name = "item_name", length = 30)
-    @NotEmpty(message = "Item has to have a name. Miksi tätä kutsutaan")
+    @NotEmpty(message = "Item has to have name")
     private String itemName;
 
     @Column(name = "description", length = 500, nullable = true)

@@ -13,14 +13,85 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <style>
         form {
+            margin: 1px;
             margin-left: 5px;
         }
 
         h1 {
+            margin: 1px;
             margin-left: 5px;
         }
     </style>
+    <script>
 
+        function addSubCategory() {
+            let subCatName = document.getElementById("newSubCatName").value;
+            if (!subCatName) return; // Prevent empty input
+            fetch('/addSubCategory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subCategoryName: subCatName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let subCategoryList = document.getElementById("subcategoryList");
+                    let newOption = document.createElement("option");
+                    newOption.text = data.subCategoryName;
+                    newOption.value = data.subCategoryId;
+                    subCategoryList.appendChild(newOption);
+                    subCatName = "";
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function addCategory() {
+            let catName = document.getElementById("newCatName").value;
+            if (!catName) return; // Prevent empty input
+            fetch('/addCategory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ categoryName: catName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let categoryList = document.getElementById("categoryList");
+                    let newOption = document.createElement("option");
+                    newOption.text = data.categoryName;
+                    newOption.value = data.categoryId;
+                    categorylist.appendChild(newOption);
+                    newCatName = "";
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function addLocation() {
+            let locName = document.getElementById("newLocName").value;
+            if (!locName) return; // Prevent empty input
+            fetch('/addLocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ locationName: locName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let categoryList = document.getElementById("locationList");
+                    let newOption = document.createElement("option");
+                    newOption.text = data.locationName;
+                    newOption.value = data.locationId;
+                    locationlist.appendChild(newOption);
+                    newLocName = "";
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+
+    </script>
 
 </head>
 
@@ -41,7 +112,7 @@ th:href="@{'/save/{id}'(id=${userId})}"
                         </td>
 
                         <td>
-                            <input type="text" placeholder="item name" th:field="*{itemName}" />
+                            <input type="text" size="30" placeholder="item name" th:field="*{itemName}" />
                         </td>
 
                     </tr>
@@ -50,13 +121,28 @@ th:href="@{'/save/{id}'(id=${userId})}"
                             Description&nbsp
                         </td>
                         <td>
-                            <input type="text" placeholder="item description" th:field="*{description}" />
+                            <input type="text" size="30" placeholder="item description" th:field="*{description}" />
                         </td>
-
                     </tr>
                     <tr>
-                        <td>User&nbsp</td>
-                        <td td:text="${userId}"></td>
+                        <td>Size&nbsp</td>
+                        <td align="left">
+                            <select id="sizelist" th:field="*{sizeof}" class="form-control">
+                                <option th:each="size: ${sizeofs}" th:value="${size.sizeofId}"
+                                    th:text="${size.sizeName}">
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">Condition</td>
+                        <td align="left">
+                            <select id="conditionlist" th:field="*{condition}" class="form-control">
+                                <option th:each="cond: ${conditions}" th:value="${cond.conditionId}"
+                                    th:text="${cond.condition}">
+                                </option>
+                            </select>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -69,6 +155,24 @@ th:href="@{'/save/{id}'(id=${userId})}"
                                 </option>
                             </select>
                         </td>
+                        <td align="left">
+                            <input type="text" id="newCatName" placeholder="Enter new category">
+                            <button type="button" onclick="addCategory()">Add</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">Sub category</td>
+                        <td align="left">
+                            <select id="subcategoryList" th:field="*{subCategories}" class="form-control">
+                                <option th:each="subc : ${subcategories}" th:value="${subc.subCategoryId}"
+                                    th:text="${subc.subCategoryName}">Select sub-location</option>
+                            </select>
+                        </td>
+                        <td align="left">
+                            <input type="text" id="newSubCatName" placeholder="Enter new sub-category">
+                            <button type="button" onclick="addSubCategory()">Add</button>
+                        </td>
+                   
                     </tr>
                     <tr>
 
@@ -80,23 +184,51 @@ th:href="@{'/save/{id}'(id=${userId})}"
                                     th:text="${loc.locationName}">
                                 </option>
                             </select>
+                        </td>
+                        <td align="left">
+                            <input type="text" id="newLocName" placeholder="Enter new location">
+                            <button type="button" onclick="addLocation()">Add</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Location info&nbsp</td>
+                        <td>
+                            <input size="30" type="text" th:field="*{locationinfo}" />
+                            <div th:if="${#fields.hasErrors('locationinfo')}" th:errors="*{locationinfo}">Error</div>
 
                         </td>
                     </tr>
                     <tr>
-
-                        <td>subLocation&nbsp</td>
-                        <td>
-                            <select id="sublocationlist" th:field="*{location}" class="form-control">
-                                <option value="" disabled selected>Select category</option>
-                                <option th:each="loc : ${locations}" th:value="${loc.locationId}"
-                                    th:text="${loc.locationName}">
+                        <td align="left">State</td>
+                        <td align="left">
+                            <select id="statelist" th:field="*{state}" class="form-control">
+                                <option th:each="stat: ${states}" th:value="${stat.stateId}"
+                                    th:text="${stat.stateName}">
                                 </option>
                             </select>
-
                         </td>
                     </tr>
-
+                    <tr>
+                        <td align="rileftght">Purchase price</td>
+                        <td align="left">
+                            <input size="10" step="0.01" type="text" th:field="*{purchaseprice}" />
+                            <div th:if="${#fields.hasErrors('purchaseprice')}" th:errors="*{purchaseprice}">Error</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">Selling price</td>
+                        <td align="left">
+                            <input size="10" step="0.01" type="text" th:field="*{price}" />
+                            <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Error</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">Rental price (per day)</td>
+                        <td align="left">
+                            <input size="10" step="0.01" type="text" th:field="*{rentalprice}" />
+                            <div th:if="${#fields.hasErrors('rentalprice')}" th:errors="*{rentalprice}">Error</div>
+                        </td>
+                    </tr>
 
 
 

@@ -119,7 +119,7 @@ public class StufflogApplication {
 
 
 			List<String> categories = Arrays.asList(
-					"No category","Art", "Baby", "Cars", "Clothes", "Games", "Hobbies", "Music", "Maternity", "Outdoor", "Sports",
+					"No category","Art", "Baby", "Cars", "Clothes", "Collectibles & Antiques","Games", "Hobbies","Home & Living", "Music", "Maternity", "Outdoor", "Sports",
 					"Travel", "Tools");
 			if (catRepository.count() == 0) {
 				categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
