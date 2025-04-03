@@ -38,8 +38,8 @@
                 </td>
 
                 </td>
-                <td class="btn btn-dark">
-                    logout button here
+                <td>
+                    <a class="btn btn-dark" th:href="@{/logout}" method="post" >Logout</a> 
                 </td>
                 <td>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -53,8 +53,8 @@
                     &nbsp&nbsp&nbsp
                 </td>
 
-                <td class="btn btn-info" >
-                    Browse items for sale
+                <td>
+                    <a class="btn btn-info" th:href="@{'/salelist/{id}'(id=${userId})}">Browse items for sale</a>
                 </td>
                 &nbsp&nbsp
 
