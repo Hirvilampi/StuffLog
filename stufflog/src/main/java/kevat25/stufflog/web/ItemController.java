@@ -192,8 +192,8 @@ public class ItemController {
                         if (thisitem.getDescription() != null){
                             rModel.setItemDescription(thisitem.getDescription());
                         }
-                        if (thisitem.getRentalprice() != null){
-                            rModel.setRentalPrice(thisitem.getRentalprice());
+                        if (thisitem.getPrice() != null){
+                            rModel.setSalePrice(thisitem.getPrice());
                         }
                         if (thisitem.getCondition() != null){
                             rModel.setCondition(thisitem.getCondition());

@@ -57,7 +57,7 @@ public class StufflogApplication {
 
 			UserAccount adminuser = new UserAccount("admin", "admin", "Timo", "Lampinen","lampinen.timo@gmail.com");
 			UserAccount regularuser = new UserAccount("user", "user", "Satu", "Lampinen","satu.lampinen81@gmail.com");
-			UserAccount testuser = new UserAccount("test","test","Test","User","noemail@email.no");
+			UserAccount testuser = new UserAccount("test","test","TestName","User","noemail@email.no");
 			if (uaRepository.count() == 0)  {
 				uaRepository.save(adminuser);
 				uaRepository.save(regularuser);
@@ -169,9 +169,9 @@ public class StufflogApplication {
 				iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, loc1));
 				iRepository.save(new Item("Vacuum cleaner", "Quiet hoover",30.0,regularuser,state));
 				iRepository.save(new Item("Sewing machine", "Simens",20.0,regularuser,state));
-				iRepository.save(new Item("Full Face bicycle helmet", "Bell, kids size",70.0,regularuser,stateforsale));
+				iRepository.save(new Item("Full Face bicycle helmet", "Bell, kids size",170.0, 80.0 ,regularuser, condition, stateforsale));
 				iRepository.save(new Item("Tent","4 people, all weather",35.0,testuser,state));
-				iRepository.save(new Item("Packraft","2 people, MRS-packraft with 2 paddles",830.0,testuser,stateforsale));
+				iRepository.save(new Item("Packraft","2 people, MRS-packraft with 2 paddles",1450.0,999.0,testuser, condition,stateforsale));
 				iRepository.save(new Item("Ice Skates","size 36",testuser,loc6));
 				iRepository.save(new Item("Ice Skates","size 37",testuser,loc6));
 				iRepository.save(new Item("Ice Skates","size 38",testuser,loc6));
