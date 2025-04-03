@@ -14,6 +14,7 @@ public class RentableModel {
     private String sizeOfString;
     private String categoryName;
     private String itemOwnerEmail;
+    private Double salePrice;
 
     public RentableModel() {
     }
@@ -28,9 +29,11 @@ public class RentableModel {
     }
 
 
+
+
     public RentableModel(Long itemIdLong, String itemName, String itemDescription, Double rentalPrice,
             Condition condition, State state, Long itemOwnerId, String sizeOfString, String categoryName,
-            String itemOwnerEmail) {
+            String itemOwnerEmail, Double salePrice) {
         this.itemIdLong = itemIdLong;
         this.itemName = itemName;
         this.itemDescription = itemDescription;
@@ -41,6 +44,7 @@ public class RentableModel {
         this.sizeOfString = sizeOfString;
         this.categoryName = categoryName;
         this.itemOwnerEmail = itemOwnerEmail;
+        this.salePrice = salePrice;
     }
 
     public RentableModel(Long itemIdLong, String itemName, State state, Long itemOwnerId) {
@@ -128,6 +132,14 @@ public class RentableModel {
 
     public void setItemOwnerEmail(String itemOwnerEmail) {
         this.itemOwnerEmail = itemOwnerEmail;
+    }
+
+    public Double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
     }
 
     
