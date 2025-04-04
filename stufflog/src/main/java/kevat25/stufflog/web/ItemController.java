@@ -32,6 +32,7 @@ import org.springframework.validation.BindingResult;
 
 import kevat25.stufflog.model.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -112,26 +113,36 @@ public class ItemController {
     @PreAuthorize("hasAnyAuthority('ADMIN','USER','TEST')")
     @GetMapping(value = { "/stufflistuser/{userid}" })
     public String showUsersStuff(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
+        //haetaan käyttäjän id requestattributesta
+        /* 
         Long requestuserId = (Long) request.getAttribute("SaveduserId");
         System.out.println("requestin kautta tullut id "+requestuserId);
         if (requestuserId == userId){
             System.out.println("OIKEA KÄYTTÄJÄ!!");
         }
+        */
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
+        model.addAttribute("userId", userId);
         model.addAttribute("items", iRepository.findAllByUserAccount(userAccount));
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("locations", locRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
-        model.addAttribute("userId", userId);
+
   //      model.addAttribute("userId", requestuserId);
-        System.out.println("-- NÄYTETÄÄN SUN STUFFLIST -- "+requestuserId);
+        System.out.println("-- NÄYTETÄÄN SUN STUFFLIST -- "+userId);
         return "stufflistuser";
     }
 
     @GetMapping(value = {"/rentlist/{userid}"})
-    public String showRentables(@PathVariable("userid") Long userId, Model model){
+    public String showRentables(@PathVariable("userid") Long userId, Model model, HttpServletRequest request){
         System.out.println("Ollaan siirtymässä rentlistaan");
+  /*       Long requestuserId = (Long) request.getAttribute("SaveduserId");
+        System.out.println("requestin kautta tullut id "+requestuserId);
+        if (requestuserId == userId){
+            System.out.println("OIKEA KÄYTTÄJÄ!! -- rentlist");
+        }
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
+        */
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
         Iterable<UserAccount> uaList = uaRepository.findAll();
@@ -186,7 +197,7 @@ public class ItemController {
     }
 
     @GetMapping(value = {"/salelist/{userid}"})
-    public String showSaleable(@PathVariable("userid") Long userId, Model model){
+    public String showSaleable(@PathVariable("userid") Long userId, Model model, HttpServletRequest request){
         System.out.println("Ollaan siirtymässä rentlistaan");
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
@@ -256,8 +267,9 @@ public class ItemController {
         return "stufflist";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @RequestMapping("/additem/{id}")
-    public String addItemForm(@PathVariable("id") Long userId, Model model) {
+    public String addItemForm(@Valid @PathVariable("id") Long userId, Model model) {
         model.addAttribute("item", new Item());
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("subcategories", subCatRepository.findAll());
@@ -270,6 +282,7 @@ public class ItemController {
         return "additem";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @RequestMapping(value = "/save/{id}", method = RequestMethod.POST)
     public String save(@Valid @ModelAttribute("item") Item item, @PathVariable("id") Long userId,
             BindingResult bindingResult, Model model) {
@@ -290,8 +303,9 @@ public class ItemController {
         }
     }
 
+   
     @GetMapping("/edititem/{id}")
-    public String editItem(@PathVariable("id") Long itemId, Model model) {
+    public String editItem(@Valid @PathVariable("id") Long itemId, Model model) {
         Item item = iRepository.findById(itemId).orElse(null);
         if (item == null) {
             // tähän errorin käsittely - ehkä kokonaan vaan ResponseEntity<?> jne
@@ -372,7 +386,7 @@ public class ItemController {
     }
 
     @GetMapping("/showitem/{id}/{userId}")
-    public String showItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long userId, Model model) {
+    public String showItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long userId, Model model, HttpServletRequest request) {
         Item item = iRepository.findById(itemId).orElse(null);
         if (item == null) {
             // tähän errorin käsittely - ehkä kokonaan vaan ResponseEntity<?> jne
@@ -472,13 +486,16 @@ public class ItemController {
     }
 
     @Transactional
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @PostMapping("putitem/{userId}/{id}")
     public String putitem(@Valid @ModelAttribute Item item,
             @RequestParam(value = "location.sublocation.sublocationId", required = false) Long sublocationId,
             // @RequestParam(value = "category.subCategory.subCategoryId", required = false)
             // Long subcategoryId,
             @PathVariable("userId") Long kayttLong,
-            @PathVariable("id") Long itemId, BindingResult bindingResult) {
+            @PathVariable("id") Long itemId, BindingResult bindingResult,
+            HttpServletRequest request
+            ) {
         if (bindingResult.hasErrors()) {
 
             // errorhändling tähän
@@ -612,9 +629,10 @@ public class ItemController {
         return ResponseEntity.ok(savedloc);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @RequestMapping(value = "/delete/{userId}/{id}", method = RequestMethod.GET)
     public String deleteItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long kayttajalLong, Item item,
-            BindingResult bindingResult) {
+            BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             // errorhändling tähän
             System.out.println("vituiks män.. ");
