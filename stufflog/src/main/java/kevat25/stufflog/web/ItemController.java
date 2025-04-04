@@ -7,11 +7,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import kevat25.stufflog.model.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,13 +79,27 @@ public class ItemController {
     @Autowired
     private CatSubCatRepository catSubCatRepository;
 
-    @RequestMapping(value = { "/", "index" })
+   // login
+   @RequestMapping(value = {"/","login"})
+   public String login(){
+    return "login";
+   }
+
+  /*
+    @GetMapping(value = { "/index" })
     public String userSelection(Model model) {
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        model.addAttribute("username", userDetails.getUsername());
+        model.addAttribute("authorities", userDetails.getAuthorities());
         model.addAttribute("useraccounts", uaRepository.findAll());
         model.addAttribute("selectedUserAccount", new UserAccount());
         return "index";
     }
+ */
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER','TEST')")
     @RequestMapping(value = "/selectuser", method = RequestMethod.POST)
     public String selectUser(@ModelAttribute("selectedUserAccount") UserAccount userAccount, Model model) {
         UserAccount selectedUser = uaRepository.findById(userAccount.getUserId()).orElse(null);
@@ -90,14 +109,22 @@ public class ItemController {
 
     // @RequestMapping(value = { "/stufflistuser/{userid}" }, method =
     // RequestMethod.GET)
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER','TEST')")
     @GetMapping(value = { "/stufflistuser/{userid}" })
-    public String showUsersStuff(@PathVariable("userid") Long userId, Model model) {
+    public String showUsersStuff(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
+        Long requestuserId = (Long) request.getAttribute("SaveduserId");
+        System.out.println("requestin kautta tullut id "+requestuserId);
+        if (requestuserId == userId){
+            System.out.println("OIKEA KÄYTTÄJÄ!!");
+        }
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
         model.addAttribute("items", iRepository.findAllByUserAccount(userAccount));
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("locations", locRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
+  //      model.addAttribute("userId", requestuserId);
+        System.out.println("-- NÄYTETÄÄN SUN STUFFLIST -- "+requestuserId);
         return "stufflistuser";
     }
 
@@ -215,12 +242,17 @@ public class ItemController {
         return "saleitems";
     }
 
-    @RequestMapping(value = { "stufflist" })
+    @RequestMapping(value = { "/stufflist" })
     public String showStuff(Model model) {
+        System.out.println("STUFFLIST IT IS!!!");
         model.addAttribute("items", iRepository.findAll());
         model.addAttribute("categories", cRepository.findAll());
         model.addAttribute("locations", locRepository.findAll());
+        System.out.println("saaddaanko USERACCOUTN ladattua");
         model.addAttribute("useraccount", uaRepository.findAll());
+   //     Long kayttajaid = 
+   //     model.addAttribute("userId",);
+        System.err.println("Kaikki saatiin ladattua");
         return "stufflist";
     }
 

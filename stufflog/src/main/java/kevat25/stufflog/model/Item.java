@@ -44,7 +44,7 @@ public class Item {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "userAccountId")
+    @JoinColumn(name = "userAccountId", nullable = true)
     private UserAccount userAccount;
 
     @ManyToOne

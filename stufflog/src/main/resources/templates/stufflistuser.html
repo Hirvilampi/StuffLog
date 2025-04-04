@@ -99,7 +99,8 @@
 
 
                 <td th:text="${#strings.defaultString(item.state?.stateName, 'No State')}"></td>
-                <td><a type="button" class="btn btn-danger"
+                <td sec:authorize="hasAnyAuthority('ADMIN','USER')">
+                    <a type="button" class="btn btn-danger"
                         th:href="@{'/delete/{userID}/{id}'(userID=${userId}, id=${item.itemId})}">Delete</a></td>
                 <!--               <td><a type="button" class="btn btn-primary" th:href="@{'/edit/{id}'(id=${item.id})}">Edit</a></td>
 -->
@@ -108,9 +109,12 @@
 
         <br>
 
+    
         &nbsp;<a class="btn btn-outline-primary" th:href="@{{id}(id=${userId})}">Refresh list </a>
         &nbsp;&nbsp;
+        <div sec:authorize="hasAnyAuthority('ADMIN','USER')">
         <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${userId})}">Add new stuff</a>
+        </div>
         <!--
 &nbsp;<a class="btn btn-outline-primary" href="/stufflist">Refresh list </a> &nbsp;&nbsp; <a
 class="btn btn-success" th:href="@{'/additem/{id}'(id=${items[1].userId.username})}"> Add new stuff </a>

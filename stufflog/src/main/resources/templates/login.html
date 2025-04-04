@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    <title>Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        form {
+            margin-left: 5px;
+        }
+
+        h1 {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+    <div class="container" style="background-color:aliceblue">
+       <h4 padding="20px" margin="10px"> Enter your user name and password to log in StuffLog</h4>
+       <h6>For testing use username: test password: test</h6>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="alert alert-danger" th:if="${param.error}">
+            Invalid username and password.
+        </div>
+        <div class="alert alert-warning" th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <form th:action="@{/login}" method="post">
+            <div><label> User Name : <input type="text" name="username" class="form-control" /> </label></div>
+            <div><label> Password: <input type="password" name="password" class="form-control" /> </label></div>
+            <div><input type="submit" value="Sign In" class="btn btn-primary" /></div>
+        </form>
+        <a th:href="@{/signup}">Sign-up</a>
+    </div>
+    </div>
+</body>
+
+    </html>

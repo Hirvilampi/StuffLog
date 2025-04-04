@@ -10,24 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import kevat25.stufflog.model.ConditionRepository;
-import kevat25.stufflog.model.Condition;
-import kevat25.stufflog.model.Location;
-import kevat25.stufflog.model.LocationRepository;
-import kevat25.stufflog.model.SizeOf;
-import kevat25.stufflog.model.SizeOfRepository;
-import kevat25.stufflog.model.Category;
-import kevat25.stufflog.model.CategoryRepository;
-import kevat25.stufflog.model.SubCategory;
-import kevat25.stufflog.model.SubCategoryRepository;
-import kevat25.stufflog.model.SubLocation;
-import kevat25.stufflog.model.SubLocationRepository;
-import kevat25.stufflog.model.UserAccount;
-import kevat25.stufflog.model.UserAccountRepository;
-import kevat25.stufflog.model.Item;
-import kevat25.stufflog.model.ItemRepository;
-import kevat25.stufflog.model.State;
-import kevat25.stufflog.model.StateRepository;
+import kevat25.stufflog.model.*;
 
 @SpringBootApplication
 public class StufflogApplication {
@@ -51,18 +34,11 @@ public class StufflogApplication {
 	public CommandLineRunner sufflog(ConditionRepository condRepository, LocationRepository locRepository,
 			SizeOfRepository sRepository, CategoryRepository catRepository, SubCategoryRepository subCatRepository,
 			ItemRepository iRepository, UserAccountRepository uaRepository, SubLocationRepository subLocRepository,
-			StateRepository stateRepository) {
+			StateRepository stateRepository, AppUserRepository appUserRepository) {
 		return (args) -> {
 			log.info("create few conditions");
+			System.out.println("starting Bean - next condtions");
 
-			UserAccount adminuser = new UserAccount("admin", "admin", "Timo", "Lampinen","lampinen.timo@gmail.com");
-			UserAccount regularuser = new UserAccount("user", "user", "Satu", "Lampinen","satu.lampinen81@gmail.com");
-			UserAccount testuser = new UserAccount("test","test","TestName","User","noemail@email.no");
-			if (uaRepository.count() == 0)  {
-				uaRepository.save(adminuser);
-				uaRepository.save(regularuser);
-				uaRepository.save(testuser);
-			};
 		
 			Condition cond1 = new Condition("New");
 			Condition cond2 = new Condition("Like new");
@@ -159,7 +135,24 @@ public class StufflogApplication {
 			State stateforsale = stateRepository.save(new State(statesnew.get(1)));
 			System.out.println("tässä kohti vielä toimii 3");
 
+			UserAccount adminuser = new UserAccount("admin", "$2a$10$Xl187lOiHVJgG8cLRrRUveuQzOZx5InzgJB6u.iAY0KkJ7oDiD8Zi", "Timo", "Lampinen","lampinen.timo@gmail.com","ADMIN");
+			UserAccount regularuser = new UserAccount("user", "$2y$10$I0SGrzr25KfMLIH96VS7rOjHH0ugfkC9/UW9Y6l44qDh2EQSVB5A.", "Satu", "Lampinen","satu.lampinen81@gmail.com","USER");
+			UserAccount testuser = new UserAccount("test","$2y$10$I1FjJ9VCyYE9Qq3Tvox19.dCzgRxRypln27ueXf8YTC7s67qftx3i","TestName","User","noemail@email.no","TEST");
 
+
+			System.out.println("nyt userit");
+			if (uaRepository.count() == 0)  {
+				System.out.println("uaRepository oli tyhjä. Lisätään sinne käyttäjiä");
+				uaRepository.save(adminuser);
+				System.out.println("admin tallennettu");
+				uaRepository.save(regularuser);
+				System.out.println("regular tallenneet");
+				uaRepository.save(testuser);
+				System.out.println("testi tallennettu");
+			};
+			System.err.println("users saved");
+
+			System.out.println("item tallenus repositorioon");
 
 			if (iRepository.count() == 0 ){
 				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, adminuser, cattosave, loc6, sizeOf, condition, state ));
@@ -178,7 +171,6 @@ public class StufflogApplication {
 				iRepository.save(new Item("Ice Skates","size 39",testuser,loc6));
 				iRepository.save(new Item("Ice Skates","size 40",testuser,loc6));
 			}
-
 
 			System.out.println(" --- ITEM TIEDOT LADATTU ONNISTUNEESTI ---");
 			/*

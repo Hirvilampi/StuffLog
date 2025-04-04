@@ -1,0 +1,28 @@
+package kevat25.stufflog.web;
+
+import kevat25.stufflog.model.UserAccount;
+import kevat25.stufflog.model.UserAccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+@Primary
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserAccount userAccount = userAccountRepository.findByUsername(username);
+        if (userAccount == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        
+        return new CustomUserDetails(userAccount);
+    }
+} 

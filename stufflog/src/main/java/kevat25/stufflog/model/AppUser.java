@@ -1,34 +1,33 @@
 package kevat25.stufflog.model;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import jakarta.persistence.CascadeType;
 
 @Entity
-@Table(name = "user_account")
-public class UserAccount {
+@Table(name = "appuser")
+public class AppUser {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userid")
-    private Long userId;
+    @Column(name = "id", nullable = false, updatable = false)
+    private Long id;
 
-    @Column(name = "username")
-    @Size(min = 3, max = 50, message = "must be between 3-500 characters")
+    @Column(nullable = false)
+    private Long userIdLong;
+
+    // username, that has to be unique and no null
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password")
-    @Size(min = 3, max = 100, message = "must be between 3-100 characters")
+    @Column(name = "password", nullable = false)
     private String passwordHash;
 
     @Column(name = "firstname")
@@ -46,52 +45,36 @@ public class UserAccount {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @JsonIgnoreProperties("userAccount")
-    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Item> items;
-
-    public UserAccount() {
-
+    public AppUser() {
     }
 
-    public UserAccount(String username, String passwordHash) {
+    public AppUser(String username, String passwordHash, String role) {
         this.username = username;
         this.passwordHash = passwordHash;
+        this.role = role;
     }
 
 
 
-
-
-    public UserAccount(@Size(min = 3, max = 50, message = "must be between 3-500 characters") String username,
-            @Size(min = 3, max = 50, message = "must be between 3-500 characters") String passwordHash,
+    public AppUser(Long userIdLong, String username, String passwordHash,
             @Size(min = 3, max = 50, message = "must be between 3-50 characters") String firstname,
             @Size(min = 3, max = 50, message = "must be between 3-50 characters") String surname,
-            @Size(min = 7, max = 100, message = "must be between 7-100 characters") String email, String role){
+            @Size(min = 7, max = 100, message = "must be between 7-100 characters") String email, String role) {
+        this.userIdLong = userIdLong;
         this.username = username;
         this.passwordHash = passwordHash;
         this.firstname = firstname;
         this.surname = surname;
         this.email = email;
         this.role = role;
-    
     }
 
-    public UserAccount(List<Item> iditems) {
-        items = iditems;
+    public Long getId() {
+        return id;
     }
 
-
-
-    // public UserAccount(List<Item> items) {
-    // this.items = items; }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -102,21 +85,12 @@ public class UserAccount {
         this.username = username;
     }
 
-
     public String getPasswordHash() {
         return passwordHash;
     }
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getFirstname() {
@@ -135,22 +109,6 @@ public class UserAccount {
         this.surname = surname;
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
-
-    
-    @Override
-    public String toString() {
-        return "UserAccount [userId=" + userId + ", username=" + username + ", password=" + passwordHash + ", firstname="
-                + firstname + ", surname=" + surname + ", items=" + items + "]";
-    }
-
     public String getEmail() {
         return email;
     }
@@ -159,6 +117,22 @@ public class UserAccount {
         this.email = email;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Long getUserIdLong() {
+        return userIdLong;
+    }
+
+    public void setUserIdLong(Long userIdLong) {
+        this.userIdLong = userIdLong;
+    }
 
 
+    
 }
