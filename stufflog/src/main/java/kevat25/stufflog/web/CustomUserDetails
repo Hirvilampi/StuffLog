@@ -24,7 +24,8 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Return a singleton list with a single SimpleGrantedAuthority based on the user's role
         return Collections.singletonList(new SimpleGrantedAuthority(userAccount.getRole()));
-    }
+    }Arvosana 3
+    Ed sekä: Harjoitustyössä on login ominaisuus, jossa on käytetty spring securityä. Tavallinen käyttäjä pelkästään näkee tiedot: hän ei voi poistaa, lisätä tai muokata tietoja. Admin tasoisella käyttäjällä kaikki oikeudet. 
 
     @Override
     public String getPassword() {

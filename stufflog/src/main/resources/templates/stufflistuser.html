@@ -109,9 +109,11 @@
 
         <br>
 
-    
-        &nbsp;<a class="btn btn-outline-primary" th:href="@{{id}(id=${userId})}">Refresh list </a>
+    <!--
+        &nbsp;<a class="btn btn-outline-primary" th:href="@{'stufflistuser/{id}'(id=${userId})}">Refresh list </a>
+       -->
         &nbsp;&nbsp;
+
         <div sec:authorize="hasAnyAuthority('ADMIN','USER')">
         <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${userId})}">Add new stuff</a>
         </div>

@@ -25,7 +25,7 @@ public class IndexController {
     private UserAccountRepository uaRepository;
 
     @GetMapping("/index")
-    public String index(
+    public String index( 
         Model model,
         HttpServletRequest request, HttpServletResponse response,
        Authentication authentication) throws IOException, ServletException
@@ -39,7 +39,7 @@ public class IndexController {
         UserAccount userAccount = uaRepository.findByUsername(userDetails.getUsername());
         Long kayttajalLong = userAccount.getUserId();
 
-        // laitetaan  id to requestattribute
+        // lähetetään user id request attributena  
         request.setAttribute("SaveduserId", kayttajalLong);
 
         model.addAttribute("Saveduserid", kayttajalLong);
@@ -49,8 +49,7 @@ public class IndexController {
         String url = "/stufflistuser/"+kayttajalLong;
         // Forward to the desired URL
        request.getRequestDispatcher(url).forward(request, response);
-
-   
+        System.out.println("TULLAANKO TÄHÄN KOHTAAN OLLENKAAN");
         return "redirect:/stufflistuser/" +kayttajalLong;
     }
 
