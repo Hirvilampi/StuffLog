@@ -1,4 +1,4 @@
-package kevat25.stufflog.model;
+package kevat25.stufflog.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

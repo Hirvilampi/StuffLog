@@ -10,6 +10,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import kevat25.stufflog.domain.AppUserRepository;
+import kevat25.stufflog.domain.SubLocation;
+import kevat25.stufflog.domain.SubLocationRepository;
 import kevat25.stufflog.model.*;
 
 @SpringBootApplication
@@ -97,7 +100,8 @@ public class StufflogApplication {
 
 
 			List<String> categories = Arrays.asList(
-					"No category","Art", "Baby", "Cars", "Clothes", "Collectibles & Antiques","Games", "Hobbies","Home & Living", "Music", "Maternity", "Outdoor", "Sports",
+					"No category","Art", "Baby", "Cars", "Clothes", "Collectibles & Antiques",
+					"Games", "Hobbies","Home & Living", "Music", "Maternity", "Outdoor", "Sports",
 					"Travel", "Tools");
 			if (catRepository.count() == 0) {
 				categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
@@ -114,14 +118,15 @@ public class StufflogApplication {
 				subCatNames.forEach(subname -> subCatRepository.save(new SubCategory(subname)));
 			}
 			
-			List<String> conditions = Arrays.asList("New","Like new","Good","Used","Poor","Broken");
+			List<String> conditions = Arrays.asList("New","Like new","Good","Used",
+			"Poor","Broken");
 			if (condRepository.count() == 0){
 				conditions.forEach(cond -> condRepository.save(new Condition(cond)));
 			}
 
 			
 			List<String> statesnew = Arrays.asList(
-					"In use", "For sale", "Sold", "For rent");
+					"In use", "For sale", "Sold", "For rent", "Standby", "Available");
 			if (stateRepository.count() == 0) {
 				statesnew.forEach(statename -> stateRepository.save(new State(statename)));			
 			}
@@ -137,7 +142,7 @@ public class StufflogApplication {
 
 			UserAccount adminuser = new UserAccount("admin", "$2a$10$Xl187lOiHVJgG8cLRrRUveuQzOZx5InzgJB6u.iAY0KkJ7oDiD8Zi", "Timo", "Lampinen","lampinen.timo@gmail.com","ADMIN");
 			UserAccount regularuser = new UserAccount("user", "$2y$10$I0SGrzr25KfMLIH96VS7rOjHH0ugfkC9/UW9Y6l44qDh2EQSVB5A.", "Satu", "Lampinen","satu.lampinen81@gmail.com","USER");
-			UserAccount testuser = new UserAccount("test","$2y$10$I1FjJ9VCyYE9Qq3Tvox19.dCzgRxRypln27ueXf8YTC7s67qftx3i","TestName","User","noemail@email.no","TEST");
+			UserAccount testuser = new UserAccount("test","$2y$10$I1FjJ9VCyYE9Qq3Tvox19.dCzgRxRypln27ueXf8YTC7s67qftx3i","TestName","UserSurname","noemail@email.no","TEST");
 
 
 			System.out.println("nyt userit");
@@ -173,21 +178,12 @@ public class StufflogApplication {
 			}
 
 			System.out.println(" --- ITEM TIEDOT LADATTU ONNISTUNEESTI ---");
-			/*
-			 * iRepository.save(new Item("Soccer ball",
-			 * uaRepository.findByUserAccount(adminuser)));
-			 * iRepository.save(new Item("Drill", uaRepository.findByUserAccount(adminuser),
-			 * loc2));
-			 * iRepository.save(new Item("Hockey Stick", "Farrow flex60",
-			 * uaRepository.findByUserAccount(adminuser), loc1));
-			 * iRepository.save(new Item("Vacuum cleaner",
-			 * uaRepository.findByUserAccount(regularuser)));
-			 * iRepository.save(new Item("Soccer ball", "1"));
-			 * iRepository.save(new Item("Vacuum cleaner", "2"));
-			 */
-			// iRepository.save(new Item("Farrow", "flex60", loc1));
-			// iRepository.save(new Item("Tent", "4 people", loc3));
+
+	
 
 		};
+	
 	}
+	
+
 }

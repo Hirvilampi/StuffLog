@@ -1,6 +1,9 @@
-package kevat25.stufflog.model;
+package kevat25.stufflog.domain;
 
 import org.springframework.security.core.userdetails.UserDetails;
+
+import kevat25.stufflog.model.UserAccount;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

@@ -29,7 +29,7 @@ public class State {
 
     @Column(name = "state_name")
     @NotNull
-    @Size(max = 20)
+    @Size(min = 2, max = 20, message = "must be between 2-20 characters")
     private String stateName;
 
     @Column(name = "entry_date")
