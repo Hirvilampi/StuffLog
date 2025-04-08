@@ -23,15 +23,15 @@ public class UserAccount {
     @Column(name = "userid")
     private Long userId;
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     @Size(min = 3, max = 50, message = "must be between 3-500 characters")
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     @Size(min = 3, max = 100, message = "must be between 3-100 characters")
     private String passwordHash;
 
-    @Column(name = "firstname")
+    @Column(name = "firstname", nullable = false)
     @Size(min = 3, max = 50, message = "must be between 3-50 characters")
     private String firstname;
 
@@ -39,7 +39,7 @@ public class UserAccount {
     @Size(min = 3, max = 50, message = "must be between 3-50 characters")
     private String surname;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     @Size(min = 7, max = 100, message = "must be between 7-100 characters")
     private String email;
 

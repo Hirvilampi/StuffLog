@@ -1,4 +1,4 @@
-package kevat25.stufflog.web;
+package kevat25.stufflog.domain;
 
 import java.io.IOException;
 

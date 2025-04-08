@@ -11,10 +11,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.CascadeType;
 
 @Entity
-@Table(name = "Condition")
+@Table(name = "condition")
 public class Condition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +23,7 @@ public class Condition {
     private Long conditionId;
 
     @Column(name ="condition_name")
+    @Size (min = 2,  max = 20, message = "must be between 2-20 characters")
     private String condition;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "condition")

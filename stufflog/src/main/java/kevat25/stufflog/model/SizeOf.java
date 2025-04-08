@@ -12,17 +12,19 @@ import jakarta.persistence.Id;
 
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.CascadeType;
 
 @Entity
-@Table(name = "Size")
+@Table(name = "size")
 public class SizeOf {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sizeof_id")
     private Long sizeofId;
 
-    @Column(name = "sizeName", nullable = true)
+    @Column(name = "sizename", nullable = true)
+    @Size(min = 1, max = 20, message = "must be between 1 and 20 characers")
     private String sizeName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sizeof")

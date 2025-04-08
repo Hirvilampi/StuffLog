@@ -11,6 +11,8 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
   Item findByUserAccount (UserAccount userAccount);
 
+  List<Item> findByItemName(String itemName);
+
 
 
 }

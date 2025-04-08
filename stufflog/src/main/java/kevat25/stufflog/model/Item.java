@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "item")
@@ -23,11 +24,12 @@ public class Item {
     @Column(name = "item_id")
     private Long itemId;
 
-    @Column(name = "item_name", length = 30)
+    @Column(name = "item_name",  nullable = false)
+    @Size( min=2, max=30, message = "must have between 2-30 characters")
     @NotEmpty(message = "Item has to have name")
     private String itemName;
 
-    @Column(name = "description", length = 500, nullable = true)
+    @Column(name = "description", nullable = true)
     private String description;
 
     @Column(name = "purchase_price", nullable = true)
@@ -39,7 +41,7 @@ public class Item {
     @Column(name = "rental_price", nullable = true)
     private Double rentalprice;
 
-    @Column(name ="locationinfo, nullable = true")
+    @Column(name ="locationinfo", nullable = true)
     private String locationinfo;
 
     @ManyToOne

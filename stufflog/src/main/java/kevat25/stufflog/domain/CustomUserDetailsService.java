@@ -1,4 +1,4 @@
-package kevat25.stufflog.model;
+package kevat25.stufflog.domain;
 /*
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

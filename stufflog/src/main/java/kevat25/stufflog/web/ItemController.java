@@ -7,15 +7,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,19 +23,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import kevat25.stufflog.domain.SubLocation;
+import kevat25.stufflog.domain.SubLocationRepository;
 import kevat25.stufflog.model.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
+
 
 @Configuration
 @Controller
@@ -344,7 +342,6 @@ public class ItemController {
             }
         }
 
-        Category saveCategory = null;
         SubCategory saveSubCategory = null;
         // Tarkistetaan onko gategory asetettu ja onko sub categoria tyhjä
         System.out.println("subcategory haku ja tallennus alkaa");
@@ -426,7 +423,6 @@ public class ItemController {
             }
         }
 
-        Category saveCategory = null;
         SubCategory saveSubCategory = null;
         // Tarkistetaan onko gategory asetettu ja onko sub categoria tyhjä
         System.out.println("subcategory haku ja tallennus alkaa");
