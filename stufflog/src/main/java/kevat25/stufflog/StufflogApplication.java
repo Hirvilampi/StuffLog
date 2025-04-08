@@ -10,24 +10,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import kevat25.stufflog.model.ConditionRepository;
-import kevat25.stufflog.model.Condition;
-import kevat25.stufflog.model.Location;
-import kevat25.stufflog.model.LocationRepository;
-import kevat25.stufflog.model.SizeOf;
-import kevat25.stufflog.model.SizeOfRepository;
-import kevat25.stufflog.model.Category;
-import kevat25.stufflog.model.CategoryRepository;
-import kevat25.stufflog.model.SubCategory;
-import kevat25.stufflog.model.SubCategoryRepository;
-import kevat25.stufflog.model.SubLocation;
-import kevat25.stufflog.model.SubLocationRepository;
-import kevat25.stufflog.model.UserAccount;
-import kevat25.stufflog.model.UserAccountRepository;
-import kevat25.stufflog.model.Item;
-import kevat25.stufflog.model.ItemRepository;
-import kevat25.stufflog.model.State;
-import kevat25.stufflog.model.StateRepository;
+import kevat25.stufflog.domain.AppUserRepository;
+import kevat25.stufflog.domain.SubLocation;
+import kevat25.stufflog.domain.SubLocationRepository;
+import kevat25.stufflog.model.*;
 
 @SpringBootApplication
 public class StufflogApplication {
@@ -51,18 +37,11 @@ public class StufflogApplication {
 	public CommandLineRunner sufflog(ConditionRepository condRepository, LocationRepository locRepository,
 			SizeOfRepository sRepository, CategoryRepository catRepository, SubCategoryRepository subCatRepository,
 			ItemRepository iRepository, UserAccountRepository uaRepository, SubLocationRepository subLocRepository,
-			StateRepository stateRepository) {
+			StateRepository stateRepository, AppUserRepository appUserRepository) {
 		return (args) -> {
 			log.info("create few conditions");
+			System.out.println("starting Bean - next condtions");
 
-			UserAccount adminuser = new UserAccount("admin", "admin", "Timo", "Lampinen","lampinen.timo@gmail.com");
-			UserAccount regularuser = new UserAccount("user", "user", "Satu", "Lampinen","satu.lampinen81@gmail.com");
-			UserAccount testuser = new UserAccount("test","test","Test","User","noemail@email.no");
-			if (uaRepository.count() == 0)  {
-				uaRepository.save(adminuser);
-				uaRepository.save(regularuser);
-				uaRepository.save(testuser);
-			};
 		
 			Condition cond1 = new Condition("New");
 			Condition cond2 = new Condition("Like new");
@@ -121,7 +100,8 @@ public class StufflogApplication {
 
 
 			List<String> categories = Arrays.asList(
-					"No category","Art", "Baby", "Cars", "Clothes", "Collectibles & Antiques","Games", "Hobbies","Home & Living", "Music", "Maternity", "Outdoor", "Sports",
+					"No category","Art", "Baby", "Cars", "Clothes", "Collectibles & Antiques",
+					"Games", "Hobbies","Home & Living", "Music", "Maternity", "Outdoor", "Sports",
 					"Travel", "Tools");
 			if (catRepository.count() == 0) {
 				categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
@@ -138,14 +118,15 @@ public class StufflogApplication {
 				subCatNames.forEach(subname -> subCatRepository.save(new SubCategory(subname)));
 			}
 			
-			List<String> conditions = Arrays.asList("New","Like new","Good","Used","Poor","Broken");
+			List<String> conditions = Arrays.asList("New","Like new","Good","Used",
+			"Poor","Broken");
 			if (condRepository.count() == 0){
 				conditions.forEach(cond -> condRepository.save(new Condition(cond)));
 			}
 
 			
 			List<String> statesnew = Arrays.asList(
-					"In use", "For sale", "Sold", "For rent");
+					"In use", "For sale", "Sold", "For rent", "Standby", "Available");
 			if (stateRepository.count() == 0) {
 				statesnew.forEach(statename -> stateRepository.save(new State(statename)));			
 			}
@@ -159,7 +140,24 @@ public class StufflogApplication {
 			State stateforsale = stateRepository.save(new State(statesnew.get(1)));
 			System.out.println("tässä kohti vielä toimii 3");
 
+			UserAccount adminuser = new UserAccount("admin", "$2a$10$Xl187lOiHVJgG8cLRrRUveuQzOZx5InzgJB6u.iAY0KkJ7oDiD8Zi", "Timo", "Lampinen","lampinen.timo@gmail.com","ADMIN");
+			UserAccount regularuser = new UserAccount("user", "$2y$10$I0SGrzr25KfMLIH96VS7rOjHH0ugfkC9/UW9Y6l44qDh2EQSVB5A.", "Satu", "Lampinen","satu.lampinen81@gmail.com","USER");
+			UserAccount testuser = new UserAccount("test","$2y$10$I1FjJ9VCyYE9Qq3Tvox19.dCzgRxRypln27ueXf8YTC7s67qftx3i","TestName","UserSurname","noemail@email.no","TEST");
 
+
+			System.out.println("nyt userit");
+			if (uaRepository.count() == 0)  {
+				System.out.println("uaRepository oli tyhjä. Lisätään sinne käyttäjiä");
+				uaRepository.save(adminuser);
+				System.out.println("admin tallennettu");
+				uaRepository.save(regularuser);
+				System.out.println("regular tallenneet");
+				uaRepository.save(testuser);
+				System.out.println("testi tallennettu");
+			};
+			System.err.println("users saved");
+
+			System.out.println("item tallenus repositorioon");
 
 			if (iRepository.count() == 0 ){
 				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, adminuser, cattosave, loc6, sizeOf, condition, state ));
@@ -169,9 +167,9 @@ public class StufflogApplication {
 				iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, loc1));
 				iRepository.save(new Item("Vacuum cleaner", "Quiet hoover",30.0,regularuser,state));
 				iRepository.save(new Item("Sewing machine", "Simens",20.0,regularuser,state));
-				iRepository.save(new Item("Full Face bicycle helmet", "Bell, kids size",70.0,regularuser,stateforsale));
+				iRepository.save(new Item("Full Face bicycle helmet", "Bell, kids size",170.0, 80.0 ,regularuser, condition, stateforsale));
 				iRepository.save(new Item("Tent","4 people, all weather",35.0,testuser,state));
-				iRepository.save(new Item("Packraft","2 people, MRS-packraft with 2 paddles",830.0,testuser,stateforsale));
+				iRepository.save(new Item("Packraft","2 people, MRS-packraft with 2 paddles",1450.0,999.0,testuser, condition,stateforsale));
 				iRepository.save(new Item("Ice Skates","size 36",testuser,loc6));
 				iRepository.save(new Item("Ice Skates","size 37",testuser,loc6));
 				iRepository.save(new Item("Ice Skates","size 38",testuser,loc6));
@@ -179,23 +177,13 @@ public class StufflogApplication {
 				iRepository.save(new Item("Ice Skates","size 40",testuser,loc6));
 			}
 
-
 			System.out.println(" --- ITEM TIEDOT LADATTU ONNISTUNEESTI ---");
-			/*
-			 * iRepository.save(new Item("Soccer ball",
-			 * uaRepository.findByUserAccount(adminuser)));
-			 * iRepository.save(new Item("Drill", uaRepository.findByUserAccount(adminuser),
-			 * loc2));
-			 * iRepository.save(new Item("Hockey Stick", "Farrow flex60",
-			 * uaRepository.findByUserAccount(adminuser), loc1));
-			 * iRepository.save(new Item("Vacuum cleaner",
-			 * uaRepository.findByUserAccount(regularuser)));
-			 * iRepository.save(new Item("Soccer ball", "1"));
-			 * iRepository.save(new Item("Vacuum cleaner", "2"));
-			 */
-			// iRepository.save(new Item("Farrow", "flex60", loc1));
-			// iRepository.save(new Item("Tent", "4 people", loc3));
+
+	
 
 		};
+	
 	}
+	
+
 }

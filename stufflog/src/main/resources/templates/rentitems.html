@@ -30,7 +30,7 @@
                 </th>
                 <td>
                 <td>Welcome&nbsp</td>
-                <th th:text="${useraccount.username}"></th>
+                <th th:text="${useraccount.firstname}"></th>
                 </td>
                 <td>
                 <td>
@@ -42,12 +42,14 @@
                     <a class="btn btn-dark" th:href="@{/logout}" method="post" >Logout</a> 
                 </td>
                 <td>
+                    &nbsp&nbsp
+                    <a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back to your list </a>
+                </td>
+                <td>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                 </td>
                 <td th:text="'Other peoples items&nbsp'"></td>
-                <td>
-                    <a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back to list </a>
-                </td>
+
                 <td>
                     &nbsp&nbsp&nbsp
                 </td>

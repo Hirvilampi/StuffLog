@@ -1,6 +1,7 @@
-package kevat25.stufflog.model;
+package kevat25.stufflog.domain;
 
 import org.springframework.data.repository.CrudRepository;
+
 import java.util.List;
 
 

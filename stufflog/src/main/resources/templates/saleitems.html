@@ -30,7 +30,7 @@
                 </th>
                 <td>
                 <td>Welcome&nbsp</td>
-                <th th:text="${useraccount.username}"></th>
+                <th th:text="${useraccount.firstname}"></th>
                 </td>
                 <td>
                 <td>
@@ -42,6 +42,11 @@
                     <a class="btn btn-dark" th:href="@{/logout}" method="post" >Logout</a> 
                 </td>
                 <td>
+                    &nbsp&nbsp
+                    <a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back to your list </a>
+                </td>
+                <td>
+                    
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                 </td>
                 <td th:text="'Other peoples items&nbsp'"></td>
@@ -52,9 +57,7 @@
                     &nbsp&nbsp&nbsp
                 </td>
 
-                <td>
-                    <a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back to list </a>
-                </td>
+          
                 &nbsp&nbsp
 
                 </td>
@@ -67,7 +70,7 @@
             </tr>
             
         </table>
-        <h3>These item are for rent</h3>
+        <h3>These item are for sale</h3>
         <!--
     <h2 th:text="'&nbsp &nbspYour stuff  &nbsp('+ ${useraccount.username}+') '">&nbsp &nbsp Your
         stuff</h2>
@@ -79,7 +82,7 @@
                 <th align="left">Item</th>
                 <th align="left">Descripton</th>
                 <th align="left">Size</th>
-                <th align="left">Rental price</th>
+                <th align="left">Price</th>
                 <th align="left"></th>
                 <th align="left">Category</th>
                 <th align="left">Contact</th>
@@ -95,7 +98,7 @@
                
                 <td th:text="${rentitem.itemDescription}"></td>
                <td th:text="${#strings.defaultString(rentitem.sizeOfString, 'No Size')}"></td>
-                  <td th:text="${#strings.defaultString(rentitem.rentalPrice + ' €/day', 'Not defined')}">€/day</td>
+                  <td th:text="${#strings.defaultString(rentitem.salePrice + '€', 'Not defined')}">€/day</td>
                 <td></td>
               <td th:text="${#strings.defaultString(rentitem.categoryName, 'No Category')}"></td>
               <td th:text="${#strings.defaultString(rentitem.itemOwnerEmail, 'No Contact')}">

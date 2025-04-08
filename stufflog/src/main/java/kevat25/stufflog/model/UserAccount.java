@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,15 +23,15 @@ public class UserAccount {
     @Column(name = "userid")
     private Long userId;
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     @Size(min = 3, max = 50, message = "must be between 3-500 characters")
     private String username;
 
-    @Column(name = "password")
-    @Size(min = 3, max = 50, message = "must be between 3-500 characters")
-    private String password;
+    @Column(name = "password", nullable = false)
+    @Size(min = 3, max = 100, message = "must be between 3-100 characters")
+    private String passwordHash;
 
-    @Column(name = "firstname")
+    @Column(name = "firstname", nullable = false)
     @Size(min = 3, max = 50, message = "must be between 3-50 characters")
     private String firstname;
 
@@ -38,35 +39,42 @@ public class UserAccount {
     @Size(min = 3, max = 50, message = "must be between 3-50 characters")
     private String surname;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     @Size(min = 7, max = 100, message = "must be between 7-100 characters")
     private String email;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
     @JsonIgnoreProperties("userAccount")
-    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Item> items;
 
     public UserAccount() {
 
     }
 
-    public UserAccount(String username, String password) {
+    public UserAccount(String username, String passwordHash) {
         this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
     }
 
 
-    public UserAccount(
-            @Size(min = 3, max = 50, message = "must be between 3-500 characters") String username,
-            @Size(min = 3, max = 50, message = "must be between 3-500 characters") String password,
+
+
+
+    public UserAccount(@Size(min = 3, max = 50, message = "must be between 3-500 characters") String username,
+            @Size(min = 3, max = 50, message = "must be between 3-500 characters") String passwordHash,
             @Size(min = 3, max = 50, message = "must be between 3-50 characters") String firstname,
             @Size(min = 3, max = 50, message = "must be between 3-50 characters") String surname,
-            @Size(min = 7, max = 100, message = "must be between 7-100 characters") String email) {
+            @Size(min = 7, max = 100, message = "must be between 7-100 characters") String email, String role){
         this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.firstname = firstname;
         this.surname = surname;
         this.email = email;
+        this.role = role;
+    
     }
 
     public UserAccount(List<Item> iditems) {
@@ -94,12 +102,21 @@ public class UserAccount {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getFirstname() {
@@ -130,7 +147,7 @@ public class UserAccount {
     
     @Override
     public String toString() {
-        return "UserAccount [userId=" + userId + ", username=" + username + ", password=" + password + ", firstname="
+        return "UserAccount [userId=" + userId + ", username=" + username + ", password=" + passwordHash + ", firstname="
                 + firstname + ", surname=" + surname + ", items=" + items + "]";
     }
 
