@@ -16,14 +16,14 @@ import jakarta.validation.constraints.Size;
 import jakarta.persistence.CascadeType;
 
 @Entity
-@Table(name = "size")
+@Table(name = "sizeof")
 public class SizeOf {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sizeof_id")
     private Long sizeofId;
 
-    @Column(name = "sizename", nullable = true)
+    @Column(name = "sizeof_name", nullable = true)
     @Size(min = 1, max = 20, message = "must be between 1 and 20 characers")
     private String sizeName;
 

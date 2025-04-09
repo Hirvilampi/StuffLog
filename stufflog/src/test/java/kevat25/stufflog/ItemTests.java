@@ -95,9 +95,9 @@ public class ItemTests {
         if (userAccountOptional.isPresent()) {
             UserAccount userAccount = userAccountOptional.get();
             List<Item> item = itemRepository.findAllByUserAccount(userAccount);
-            assertThat(item.get(2).getItemName()).isEqualTo("Sewing machine");
-            assertThat(item.get(2).getDescription()).isEqualTo("Simens");
-            assertThat(item.get(2).getRentalprice()).isEqualTo(20.0);
+            assertThat(item.get(1).getItemName()).isEqualTo("Sewing machine");
+            assertThat(item.get(1).getDescription()).isEqualTo("Simens");
+            assertThat(item.get(1).getRentalprice()).isEqualTo(20.0);
 
         }
     }

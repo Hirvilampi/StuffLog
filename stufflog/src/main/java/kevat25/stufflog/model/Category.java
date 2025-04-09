@@ -43,7 +43,7 @@ public class Category {
         joinColumns = @JoinColumn(name = "category_id"),
         inverseJoinColumns = @JoinColumn(name = "subcategory_id")
     )
-    private List<SubCategory> subCategories = new ArrayList<>();;
+    private List<SubCategory> subcategories = new ArrayList<>();
 
     /* 
     @OneToMany
@@ -53,7 +53,7 @@ public class Category {
 
 
     public Category() {
-        this.subCategories = new ArrayList<>();
+        this.subcategories = new ArrayList<>();
     }
 
     public Category(@NotEmpty(message = "Category has to have a name") String categoryName) {
@@ -89,11 +89,11 @@ public class Category {
     }
 */
     public List<SubCategory> getSubCategories() {
-        return subCategories;
+        return subcategories;
     }
 
     public void setSubCategories(List<SubCategory> subCategories) {
-        this.subCategories = subCategories;
+        this.subcategories = subCategories;
     }
 
     

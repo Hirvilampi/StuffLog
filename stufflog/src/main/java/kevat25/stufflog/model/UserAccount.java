@@ -20,10 +20,10 @@ import jakarta.persistence.CascadeType;
 public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userid")
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique=true)
     @Size(min = 3, max = 50, message = "must be between 3-500 characters")
     private String username;
 
@@ -47,7 +47,7 @@ public class UserAccount {
     private String role;
 
     @JsonIgnoreProperties("userAccount")
-    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
     private List<Item> items;
 
     public UserAccount() {
