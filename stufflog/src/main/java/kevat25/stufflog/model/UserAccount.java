@@ -23,7 +23,7 @@ public class UserAccount {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique=true)
     @Size(min = 3, max = 50, message = "must be between 3-500 characters")
     private String username;
 
