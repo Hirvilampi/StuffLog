@@ -51,15 +51,11 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher("/css/**")).permitAll()
                         .requestMatchers(antMatcher("/signup")).permitAll()
                         .requestMatchers(antMatcher("/saveuser")).permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers(WHITE_LIST_URLS).permitAll()
                         .anyRequest().authenticated())
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions
-                        .disable())) // for h2console
-                .formLogin(formlogin -> formlogin
-                         .loginPage("/login")
-                        .defaultSuccessUrl("/index", true)
-                        .permitAll())
-                .logout(logout -> logout.permitAll())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())) // for h2console
+   //             .formLogin(formlogin -> formlogin.loginPage("/login").defaultSuccessUrl("/index", true).permitAll()).logout(logout -> logout.permitAll())
                 .csrf(csrf -> csrf.disable()); // not for production, just for development
 
 
