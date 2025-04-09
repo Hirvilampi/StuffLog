@@ -20,7 +20,7 @@ import jakarta.persistence.CascadeType;
 public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userid")
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "username", nullable = false)

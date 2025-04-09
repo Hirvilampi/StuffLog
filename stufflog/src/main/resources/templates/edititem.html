@@ -24,31 +24,6 @@
     </style>
 
 <script>
-    <!--
-    function addSubLocation() {
-        let subName = document.getElementById("newSubName").value;
-        if (!subName) return; // Prevent empty input
-    
-        fetch('/addSublocation', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ sublocationName: subName })
-    })
-    .then(response => response.json())
-    .then(data => {
-        let subLocationList = document.getElementById("sublocationList");
-
-        let newOption = document.createElement("option");
-        newOption.text = data.sublocationName;
-        newOption.value = data.sublocationId;
-
-        subLocationList.appendChild(newOption);
-    })
-    .catch(error => console.error('Error:', error));
-    }
--->
 
     function addSubCategory() {
         let subCatName = document.getElementById("newSubCatName").value;
@@ -163,7 +138,7 @@
                 <td align="left">
                 <select id="subcategoryList" th:field="*{subCategories}" class="form-control">
                     <option th:each="subc : ${subcategories}" th:value="${subc.subCategoryId}"
-                    th:text="${subc.subCategoryName}">Select sub-location</option>
+                    th:text="${subc.subCategoryName}">Select sub-category</option>
                 </select>
                 </td>
                 <td align="left" sec:authorize="hasAnyAuthority('ADMIN','USER')">

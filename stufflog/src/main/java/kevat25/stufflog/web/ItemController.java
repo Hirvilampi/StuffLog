@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,6 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Configuration
 @Controller
@@ -78,25 +76,26 @@ public class ItemController {
     @Autowired
     private CatSubCatRepository catSubCatRepository;
 
-   // login
-   @RequestMapping(value = {"/","login"})
-   public String login(){
-    return "login";
-   }
-
-  /*
-    @GetMapping(value = { "/index" })
-    public String userSelection(Model model) {
-         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        model.addAttribute("username", userDetails.getUsername());
-        model.addAttribute("authorities", userDetails.getAuthorities());
-        model.addAttribute("useraccounts", uaRepository.findAll());
-        model.addAttribute("selectedUserAccount", new UserAccount());
-        return "index";
+    // login
+    @RequestMapping(value = { "/", "login" })
+    public String login() {
+        return "login";
     }
- */
+
+    /*
+     * @GetMapping(value = { "/index" })
+     * public String userSelection(Model model) {
+     * Authentication authentication =
+     * SecurityContextHolder.getContext().getAuthentication();
+     * UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+     * 
+     * model.addAttribute("username", userDetails.getUsername());
+     * model.addAttribute("authorities", userDetails.getAuthorities());
+     * model.addAttribute("useraccounts", uaRepository.findAll());
+     * model.addAttribute("selectedUserAccount", new UserAccount());
+     * return "index";
+     * }
+     */
 
     @PreAuthorize("hasAnyAuthority('ADMIN','USER','TEST')")
     @RequestMapping(value = "/selectuser", method = RequestMethod.POST)
@@ -111,14 +110,14 @@ public class ItemController {
     @PreAuthorize("hasAnyAuthority('ADMIN','USER','TEST')")
     @GetMapping(value = { "/stufflistuser/{userid}" })
     public String showUsersStuff(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
-        //haetaan käyttäjän id requestattributesta
-        /* 
-        Long requestuserId = (Long) request.getAttribute("SaveduserId");
-        System.out.println("requestin kautta tullut id "+requestuserId);
-        if (requestuserId == userId){
-            System.out.println("OIKEA KÄYTTÄJÄ!!");
-        }
-        */
+        // haetaan käyttäjän id requestattributesta
+        /*
+         * Long requestuserId = (Long) request.getAttribute("SaveduserId");
+         * System.out.println("requestin kautta tullut id "+requestuserId);
+         * if (requestuserId == userId){
+         * System.out.println("OIKEA KÄYTTÄJÄ!!");
+         * }
+         */
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
         model.addAttribute("userId", userId);
         model.addAttribute("items", iRepository.findAllByUserAccount(userAccount));
@@ -126,126 +125,133 @@ public class ItemController {
         model.addAttribute("locations", locRepository.findAll());
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
 
-  //      model.addAttribute("userId", requestuserId);
-        System.out.println("-- NÄYTETÄÄN SUN STUFFLIST -- "+userId);
+        // model.addAttribute("userId", requestuserId);
+        System.out.println("-- NÄYTETÄÄN SUN STUFFLIST -- " + userId);
         return "stufflistuser";
     }
 
-    @GetMapping(value = {"/rentlist/{userid}"})
-    public String showRentables(@PathVariable("userid") Long userId, Model model, HttpServletRequest request){
+    @GetMapping(value = { "/rentlist/{userid}" })
+    public String showRentables(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
         System.out.println("Ollaan siirtymässä rentlistaan");
-  /*       Long requestuserId = (Long) request.getAttribute("SaveduserId");
-        System.out.println("requestin kautta tullut id "+requestuserId);
-        if (requestuserId == userId){
-            System.out.println("OIKEA KÄYTTÄJÄ!! -- rentlist");
-        }
-        UserAccount userAccount = uaRepository.findById(userId).orElse(null);
-        */
+        /*
+         * Long requestuserId = (Long) request.getAttribute("SaveduserId");
+         * System.out.println("requestin kautta tullut id "+requestuserId);
+         * if (requestuserId == userId){
+         * System.out.println("OIKEA KÄYTTÄJÄ!! -- rentlist");
+         * }
+         * UserAccount userAccount = uaRepository.findById(userId).orElse(null);
+         */
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
         Iterable<UserAccount> uaList = uaRepository.findAll();
         List<UserAccount> accountList = StreamSupport.stream(uaList.spliterator(), false)
-                                   .collect(Collectors.toList());
+                .collect(Collectors.toList());
         List<RentableModel> rentableModels = new ArrayList<>();
         System.out.println("aletaan tsekkaamaan listaa");
-        for (int i=0; i<accountList.size() ; i++){
-            System.out.println("henkilö (normlist) nro: "+i);
+        for (int i = 0; i < accountList.size(); i++) {
+            System.out.println("henkilö (normlist) nro: " + i);
             // haetaan yhden henkilön lista kerrallaan
             List<Item> items = iRepository.findAllByUserAccount(accountList.get(i));
-            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos on For rent
-            for(int x=0; x<items.size(); x++){
-                System.out.println("Item tsekkaus nro: "+x);
-                // haetaan yksi item 
+            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos State
+            // on muotoa: For rent
+            for (int x = 0; x < items.size(); x++) {
+                System.out.println("Item tsekkaus nro: " + x);
+                // haetaan yksi item
                 Item thisitem = items.get(x);
                 Long ownerid = (long) i;
-                if (thisitem.getState() != null && thisitem.getState().getStateName() != null){
-                    if (thisitem.getState().getStateName().equals("For rent")){
+                // verrataan ensin ettei oo null ja jos ei ole katsotaan onko "For rent",
+                // jolloin mennään etiäpäin
+                if (thisitem.getState() != null && thisitem.getState().getStateName() != null) {
+                    if (thisitem.getState().getStateName().equals("For rent")) {
                         System.out.println("löytyi For rent");
                         // item on For rent, joten haetaan kaikki RentableModels:n tiedot
                         RentableModel rModel = new RentableModel(
-                            thisitem.getItemId(), 
-                            thisitem.getItemName(),
-                            thisitem.getState(),
-                             ownerid 
-                            );
-                        if (thisitem.getDescription() != null){
+                                thisitem.getItemId(),
+                                thisitem.getItemName(),
+                                thisitem.getState(),
+                                ownerid);
+                        if (thisitem.getDescription() != null) {
                             rModel.setItemDescription(thisitem.getDescription());
                         }
-                        if (thisitem.getRentalprice() != null){
+                        if (thisitem.getRentalprice() != null) {
                             rModel.setRentalPrice(thisitem.getRentalprice());
                         }
-                        if (thisitem.getCondition() != null){
+                        if (thisitem.getCondition() != null) {
                             rModel.setCondition(thisitem.getCondition());
                         }
-                        if (thisitem.getSizeof() != null){
+                        if (thisitem.getSizeof() != null) {
                             rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
                         }
-                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null){
+                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null) {
                             rModel.setCategoryName(thisitem.getCategory().getCategoryName());
                         }
                         rModel.setItemOwnerEmail(accountList.get(i).getEmail());
-                    // jos item state on for rent se lisätään rent listaan
+                        // jos item state on for rent se lisätään rent listaan
                         rentableModels.add(rModel);
                     }
-                } else {System.out.println("state oli null");}
-            }     
+                } else {
+                    System.out.println("state oli null");
+                }
+            }
         }
         model.addAttribute("rentItems", rentableModels);
         return "rentitems";
     }
 
-    @GetMapping(value = {"/salelist/{userid}"})
-    public String showSaleable(@PathVariable("userid") Long userId, Model model, HttpServletRequest request){
+    @GetMapping(value = { "/salelist/{userid}" })
+    public String showSaleable(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
         System.out.println("Ollaan siirtymässä rentlistaan");
         UserAccount userAccount = uaRepository.findById(userId).orElse(null);
         model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
         model.addAttribute("userId", userId);
         Iterable<UserAccount> uaList = uaRepository.findAll();
         List<UserAccount> accountList = StreamSupport.stream(uaList.spliterator(), false)
-                                   .collect(Collectors.toList());
+                .collect(Collectors.toList());
         List<RentableModel> rentableModels = new ArrayList<>();
         System.out.println("aletaan tsekkaamaan listaa");
-        for (int i=0; i<accountList.size() ; i++){
-            System.out.println("henkilö (normlist) nro: "+i);
+        for (int i = 0; i < accountList.size(); i++) {
+            System.out.println("henkilö (normlist) nro: " + i);
             // haetaan yhden henkilön lista kerrallaan
             List<Item> items = iRepository.findAllByUserAccount(accountList.get(i));
-            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos on For rent
-            for(int x=0; x<items.size(); x++){
-                System.out.println("Item tsekkaus nro: "+x);
-                // haetaan yksi item 
+            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos on For
+            // rent
+            for (int x = 0; x < items.size(); x++) {
+                System.out.println("Item tsekkaus nro: " + x);
+                // haetaan yksi item
                 Item thisitem = items.get(x);
                 Long ownerid = (long) i;
-                if (thisitem.getState() != null && thisitem.getState().getStateName() != null){
-                    if (thisitem.getState().getStateName().equals("For sale")){
+                if (thisitem.getState() != null && thisitem.getState().getStateName() != null) {
+                    if (thisitem.getState().getStateName().equals("For sale")) {
                         System.out.println("löytyi For rent");
                         // item on For rent, joten haetaan kaikki RentableModels:n tiedot
                         RentableModel rModel = new RentableModel(
-                            thisitem.getItemId(), 
-                            thisitem.getItemName(),
-                            thisitem.getState(),
-                             ownerid 
-                            );
-                        if (thisitem.getDescription() != null){
+                                thisitem.getItemId(),
+                                thisitem.getItemName(),
+                                thisitem.getState(),
+                                ownerid);
+                        if (thisitem.getDescription() != null) {
                             rModel.setItemDescription(thisitem.getDescription());
                         }
-                        if (thisitem.getPrice() != null){
+                        if (thisitem.getPrice() != null) {
                             rModel.setSalePrice(thisitem.getPrice());
                         }
-                        if (thisitem.getCondition() != null){
+                        if (thisitem.getCondition() != null) {
                             rModel.setCondition(thisitem.getCondition());
                         }
-                        if (thisitem.getSizeof() != null){
+                        if (thisitem.getSizeof() != null) {
                             rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
                         }
-                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null){
+                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null) {
                             rModel.setCategoryName(thisitem.getCategory().getCategoryName());
                         }
                         rModel.setItemOwnerEmail(accountList.get(i).getEmail());
-                    // jos item state on for rent se lisätään rent listaan
+                        // jos item state on for rent se lisätään rent listaan
                         rentableModels.add(rModel);
                     }
-                } else {System.out.println("state oli null");}
-            }     
+                } else {
+                    System.out.println("state oli null");
+                }
+            }
         }
         model.addAttribute("rentItems", rentableModels);
         return "saleitems";
@@ -259,8 +265,8 @@ public class ItemController {
         model.addAttribute("locations", locRepository.findAll());
         System.out.println("saaddaanko USERACCOUTN ladattua");
         model.addAttribute("useraccount", uaRepository.findAll());
-   //     Long kayttajaid = 
-   //     model.addAttribute("userId",);
+        // Long kayttajaid =
+        // model.addAttribute("userId",);
         System.err.println("Kaikki saatiin ladattua");
         return "stufflist";
     }
@@ -301,7 +307,6 @@ public class ItemController {
         }
     }
 
-   
     @GetMapping("/edititem/{id}")
     public String editItem(@Valid @PathVariable("id") Long itemId, Model model) {
         Item item = iRepository.findById(itemId).orElse(null);
@@ -311,7 +316,7 @@ public class ItemController {
         }
         model.addAttribute("item", item);
         model.addAttribute("locations", locRepository.findAll());
-        model.addAttribute("sublocations", subLocationRepository.findAll());
+        // model.addAttribute("sublocations", subLocationRepository.findAll());
         // ladataan location tiedot tai asetaan oletusarvo, jos location tietoa ei ole
         if (item.getLocation() == null) {
             Long longlocid = Long.valueOf(1);
@@ -383,7 +388,8 @@ public class ItemController {
     }
 
     @GetMapping("/showitem/{id}/{userId}")
-    public String showItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long userId, Model model, HttpServletRequest request) {
+    public String showItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long userId, Model model,
+            HttpServletRequest request) {
         Item item = iRepository.findById(itemId).orElse(null);
         if (item == null) {
             // tähän errorin käsittely - ehkä kokonaan vaan ResponseEntity<?> jne
@@ -391,7 +397,7 @@ public class ItemController {
         }
         model.addAttribute("item", item);
         model.addAttribute("locations", locRepository.findAll());
-        model.addAttribute("sublocations", subLocationRepository.findAll());
+        // model.addAttribute("sublocations", subLocationRepository.findAll());
         // ladataan location tiedot tai asetaan oletusarvo, jos location tietoa ei ole
         if (item.getLocation() == null) {
             Long longlocid = Long.valueOf(1);
@@ -406,7 +412,7 @@ public class ItemController {
         model.addAttribute("states", stateRepository.findAll());
         model.addAttribute("sizeofs", sizeOfRepository.findAll());
         model.addAttribute("categories", cRepository.findAll());
-        model.addAttribute("yourId",userId);
+        model.addAttribute("yourId", userId);
 
         model.addAttribute("subcategories", subCatRepository.findAll());
         System.out.println("category haku ja tallennus alkaa");
@@ -456,7 +462,6 @@ public class ItemController {
         model.addAttribute("subcat", saveSubCategory);
         System.out.println(("ei se tähän tyssännyt"));
 
-
         // model.addAttribute("useraccount",
         // uaRepository.findById(item.getUserAccount().getUserId()).orElse(null));
         return "showitem";
@@ -490,8 +495,7 @@ public class ItemController {
             // Long subcategoryId,
             @PathVariable("userId") Long kayttLong,
             @PathVariable("id") Long itemId, BindingResult bindingResult,
-            HttpServletRequest request
-            ) {
+            HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
 
             // errorhändling tähän
@@ -525,7 +529,7 @@ public class ItemController {
 
             System.out.println("kayttlong on " + kayttLong + " username " + userAccount.getUsername());
 
-            System.out.println("sublocid " + sublocationId);
+            // System.out.println("sublocid " + sublocationId);
             System.out.println("locationid " + item.getLocation().getLocationId() + " locationname "
                     + item.getLocation().getLocationName());
             // check location and save the new sublocation -
@@ -548,7 +552,6 @@ public class ItemController {
         return "redirect:/stufflistuser/" + kayttLong;
     }
 
-
     @PostMapping("/addCategory")
     public ResponseEntity<?> addCategory(@RequestBody String categoryName) {
         System.out.println("nimi cat:" + categoryName);
@@ -557,7 +560,7 @@ public class ItemController {
         // category täytyy parsea, että sadaan sieltä pelkkä nimi ulos
         if (categoryName.length() > 20) {
             parsenimi = categoryName.substring(17, (categoryName.length() - 2));
-            System.out.println("lyhennetty nimi:(" + parsenimi+")");
+            System.out.println("lyhennetty nimi:(" + parsenimi + ")");
         } else {
         }
 
@@ -566,14 +569,13 @@ public class ItemController {
         Category savedcat;
         if (cat == null) {
             Category catname = new Category(parsenimi);
-            savedcat  = cRepository.save(catname);
+            savedcat = cRepository.save(catname);
             System.out.println("tallenneetiin uusi kategoria:" + parsenimi);
         } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "No duplicate names allowed");
         }
         return ResponseEntity.ok(savedcat);
     }
-
 
     @PostMapping("/addSubCategory")
     public ResponseEntity<?> addSubCategory(@RequestBody String subcategoryName) {
@@ -608,7 +610,7 @@ public class ItemController {
         // category täytyy parsea, että sadaan sieltä pelkkä nimi ulos
         if (locationName.length() > 20) {
             parsenimi = locationName.substring(17, (locationName.length() - 2));
-            System.out.println("lyhennetty nimi:(" + parsenimi+")");
+            System.out.println("lyhennetty nimi:(" + parsenimi + ")");
         } else {
         }
 
@@ -617,7 +619,7 @@ public class ItemController {
         Location savedloc;
         if (loc == null) {
             Location locname = new Location(parsenimi);
-            savedloc  = locRepository.save(locname);
+            savedloc = locRepository.save(locname);
             System.out.println("tallenneetiin uusi kategoria:" + parsenimi);
         } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "No duplicate names allowed");
@@ -625,19 +627,41 @@ public class ItemController {
         return ResponseEntity.ok(savedloc);
     }
 
+
+    
+     
+    @Transactional
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @RequestMapping(value = "/delete/{userId}/{id}", method = RequestMethod.GET)
     public String deleteItem(@PathVariable("id") Long itemId, @PathVariable("userId") Long kayttajalLong, Item item,
             BindingResult bindingResult, HttpServletRequest request) {
+        System.out.println("Ollaan DELETEN MAAILMASSSA");
+        System.out.println("Haluamme tuhota itemin, jonka id: " + itemId);
+        Optional<Item> itemopt = iRepository.findById(itemId);
+        Item itemi = itemopt.get();
+        System.out.println("Nimi taas on: " + itemi.getItemName());
         if (bindingResult.hasErrors()) {
             // errorhändling tähän
             System.out.println("vituiks män.. ");
             return "showitem/" + itemId;
         } else {
-
+            itemi.getSubCategories().clear();
+            iRepository.save(itemi);
+            System.out.println("Kokeillaan deleteä ");
             iRepository.deleteById(itemId);
+            iRepository.flush();
+            Optional<Item> delItem = iRepository.findById(itemId);
+            if (delItem.isPresent()) {
+                System.out.println("Delete ei onnistunut:");
+            } else {
+                System.out.println("Delete onnistui");
+                itemopt = iRepository.findById(itemId);
+                if (itemopt.isPresent()) {
+                    itemi = itemopt.get();
+                    System.out.println("jos tää on null, niin sitä ei löydy tietokannasta: " + itemi.getItemName());
+                }
+            }
             return "redirect:/stufflistuser/" + kayttajalLong;
-
         }
     }
 
@@ -649,8 +673,6 @@ public class ItemController {
                         + ex.getMessage()));
 
     }
-
-
 
     // ei käytössä
     @PostMapping("/addSublocation")
@@ -669,6 +691,5 @@ public class ItemController {
         SubLocation savedSub = subLocationRepository.save(subloc);
         return ResponseEntity.ok(savedSub);
     }
-
 
 }

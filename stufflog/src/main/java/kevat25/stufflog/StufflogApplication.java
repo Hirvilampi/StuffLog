@@ -43,15 +43,15 @@ public class StufflogApplication {
 			System.out.println("starting Bean - next condtions");
 
 		
-			Condition cond1 = new Condition("New");
-			Condition cond2 = new Condition("Like new");
-			Condition cond3 = new Condition("Unused");
-			Condition cond4 = new Condition("Used");
-			Condition cond5 = new Condition("Good");
-			Condition cond6 = new Condition("Fair");
-			Condition cond7 = new Condition("Poor");
-			Condition cond8 = new Condition("Broken");
-
+			Condition cond1 = condRepository.save(new Condition("New"));
+			Condition cond2 = condRepository.save(new Condition("Like new"));
+			Condition cond3 = condRepository.save(new Condition("Unused"));
+			Condition cond4 = condRepository.save(new Condition("Used"));
+			Condition cond5 = condRepository.save(new Condition("Good"));
+			Condition cond6 = condRepository.save(new Condition("Fair"));
+			Condition cond7 = condRepository.save(new Condition("Poor"));
+			Condition cond8 = condRepository.save(new Condition("Broken"));
+/* 
 			if (condRepository.count() == 0 ){
 				condRepository.save(cond1);
 				condRepository.save(cond2);
@@ -62,8 +62,9 @@ public class StufflogApplication {
 				condRepository.save(cond7);
 				condRepository.save(cond8);
 			}
-
+*/
 			// SubLocation table ei ole käytössä 
+			/* 
 			SubLocation sublocnone = new SubLocation("No Sub-location");
 			SubLocation sublocnone2 = new SubLocation("Blue chest");	
 			List<String> subLocNames = Arrays.asList("cabinet", "chest", "desk", "trunk", "wall", "wardrobe");	
@@ -72,14 +73,16 @@ public class StufflogApplication {
 				subLocRepository.save(sublocnone2);
 				subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
 			}
-
-			Location loc1 = new Location("No location");
-			Location loc2 = new Location("Study");
-			Location loc3 = new Location("Living room");
-			Location loc4 = new Location("Master bedroom");
-			Location loc5 = new Location("Hall");
-			Location loc6 = new Location("Storage");
-
+				*/
+			System.out.println("alustetaan lokaatiot");
+			Location loc1 = locRepository.save(new Location("No location"));
+			Location loc2 = locRepository.save(new Location("Study"));
+			Location loc3 = locRepository.save(new Location("Living room"));
+			Location loc4 = locRepository.save(new Location("Master bedroom"));
+			Location loc5 = locRepository.save(new Location("Hall"));
+			Location loc6 = locRepository.save( new Location("Storage"));
+			System.out.println("tallennetaan lokaaiota");
+			/*
 			if (locRepository.count() == 0) {
 				locRepository.save(loc1);
 				locRepository.save(loc2);
@@ -87,7 +90,9 @@ public class StufflogApplication {
 				locRepository.save(loc4);
 				locRepository.save(loc5);
 				locRepository.save(loc6);
+				System.out.println("!!! lokaatiota tallenneetiin !!!");
 			}
+			 */
 
 			List<String> sizeNames = Arrays.asList(
 					 "NONE", "XXXS", "XXS","XS","S","M", "L",  "XL", "XXL","XXXL", "20", "21", "22", "23",
@@ -157,13 +162,25 @@ public class StufflogApplication {
 			};
 			System.err.println("users saved");
 
+	//		Location location = locRepository.findById(6L).orElseThrow(() -> new RuntimeException("Location not found"));
+	//		Item item = null;
+	//		item.setLocation(location);
+	//		iRepository.save(item); // ✅ Now it works
+
+	// Location locuus = locRepository.findByLocationName("Storage");
+
 			System.out.println("item tallenus repositorioon");
 
+	
+
 			if (iRepository.count() == 0 ){
-				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, adminuser, cattosave, loc6, sizeOf, condition, state ));
+
+				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, "Green closet",adminuser, cattosave, loc6, sizeOf, condition, state ));
 				System.out.println("tässä kohti vielä toimii - siis saatiin tää uus märkäimuri tallennettua");
 				iRepository.save(new Item("Soccer ball", adminuser));
+				System.out.println("Soccer ball tallennettu");
 				iRepository.save(new Item("Drill", adminuser, loc2));
+				System.out.println("Drill tallennettu");
 				iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, loc1));
 				iRepository.save(new Item("Vacuum cleaner", "Quiet hoover",30.0,regularuser,state));
 				iRepository.save(new Item("Sewing machine", "Simens",20.0,regularuser,state));

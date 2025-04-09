@@ -1,8 +1,11 @@
 package kevat25.stufflog.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +32,7 @@ public class Item {
     @NotEmpty(message = "Item has to have name")
     private String itemName;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "item_description", nullable = true)
     private String description;
 
     @Column(name = "purchase_price", nullable = true)
@@ -41,15 +44,15 @@ public class Item {
     @Column(name = "rental_price", nullable = true)
     private Double rentalprice;
 
-    @Column(name ="locationinfo", nullable = true)
+    @Column(name ="location_info", nullable = true)
     private String locationinfo;
 
-    @ManyToOne
+    @ManyToOne 
     @JsonIgnore
-    @JoinColumn(name = "userAccountId", nullable = true)
+    @JoinColumn(name = "user_id", nullable = true)
     private UserAccount userAccount;
 
-    @ManyToOne
+    @ManyToOne 
     @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 
@@ -63,19 +66,22 @@ public class Item {
     @JoinColumn(name = "sizeof_id", nullable = true)
     private SizeOf sizeof;
 
-    @ManyToOne
+    @ManyToOne 
     @JsonIgnore
     @JoinColumn(name = "condition_id", nullable = true)
     private Condition condition;
 
-    @ManyToOne
+    @ManyToOne 
     @JsonIgnore
     @JoinColumn(name = "state_id", nullable = true)
     private State state;
 
-    @ManyToMany
-    @JoinTable(name = "item_subcategory", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "subcategory_id"))
-    private List<SubCategory> subCategories;
+    @ManyToMany 
+    @JoinTable(name = "item_subcategory", 
+    joinColumns = @JoinColumn(name = "item_id"), 
+    inverseJoinColumns = @JoinColumn(name = "subcategory_id"))
+    @JsonIgnore
+    private List<SubCategory> subcategories = new ArrayList<>();
 
     // constructors, getters and setters
 
@@ -173,7 +179,27 @@ public class Item {
         this.state = state;
     }
 
+    
 
+
+    public Item(
+            @Size(min = 2, max = 30, message = "must have between 2-30 characters") @NotEmpty(message = "Item has to have name") String itemName,
+            String description, Double purchaseprice, Double price, Double rentalprice, String locationinfo,
+            UserAccount userAccount, Category category, Location location, SizeOf sizeof, Condition condition,
+            State state) {
+        this.itemName = itemName;
+        this.description = description;
+        this.purchaseprice = purchaseprice;
+        this.price = price;
+        this.rentalprice = rentalprice;
+        this.locationinfo = locationinfo;
+        this.userAccount = userAccount;
+        this.category = category;
+        this.location = location;
+        this.sizeof = sizeof;
+        this.condition = condition;
+        this.state = state;
+    }
 
     public Item(Location location) {
         this.location = location;
@@ -288,11 +314,11 @@ public class Item {
     }
 
     public List<SubCategory> getSubCategories() {
-        return subCategories;
+        return subcategories;
     }
     
     public void setSubCategories(List<SubCategory> subCategories) {
-        this.subCategories = subCategories;
+        this.subcategories = subCategories;
     }
 
     public String getLocationinfo() {
