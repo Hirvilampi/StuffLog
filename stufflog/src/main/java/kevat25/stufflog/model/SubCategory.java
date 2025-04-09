@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.persistence.ManyToMany;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,8 +34,19 @@ public class SubCategory {
     @JsonIgnore
     private Category category;
 */
-    @ManyToMany(mappedBy = "subCategories", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "subcategories", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Category> categories;
+
+    /* 
+@ManyToMany
+@JoinTable(
+    name = "item_subcategory",
+    joinColumns = @JoinColumn(name = "subcategory_id"),
+    inverseJoinColumns = @JoinColumn(name = "item_id")
+)
+@JsonIgnore
+private List<Item> items = new ArrayList<>();
+*/
 
     public SubCategory() {
     }
@@ -72,6 +84,13 @@ public class SubCategory {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
-
+/* 
+    public List<Item> getItems() {
+        return items;
+    }
     
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+   */ 
 }
