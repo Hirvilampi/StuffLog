@@ -36,7 +36,7 @@ public class ItemRestController {
     UserAccountRepository userAccountRepository;
 
     // get items for specific user
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping(value = { "/api/items/{userId}" })
     public ResponseEntity<Iterable<Item>> getItems(@PathVariable Long userId) {
         try {
@@ -76,7 +76,7 @@ public class ItemRestController {
     }
 
     // add new item - post
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+ //   @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping(value = { "/api/items/{userId}" })
     public ResponseEntity<Item> newItem(@PathVariable Long userId, @RequestBody Item newItem) {
         try {
@@ -96,8 +96,9 @@ public class ItemRestController {
     }
 
     // edit item -- put
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @PutMapping(value = {"/api/items/{userId}/{itemId}"})
+ //   @PreAuthorize("hasAnyAuthority('ADMIN')")
+ //   @PutMapping(value = {"/api/items/{userId}/{itemId}"})
+    @PostMapping(value = {"/api/items/{userId}/{itemId}"})
     public ResponseEntity<Item> putItem(@PathVariable("userId") Long userId, @PathVariable("itemId") Long itemId, @RequestBody Item item){
         try {
             Optional<UserAccount> userAccountopt = userAccountRepository.findById(userId);
@@ -114,8 +115,8 @@ public class ItemRestController {
     }
 
     // delete item - delete
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-     @DeleteMapping(value = {"items/{itemId}"})
+  //  @PreAuthorize("hasAnyAuthority('ADMIN')")
+     @DeleteMapping(value = {"/api/items/{itemId}"})
      public ResponseEntity<Iterable<Item>> deleteItem(@PathVariable Long itemId){
         try { 
             itemRepository.deleteById(itemId);
