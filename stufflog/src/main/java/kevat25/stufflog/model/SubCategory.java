@@ -34,9 +34,10 @@ public class SubCategory {
     @JsonIgnore
     private Category category;
 */
-    @ManyToMany(mappedBy = "subcategories")
+    @ManyToMany(mappedBy = "subcategories", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Category> categories;
 
+    /* 
 @ManyToMany
 @JoinTable(
     name = "item_subcategory",
@@ -45,6 +46,7 @@ public class SubCategory {
 )
 @JsonIgnore
 private List<Item> items = new ArrayList<>();
+*/
 
     public SubCategory() {
     }
@@ -82,7 +84,7 @@ private List<Item> items = new ArrayList<>();
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
-
+/* 
     public List<Item> getItems() {
         return items;
     }
@@ -90,5 +92,5 @@ private List<Item> items = new ArrayList<>();
     public void setItems(List<Item> items) {
         this.items = items;
     }
-    
+   */ 
 }

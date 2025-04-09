@@ -47,7 +47,7 @@ public class UserAccount {
     private String role;
 
     @JsonIgnoreProperties("userAccount")
-    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
     private List<Item> items;
 
     public UserAccount() {

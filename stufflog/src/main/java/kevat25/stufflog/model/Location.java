@@ -25,7 +25,7 @@ public class Location {
     @Column(name = "location_id")
     private Long locationId;
 
-    @Column(name = "location_name", length = 50, nullable = false)
+    @Column(name = "location_name", nullable = false)
     @NotEmpty(message = "Location has to have a name")
     private String locationName;
 
