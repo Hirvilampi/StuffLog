@@ -21,7 +21,7 @@
 
 
 <body>
-    <div class="container" style="width: 85%; margin-top:15px; padding: 20px; border: 2px solid #000">
+    <div class="container" style="width: 85%; min-width:900px; margin-top:15px; padding: 20px; border: 2px solid #000">
 
         <table>
             <tr>
@@ -126,6 +126,7 @@
         <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${userId})}">Add new stuff</a>
         </div>
     </td>
+    <td>&nbsp</td>
     <td>
         <div sec:authorize="hasAnyAuthority('ADMIN')">
             <a class="btn btn-success" th:href="@{'/admin'}">Admin's page</a>
