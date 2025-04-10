@@ -56,7 +56,7 @@ public class WebSecurityConfig {
                         .requestMatchers(WHITE_LIST_URLS).permitAll()
                         .anyRequest().authenticated())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())) // for h2console
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults()) // for basic auth with postman
                 .formLogin(formlogin -> formlogin.loginPage("/login").defaultSuccessUrl("/index", true).permitAll()).logout(logout -> logout.permitAll())
                 .csrf(csrf -> csrf.disable()); // not for production, just for development
 
