@@ -211,11 +211,19 @@ public class ItemController {
             @RequestParam(value = "location.sublocation.sublocationId", required = false) Long sublocationId,
             @PathVariable("userId") Long kayttLong,
             @PathVariable("id") Long itemId, BindingResult bindingResult,
-            HttpServletRequest request) {
+            HttpServletRequest request, Model model) {
 
         if (bindingResult.hasErrors()) {
-            System.out.println("vituiks män.. ");
-            return "showitem/" + itemId;
+          model.addAttribute("item", item);
+            model.addAttribute("categories", cRepository.findAll());
+            model.addAttribute("subcategories", subCatRepository.findAll());
+            model.addAttribute("locations", locRepository.findAll());
+            model.addAttribute("conditions", conditionRepository.findAll());
+            model.addAttribute("states", stateRepository.findAll());
+            model.addAttribute("sizeofs", sizeOfRepository.findAll());
+            model.addAttribute("useraccount", uaRepository.findById(kayttLong).orElse(null));
+            model.addAttribute("userId", kayttLong);
+            return "edititem";
         } else {
             // load item details
             item.setItemId(itemId);
@@ -232,13 +240,20 @@ public class ItemController {
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @RequestMapping(value = "/delete/{userId}/{id}", method = RequestMethod.GET)
     public String deleteItem(@Valid @PathVariable("id") Long itemId, @PathVariable("userId") Long kayttajalLong, Item item,
-            BindingResult bindingResult, HttpServletRequest request) {
+            BindingResult bindingResult, HttpServletRequest request, Model model) {
         System.out.println("Ollaan DELETEN MAAILMASSSA. Haluamme tuhota itemin, jonka id: " + itemId);
 
         if (bindingResult.hasErrors()) {
-            // errorhändling tähän
-            System.out.println("vituiks män.. ");
-            return "showitem/" + itemId;
+            model.addAttribute("item", item);
+            model.addAttribute("categories", cRepository.findAll());
+            model.addAttribute("subcategories", subCatRepository.findAll());
+            model.addAttribute("locations", locRepository.findAll());
+            model.addAttribute("conditions", conditionRepository.findAll());
+            model.addAttribute("states", stateRepository.findAll());
+            model.addAttribute("sizeofs", sizeOfRepository.findAll());
+            model.addAttribute("useraccount", uaRepository.findById(kayttajalLong).orElse(null));
+            model.addAttribute("userId", kayttajalLong);
+            return "redirect:/stufflistuser/" + kayttajalLong;
         } else {
             Optional<Item> itemopt = iRepository.findById(itemId);
             Item itemi = itemopt.get();
