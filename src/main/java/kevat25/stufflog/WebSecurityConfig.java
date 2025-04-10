@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.config.Customizer;
 
 import kevat25.stufflog.model.UserAccount;
 
@@ -39,7 +40,7 @@ public class WebSecurityConfig {
     // näitä voi sii lisätä myös tällaiseen white_list_url:n valmiiksi, jos haluaa
     // beanista lyhyemmän
     private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
-            new AntPathRequestMatcher("/api/booklist**"),
+            new AntPathRequestMatcher("/api/**"),
             new AntPathRequestMatcher("/h2-console/**")
     };
 
@@ -51,15 +52,12 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher("/css/**")).permitAll()
                         .requestMatchers(antMatcher("/signup")).permitAll()
                         .requestMatchers(antMatcher("/saveuser")).permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers(WHITE_LIST_URLS).permitAll()
                         .anyRequest().authenticated())
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions
-                        .disable())) // for h2console
-                .formLogin(formlogin -> formlogin
-                         .loginPage("/login")
-                        .defaultSuccessUrl("/index", true)
-                        .permitAll())
-                .logout(logout -> logout.permitAll())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())) // for h2console
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(formlogin -> formlogin.loginPage("/login").defaultSuccessUrl("/index", true).permitAll()).logout(logout -> logout.permitAll())
                 .csrf(csrf -> csrf.disable()); // not for production, just for development
 
 
