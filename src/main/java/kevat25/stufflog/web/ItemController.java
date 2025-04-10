@@ -171,20 +171,15 @@ public class ItemController {
                                 thisitem.getState(),
                                 ownerid);
                         if (thisitem.getDescription() != null) {
-                            rModel.setItemDescription(thisitem.getDescription());
-                        }
+                            rModel.setItemDescription(thisitem.getDescription()); }
                         if (thisitem.getRentalprice() != null) {
-                            rModel.setRentalPrice(thisitem.getRentalprice());
-                        }
+                            rModel.setRentalPrice(thisitem.getRentalprice());}
                         if (thisitem.getCondition() != null) {
-                            rModel.setCondition(thisitem.getCondition());
-                        }
+                            rModel.setCondition(thisitem.getCondition()); }
                         if (thisitem.getSizeof() != null) {
-                            rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
-                        }
+                            rModel.setSizeOfString(thisitem.getSizeof().getSizeName());}
                         if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null) {
-                            rModel.setCategoryName(thisitem.getCategory().getCategoryName());
-                        }
+                            rModel.setCategoryName(thisitem.getCategory().getCategoryName()); }
                         rModel.setItemOwnerEmail(accountList.get(i).getEmail());
                         // jos item state on for rent se lisätään rent listaan
                         rentableModels.add(rModel);
