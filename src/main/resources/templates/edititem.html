@@ -96,6 +96,9 @@
 </head>
 
 <body>
+
+    <div class="container" style="width: 85%; min-width:900px; margin-top:15px; padding: 15px; padding-top:5px; border: 2px solid #000">
+
     <br>
     <h2 th:text="'Your ' + ${item.itemName} "></h2>
 
@@ -232,11 +235,11 @@
 
 
         <input sec:authorize="hasAnyAuthority('ADMIN','USER')" class="btn btn-success" type="submit" value="Save Item" />
-        &nbsp;<a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back to list </a>
+        &nbsp;<a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back without saving</a>
         &nbsp;&nbsp;
     </form>
 
-
+</div>
 
 </body>
 
