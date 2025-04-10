@@ -14,6 +14,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
   List<Item> findByItemName(String itemName);
 
+  UserAccount findOwnerByItemId(Long itemid);
 
+  List<Item> findByState_StateName(String stateName);
 
 }

@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.CascadeType;
 
+
 @Entity
 @Table(name = "user_account")
 public class UserAccount {

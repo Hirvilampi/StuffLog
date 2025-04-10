@@ -98,7 +98,7 @@
 </head>
 
 <body>
-    <div class="container" style="width: 85%; margin-top:15px; padding: 20px; border: 2px solid #000">
+    <div class="container" style="width: 85%; min-width: 800px; margin-top:15px; padding: 20px; border: 2px solid #000">
         
 
         <form th:action="@{/save/{id}(id=${userId})}" th:object="${item}" method="post">
@@ -245,6 +245,7 @@
             </th>
             <br>
             <input type="submit" class="btn btn-success" value="Add Item" />
+            &nbsp<a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back without saving </a>
         </form>
 
 
