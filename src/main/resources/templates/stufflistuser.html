@@ -118,13 +118,26 @@
         &nbsp;<a class="btn btn-outline-primary" th:href="@{'stufflistuser/{id}'(id=${userId})}">Refresh list </a>
        -->
         &nbsp;&nbsp;
+<table>
+    <td>
 
-        <div sec:authorize="hasAnyAuthority('ADMIN','USER')">
+   
+    <div sec:authorize="hasAnyAuthority('ADMIN','USER')">
         <a class="btn btn-success" th:href="@{'/additem/{id}'(id=${userId})}">Add new stuff</a>
         </div>
+    </td>
+    <td>
+        <div sec:authorize="hasAnyAuthority('ADMIN')">
+            <a class="btn btn-success" th:href="@{'/admin'}">Admin's page</a>
+            </div>
+        </td>
+</table>
+
         <!--
 &nbsp;<a class="btn btn-outline-primary" href="/stufflist">Refresh list </a> &nbsp;&nbsp; <a
 class="btn btn-success" th:href="@{'/additem/{id}'(id=${items[1].userId.username})}"> Add new stuff </a>
+
+/{id}'(id=${userId})
 -->
     </div>
 </body>

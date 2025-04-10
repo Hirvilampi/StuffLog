@@ -82,28 +82,24 @@ public class ItemController {
         return "login";
     }
 
-    /*
-     * @GetMapping(value = { "/index" })
-     * public String userSelection(Model model) {
-     * Authentication authentication =
-     * SecurityContextHolder.getContext().getAuthentication();
-     * UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-     * 
-     * model.addAttribute("username", userDetails.getUsername());
-     * model.addAttribute("authorities", userDetails.getAuthorities());
-     * model.addAttribute("useraccounts", uaRepository.findAll());
-     * model.addAttribute("selectedUserAccount", new UserAccount());
-     * return "index";
-     * }
-     */
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER','TEST')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @RequestMapping(value = "/selectuser", method = RequestMethod.POST)
     public String selectUser(@ModelAttribute("selectedUserAccount") UserAccount userAccount, Model model) {
         UserAccount selectedUser = uaRepository.findById(userAccount.getUserId()).orElse(null);
         model.addAttribute("selectedUser", selectedUser);
         return "redirect:/stufflistuser/" + userAccount.getUserId();
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = { "/admin" })
+    public String showUsers(@ModelAttribute("selectedUserAccount") UserAccount userAccount, Model model) {
+        System.out.println("saaddaanko USERACCOUTN ladattua");
+        model.addAttribute("useraccounts", uaRepository.findAll());
+        System.err.println("Kaikki saatiin ladattua");
+        return "admin";
+    }
+
 
     // @RequestMapping(value = { "/stufflistuser/{userid}" }, method =
     // RequestMethod.GET)
@@ -130,132 +126,6 @@ public class ItemController {
         return "stufflistuser";
     }
 
-    @GetMapping(value = { "/rentlist/{userid}" })
-    public String showRentables(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
-        System.out.println("Ollaan siirtymässä rentlistaan");
-        /*
-         * Long requestuserId = (Long) request.getAttribute("SaveduserId");
-         * System.out.println("requestin kautta tullut id "+requestuserId);
-         * if (requestuserId == userId){
-         * System.out.println("OIKEA KÄYTTÄJÄ!! -- rentlist");
-         * }
-         * UserAccount userAccount = uaRepository.findById(userId).orElse(null);
-         */
-        model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
-        model.addAttribute("userId", userId);
-        Iterable<UserAccount> uaList = uaRepository.findAll();
-        List<UserAccount> accountList = StreamSupport.stream(uaList.spliterator(), false)
-                .collect(Collectors.toList());
-        List<RentableModel> rentableModels = new ArrayList<>();
-        System.out.println("aletaan tsekkaamaan listaa");
-        for (int i = 0; i < accountList.size(); i++) {
-            System.out.println("henkilö (normlist) nro: " + i);
-            // haetaan yhden henkilön lista kerrallaan
-            List<Item> items = iRepository.findAllByUserAccount(accountList.get(i));
-            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos State
-            // on muotoa: For rent
-            for (int x = 0; x < items.size(); x++) {
-                System.out.println("Item tsekkaus nro: " + x);
-                // haetaan yksi item
-                Item thisitem = items.get(x);
-                Long ownerid = (long) i;
-                // verrataan ensin ettei oo null ja jos ei ole katsotaan onko "For rent",
-                // jolloin mennään etiäpäin
-                if (thisitem.getState() != null && thisitem.getState().getStateName() != null) {
-                    if (thisitem.getState().getStateName().equals("For rent")) {
-                        System.out.println("löytyi For rent");
-                        // item on For rent, joten haetaan kaikki RentableModels:n tiedot
-                        RentableModel rModel = new RentableModel(
-                                thisitem.getItemId(),
-                                thisitem.getItemName(),
-                                thisitem.getState(),
-                                ownerid);
-                        if (thisitem.getDescription() != null) {
-                            rModel.setItemDescription(thisitem.getDescription());
-                        }
-                        if (thisitem.getRentalprice() != null) {
-                            rModel.setRentalPrice(thisitem.getRentalprice());
-                        }
-                        if (thisitem.getCondition() != null) {
-                            rModel.setCondition(thisitem.getCondition());
-                        }
-                        if (thisitem.getSizeof() != null) {
-                            rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
-                        }
-                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null) {
-                            rModel.setCategoryName(thisitem.getCategory().getCategoryName());
-                        }
-                        rModel.setItemOwnerEmail(accountList.get(i).getEmail());
-                        // jos item state on for rent se lisätään rent listaan
-                        rentableModels.add(rModel);
-                    }
-                } else {
-                    System.out.println("state oli null");
-                }
-            }
-        }
-        model.addAttribute("rentItems", rentableModels);
-        return "rentitems";
-    }
-
-    @GetMapping(value = { "/salelist/{userid}" })
-    public String showSaleable(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
-        System.out.println("Ollaan siirtymässä rentlistaan");
-        UserAccount userAccount = uaRepository.findById(userId).orElse(null);
-        model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
-        model.addAttribute("userId", userId);
-        Iterable<UserAccount> uaList = uaRepository.findAll();
-        List<UserAccount> accountList = StreamSupport.stream(uaList.spliterator(), false)
-                .collect(Collectors.toList());
-        List<RentableModel> rentableModels = new ArrayList<>();
-        System.out.println("aletaan tsekkaamaan listaa");
-        for (int i = 0; i < accountList.size(); i++) {
-            System.out.println("henkilö (normlist) nro: " + i);
-            // haetaan yhden henkilön lista kerrallaan
-            List<Item> items = iRepository.findAllByUserAccount(accountList.get(i));
-            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos on For
-            // rent
-            for (int x = 0; x < items.size(); x++) {
-                System.out.println("Item tsekkaus nro: " + x);
-                // haetaan yksi item
-                Item thisitem = items.get(x);
-                Long ownerid = (long) i;
-                if (thisitem.getState() != null && thisitem.getState().getStateName() != null) {
-                    if (thisitem.getState().getStateName().equals("For sale")) {
-                        System.out.println("löytyi For rent");
-                        // item on For rent, joten haetaan kaikki RentableModels:n tiedot
-                        RentableModel rModel = new RentableModel(
-                                thisitem.getItemId(),
-                                thisitem.getItemName(),
-                                thisitem.getState(),
-                                ownerid);
-                        if (thisitem.getDescription() != null) {
-                            rModel.setItemDescription(thisitem.getDescription());
-                        }
-                        if (thisitem.getPrice() != null) {
-                            rModel.setSalePrice(thisitem.getPrice());
-                        }
-                        if (thisitem.getCondition() != null) {
-                            rModel.setCondition(thisitem.getCondition());
-                        }
-                        if (thisitem.getSizeof() != null) {
-                            rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
-                        }
-                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null) {
-                            rModel.setCategoryName(thisitem.getCategory().getCategoryName());
-                        }
-                        rModel.setItemOwnerEmail(accountList.get(i).getEmail());
-                        // jos item state on for rent se lisätään rent listaan
-                        rentableModels.add(rModel);
-                    }
-                } else {
-                    System.out.println("state oli null");
-                }
-            }
-        }
-        model.addAttribute("rentItems", rentableModels);
-        return "saleitems";
-    }
 
     @RequestMapping(value = { "/stufflist" })
     public String showStuff(Model model) {
@@ -550,6 +420,137 @@ public class ItemController {
             System.out.println("iRepo save OK");
         }
         return "redirect:/stufflistuser/" + kayttLong;
+    }
+
+
+    
+    @GetMapping(value = { "/rentlist/{userid}" })
+    public String showRentables(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
+        System.out.println("Ollaan siirtymässä rentlistaan");
+        /*
+         * Long requestuserId = (Long) request.getAttribute("SaveduserId");
+         * System.out.println("requestin kautta tullut id "+requestuserId);
+         * if (requestuserId == userId){
+         * System.out.println("OIKEA KÄYTTÄJÄ!! -- rentlist");
+         * }
+         * UserAccount userAccount = uaRepository.findById(userId).orElse(null);
+         */
+        model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
+        model.addAttribute("userId", userId);
+        Iterable<UserAccount> uaList = uaRepository.findAll();
+        List<UserAccount> accountList = new ArrayList<>();
+        for (UserAccount uAccount : uaList){
+            accountList.add(uAccount);
+        }
+        List<RentableModel> rentableModels = new ArrayList<>();
+        System.out.println("aletaan tsekkaamaan listaa");
+        for (int i = 0; i < accountList.size(); i++) {
+            System.out.println("henkilö (normlist) nro: " + i);
+            // haetaan yhden henkilön lista kerrallaan
+            List<Item> items = iRepository.findAllByUserAccount(accountList.get(i));
+            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos State
+            // on muotoa: For rent
+            for (int x = 0; x < items.size(); x++) {
+                System.out.println("Item tsekkaus nro: " + x);
+                // haetaan yksi item
+                Item thisitem = items.get(x);
+                Long ownerid = (long) i;
+                // verrataan ensin ettei oo null ja jos ei ole katsotaan onko "For rent",
+                // jolloin mennään etiäpäin
+                if (thisitem.getState() != null && thisitem.getState().getStateName() != null) {
+                    if (thisitem.getState().getStateName().equals("For rent")) {
+                        System.out.println("löytyi For rent");
+                        // item on For rent, joten haetaan kaikki RentableModels:n tiedot
+                        RentableModel rModel = new RentableModel(
+                                thisitem.getItemId(),
+                                thisitem.getItemName(),
+                                thisitem.getState(),
+                                ownerid);
+                        if (thisitem.getDescription() != null) {
+                            rModel.setItemDescription(thisitem.getDescription());
+                        }
+                        if (thisitem.getRentalprice() != null) {
+                            rModel.setRentalPrice(thisitem.getRentalprice());
+                        }
+                        if (thisitem.getCondition() != null) {
+                            rModel.setCondition(thisitem.getCondition());
+                        }
+                        if (thisitem.getSizeof() != null) {
+                            rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
+                        }
+                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null) {
+                            rModel.setCategoryName(thisitem.getCategory().getCategoryName());
+                        }
+                        rModel.setItemOwnerEmail(accountList.get(i).getEmail());
+                        // jos item state on for rent se lisätään rent listaan
+                        rentableModels.add(rModel);
+                    }
+                } else {
+                    System.out.println("state oli null");
+                }
+            }
+        }
+        model.addAttribute("rentItems", rentableModels);
+        return "rentitems";
+    }
+
+    @GetMapping(value = { "/salelist/{userid}" })
+    public String showSaleable(@PathVariable("userid") Long userId, Model model, HttpServletRequest request) {
+        System.out.println("Ollaan siirtymässä rentlistaan");
+        UserAccount userAccount = uaRepository.findById(userId).orElse(null);
+        model.addAttribute("useraccount", uaRepository.findById(userId).orElse(null));
+        model.addAttribute("userId", userId);
+        Iterable<UserAccount> uaList = uaRepository.findAll();
+        List<UserAccount> accountList = StreamSupport.stream(uaList.spliterator(), false)
+                .collect(Collectors.toList());
+        List<RentableModel> rentableModels = new ArrayList<>();
+        System.out.println("aletaan tsekkaamaan listaa");
+        for (int i = 0; i < accountList.size(); i++) {
+            System.out.println("henkilö (normlist) nro: " + i);
+            // haetaan yhden henkilön lista kerrallaan
+            List<Item> items = iRepository.findAllByUserAccount(accountList.get(i));
+            // käydään läpi käyttäjän itemit ja lisätään rentableModles listaan, jos on For
+            // rent
+            for (int x = 0; x < items.size(); x++) {
+                System.out.println("Item tsekkaus nro: " + x);
+                // haetaan yksi item
+                Item thisitem = items.get(x);
+                Long ownerid = (long) i;
+                if (thisitem.getState() != null && thisitem.getState().getStateName() != null) {
+                    if (thisitem.getState().getStateName().equals("For sale")) {
+                        System.out.println("löytyi For rent");
+                        // item on For rent, joten haetaan kaikki RentableModels:n tiedot
+                        RentableModel rModel = new RentableModel(
+                                thisitem.getItemId(),
+                                thisitem.getItemName(),
+                                thisitem.getState(),
+                                ownerid);
+                        if (thisitem.getDescription() != null) {
+                            rModel.setItemDescription(thisitem.getDescription());
+                        }
+                        if (thisitem.getPrice() != null) {
+                            rModel.setSalePrice(thisitem.getPrice());
+                        }
+                        if (thisitem.getCondition() != null) {
+                            rModel.setCondition(thisitem.getCondition());
+                        }
+                        if (thisitem.getSizeof() != null) {
+                            rModel.setSizeOfString(thisitem.getSizeof().getSizeName());
+                        }
+                        if (thisitem.getCategory() != null && thisitem.getCategory().getCategoryName() != null) {
+                            rModel.setCategoryName(thisitem.getCategory().getCategoryName());
+                        }
+                        rModel.setItemOwnerEmail(accountList.get(i).getEmail());
+                        // jos item state on for rent se lisätään rent listaan
+                        rentableModels.add(rModel);
+                    }
+                } else {
+                    System.out.println("state oli null");
+                }
+            }
+        }
+        model.addAttribute("rentItems", rentableModels);
+        return "saleitems";
     }
 
     @PostMapping("/addCategory")
