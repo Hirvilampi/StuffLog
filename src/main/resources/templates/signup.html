@@ -36,12 +36,19 @@
                     </p>
                 </div>
                 <div>
-                    ask firstname
-                </div>
-                <div>ask surname
+                   
+                    <label>Frist name: <input type="text" th:field="*{firstname}" class="form-control" /></label>
+                    <p th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}">First name Error</p>
                 </div>
                 <div>
-                    ask email
+                    <label>Last name: <input type="text" th:field="*{surname}" class="form-control" /></label>
+                    <p th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Last name Error</p>
+                </div>
+                <div>
+                    <label>Email: <input type="text" th:field="*{email}" class="form-control" /></label>
+                    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p>
+                </div>
+                <div>
                 </div>
 
                 <input type="submit" class="btn btn-primary" value="Signup"></input>
