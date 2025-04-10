@@ -59,7 +59,7 @@ public class ItemRestController {
     }
 
     // get single item
- //   @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER','TEST')")
     @GetMapping(value = { "item/{itemId}" })
     public ResponseEntity<Item> getItem(@PathVariable Long itemId) {
         try {
@@ -127,7 +127,94 @@ public class ItemRestController {
      } 
 
     // get all rentable items from all users
+    @GetMapping(value = { "/api/rentitems" })
+    public ResponseEntity<List<RentableModel>> rentableItems(){
+        try {
+            List<RentableModel> rentableModels = new ArrayList<>();
+            //haetaan kaikkien usercounttien kaikki tiedot
+            Iterable<UserAccount> userAccountIter = userAccountRepository.findAll();
+            // käydään yksi usercount kerrallaan kaikki läpi
+            for (UserAccount account : userAccountIter){
+                List<Item> items = itemRepository.findAllByUserAccount(account);
+                for (Item item : items) {
+                    if (item.getState() != null && item.getState().getStateName() != null ){
+                    if (item.getState().getStateName().equals("For rent")){
+                 //       UserAccount ownerid = itemRepository.findOwnerByItem(item);
+                        RentableModel rModel = new RentableModel(
+                            item.getItemId(),
+                            item.getItemName(),
+                            item.getState(),
+                            account.getUserId());
+                            if (item.getDescription() != null) {
+                                rModel.setItemDescription(item.getDescription()); }
+                            if (item.getRentalprice() != null) {
+                                rModel.setRentalPrice(item.getRentalprice());}
+                            if (item.getCondition() != null) {
+                                rModel.setCondition(item.getCondition()); }
+                            if (item.getSizeof() != null) {
+                                rModel.setSizeOfString(item.getSizeof().getSizeName());}
+                            if (item.getCategory() != null && item.getCategory().getCategoryName() != null) {
+                                rModel.setCategoryName(item.getCategory().getCategoryName()); }
+                        rModel.setItemOwnerEmail(account.getEmail());
+                        rentableModels.add(rModel);
+                    }
+                } else {
+                  //  System.out.println("state oli null,ei tarvitse etsiä for renttiä");
+                 //   throw new ResponseStatusException(HttpStatus.NOT_FOUND,"State ei löytynyt");
+                }
+                } 
+            }
+            // ne itemit, joista löytyy "For rent" lisätään osaksi uutta listaa
+
+            // palautetaan uusi lista
+            return ResponseEntity.ok(rentableModels);
+        } catch (DataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Tietokantavirhe: vuokrattavia tavaroita ei voi näyttää", e);
+    }
+}
 
     // get all items for sale from all users
+    @GetMapping(value = { "/api/saleitems" })
+    public ResponseEntity<List<RentableModel>> saleableItems(){
+        try {
+            List<RentableModel> rentableModels  = new ArrayList<>();
+         //   State state = stateRepository.findOneByStateName("For sale");
+            Iterable<UserAccount> userAccountIter = userAccountRepository.findAll();
+            for (UserAccount account : userAccountIter){
+                List<Item> items = itemRepository.findAllByUserAccount(account);
+                for (Item item : items) {
+                    if (item.getState() != null && item.getState().getStateName() != null ){
+                    if (item.getState().getStateName().equals("For sale")){
+                        RentableModel rModel = new RentableModel(
+                            item.getItemId(),
+                            item.getItemName(),
+                            item.getState(),
+                            account.getUserId());
+                            if (item.getDescription() != null) {
+                                rModel.setItemDescription(item.getDescription()); }
+                            if (item.getRentalprice() != null) {
+                                rModel.setRentalPrice(item.getRentalprice());}
+                            if (item.getCondition() != null) {
+                                rModel.setCondition(item.getCondition()); }
+                            if (item.getSizeof() != null) {
+                                rModel.setSizeOfString(item.getSizeof().getSizeName());}
+                            if (item.getCategory() != null && item.getCategory().getCategoryName() != null) {
+                                rModel.setCategoryName(item.getCategory().getCategoryName()); }
+                        rModel.setItemOwnerEmail(account.getEmail());
+                        rentableModels.add(rModel);
+                    }
+                } else {
+                    //  System.out.println("state oli null,ei tarvitse etsiä for renttiä");
+                   //   throw new ResponseStatusException(HttpStatus.NOT_FOUND,"State ei löytynyt");
+                  }
+                }
+            }
+            return ResponseEntity.ok(rentableModels);
+        } catch (DataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Tietokantavirhe: vuokrattavia tavaroita ei voi näyttää", e);
+        }
+    }
 
 }
