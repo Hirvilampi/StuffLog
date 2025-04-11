@@ -6,7 +6,7 @@
     <!--
     <title th:text="'List of Your stuff User: '+ ${#strings.defaultString(items[1].userId.username, 'No user')}|">List of your stuff</title>
    -->
-    <title th:text="'List of Your stuff User: '+ ${userId}">List of your stuff</title>
+    <title th:text="'List of stuff you can buy, User: '+ ${userId}">List of stuff you can buy</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <!-- Bootstrap CSS -->
@@ -21,12 +21,13 @@
 
 
 <body>
-    <div class="container" style="width: 85%; min-width:900px; margin-top:15px; padding: 15px; padding-top:5px; border: 2px solid #000">
+    <div class="container" style="width: 85%; min-width:900px; margin: top 0px; padding: 20px; padding-top: 0px; border: 2px solid #000">
 
-        <table>
+        <table {padding-top: 0px}>
             <tr>
                 <th>
-                    <h2>HAVIKO &nbsp&nbsp &nbsp&nbsp</h2>
+                    <img src="/stufflog-logo.png" alt="Stufflog Logo" height="85">
+                    <h2>&nbsp&nbsp &nbsp&nbsp</h2>
                 </th>
                 <td>
                 <td>Welcome&nbsp</td>
