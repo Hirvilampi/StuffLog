@@ -53,7 +53,6 @@ public class StufflogApplication {
 				Condition cond8 = condRepository.save(new Condition("Broken"));
 			}
 
-
 			// SubLocation table ei ole käytössä 
 			/* 
 			SubLocation sublocnone = new SubLocation("No Sub-location");
@@ -85,7 +84,6 @@ public class StufflogApplication {
 				sizeNames.forEach(sizename -> sRepository.save(new SizeOf(sizename)));
 			}
 
-
 			List<String> categories = Arrays.asList(
 					"No category","Art", "Baby", "Cars", "Clothes", "Collectibles & Antiques",
 					"Games", "Hobbies","Home & Living", "Music", "Maternity", "Outdoor", "Sports",
@@ -93,7 +91,6 @@ public class StufflogApplication {
 			if (catRepository.count() == 0) {
 				categories.forEach(categoryname -> catRepository.save(new Category(categoryname)));
 			}
-
 
 			List<String> subCatNames = Arrays.asList(
 					"No subcategory","Ice Hockey", "Soccer", "Tennis", "Squash", "Floor ball", "Skiing",
@@ -111,15 +108,13 @@ public class StufflogApplication {
 				conditions.forEach(cond -> condRepository.save(new Condition(cond)));
 			}
 
-			
 			List<String> statesnew = Arrays.asList(
 					"In use", "For sale", "Sold", "For rent", "Standby", "Available");
 			if (stateRepository.count() == 0) {
 				statesnew.forEach(statename -> stateRepository.save(new State(statename)));			
 			}
 
-			log.info("save few items");
-
+			
 			Category cattosave = catRepository.findOneByCategoryName(categories.get(11));
 			SizeOf sizeOf = sRepository.findOneBySizeName(sizeNames.get(0));
 			Condition condition = condRepository.findOneByConditionName(conditions.get(1));
@@ -144,22 +139,13 @@ public class StufflogApplication {
 				System.out.println("regular tallenneet");
 				uaRepository.save(testuser);
 				System.out.println("testi tallennettu");
+				System.err.println("users saved");
 			};
-			System.err.println("users saved");
-
-	//		Location location = locRepository.findById(6L).orElseThrow(() -> new RuntimeException("Location not found"));
-	//		Item item = null;
-	//		item.setLocation(location);
-	//		iRepository.save(item); // ✅ Now it works
-
-	// Location locuus = locRepository.findByLocationName("Storage");
-
+			
 			System.out.println("item tallenus repositorioon");
-
-	
+			log.info("save few items");
 
 			if (iRepository.count() == 0 ){
-
 				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, "Green closet",adminuser, cattosave, locstorage, sizeOf, condition, state ));
 				System.out.println("tässä kohti vielä toimii - siis saatiin tää uus märkäimuri tallennettua");
 				iRepository.save(new Item("Soccer ball", adminuser));
@@ -180,8 +166,6 @@ public class StufflogApplication {
 			}
 
 			System.out.println(" --- ITEM TIEDOT LADATTU ONNISTUNEESTI ---");
-
-	
 
 		};
 	
