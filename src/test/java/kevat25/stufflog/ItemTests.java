@@ -97,15 +97,34 @@ public class ItemTests {
         Optional<UserAccount> userAccountOptional = userAccountRepository.findById(userid);
         if (userAccountOptional.isPresent()) {
             UserAccount userAccount = userAccountOptional.get();
-            List<Item> item = itemRepository.findAllByUserAccount(userAccount);
-            assertThat(item.get(1).getItemName()).isEqualTo("Sewing machine");
-            assertThat(item.get(1).getDescription()).isEqualTo("Simens");
-            assertThat(item.get(1).getRentalprice()).isEqualTo(20.0);
+            Item item = itemRepository.findOneByItemName("Sewing machine");
+            assertThat(item.getItemName()).isEqualTo("Sewing machine");
+            assertThat(item.getDescription()).isEqualTo("Simens");
+            assertThat(item.getRentalprice()).isEqualTo(20.0);
 
         }
     }
 
 
+    @Test
+    public void createNewUser(){
+        UserAccount newuser = new UserAccount("testuser","$2y$10$I1FjJ9VCyYE9Qq3Tvox19.dCzgRxRypln27ueXf8YTC7s67qftx3i","BestName","UserSurname","noemail@email.no","TEST");
+        userAccountRepository.save(newuser);
+        UserAccount userAccount = userAccountRepository.findByUsername("testuser");
+        assertThat(userAccount.getEmail()).isEqualTo("noemail@email.no");
+        assertThat(userAccount.getFirstname()).isEqualTo("BestName");
+        assertThat(userAccount.getRole()).isEqualTo("TEST");
+    }
 
+    @Test
+    public void deleteNewUser(){
+        UserAccount newuser = new UserAccount("testuser","$2y$10$I1FjJ9VCyYE9Qq3Tvox19.dCzgRxRypln27ueXf8YTC7s67qftx3i","BestName","UserSurname","noemail@email.no","TEST");
+        userAccountRepository.save(newuser);
+        UserAccount userAccount = userAccountRepository.findByUsername("testuser");
+        assertThat(userAccount.getEmail()).isEqualTo("noemail@email.no");
+        userAccountRepository.deleteById(userAccount.getUserId());
+        assertThat(userAccountRepository.findByUsername("testuser")).isNull();
+
+    }
 
 }

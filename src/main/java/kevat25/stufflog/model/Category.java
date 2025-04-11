@@ -27,7 +27,7 @@ public class Category {
     @Column(name = "category_id")
     private Long categoryId;
 
-    @Column(name = "category_name", length = 50, nullable = false)
+    @Column(name = "category_name", length = 50, nullable = false, unique = true)
     @NotEmpty(message = "Category has to have a name")
     private String categoryName;
 

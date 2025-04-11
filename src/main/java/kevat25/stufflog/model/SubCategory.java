@@ -26,7 +26,7 @@ public class SubCategory {
     @Column(name = "subcategory_id")
     private Long subCategoryId;
 
-    @Column(name = "subcategory_name", length = 50, nullable = false)
+    @Column(name = "subcategory_name", length = 50, nullable = false, unique = true)
     @NotEmpty(message = "Subcategory has to have a name")
     private String subCategoryName;
 /* 

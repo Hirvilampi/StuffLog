@@ -24,7 +24,7 @@ public class Condition {
 
     @Column(name ="condition_name")
     @Size (min = 2,  max = 20, message = "must be between 2-20 characters")
-    private String condition;
+    private String conditionName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "condition")
     @JsonIgnore
@@ -37,7 +37,7 @@ public class Condition {
     }
 
     public Condition(String condition) {
-        this.condition = condition;
+        this.conditionName = condition;
     }
 
     public Long getConditionId() {
@@ -45,7 +45,7 @@ public class Condition {
     }
 
     public String getCondition() {
-        return condition;
+        return conditionName;
     }
 
     public List<Item> getItems() {
@@ -57,7 +57,7 @@ public class Condition {
     }
 
     public void setCondition(String condition) {
-        this.condition = condition;
+        this.conditionName = condition;
     }
 
 }

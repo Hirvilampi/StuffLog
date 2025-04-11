@@ -74,8 +74,20 @@ public class UserAccount {
         this.firstname = firstname;
         this.surname = surname;
         this.email = email;
-        this.role = role;
+        this.role = role; 
+    }
+
+
     
+    public UserAccount(@Size(min = 3, max = 50, message = "must be between 3-500 characters") String username,
+            @Size(min = 3, max = 100, message = "must be between 3-100 characters") String passwordHash,
+            @Size(min = 3, max = 50, message = "must be between 3-50 characters") String firstname,
+            @Size(min = 7, max = 100, message = "must be between 7-100 characters") String email, String role) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.firstname = firstname;
+        this.email = email;
+        this.role = role;
     }
 
     public UserAccount(List<Item> iditems) {
