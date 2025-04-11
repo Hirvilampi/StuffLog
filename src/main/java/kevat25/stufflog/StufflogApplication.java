@@ -42,27 +42,18 @@ public class StufflogApplication {
 			log.info("create few conditions");
 			System.out.println("starting Bean - next condtions");
 
-		
-			Condition cond1 = condRepository.save(new Condition("New"));
-			Condition cond2 = condRepository.save(new Condition("Like new"));
-			Condition cond3 = condRepository.save(new Condition("Unused"));
-			Condition cond4 = condRepository.save(new Condition("Used"));
-			Condition cond5 = condRepository.save(new Condition("Good"));
-			Condition cond6 = condRepository.save(new Condition("Fair"));
-			Condition cond7 = condRepository.save(new Condition("Poor"));
-			Condition cond8 = condRepository.save(new Condition("Broken"));
-/* 
-			if (condRepository.count() == 0 ){
-				condRepository.save(cond1);
-				condRepository.save(cond2);
-				condRepository.save(cond3);
-				condRepository.save(cond4);
-				condRepository.save(cond5);
-				condRepository.save(cond6);
-				condRepository.save(cond7);
-				condRepository.save(cond8);
+			if (condRepository.count() == 0) {
+				Condition cond1 = condRepository.save(new Condition("New"));
+				Condition cond2 = condRepository.save(new Condition("Like new"));
+				Condition cond3 = condRepository.save(new Condition("Unused"));
+				Condition cond4 = condRepository.save(new Condition("Used"));
+				Condition cond5 = condRepository.save(new Condition("Good"));
+				Condition cond6 = condRepository.save(new Condition("Fair"));
+				Condition cond7 = condRepository.save(new Condition("Poor"));
+				Condition cond8 = condRepository.save(new Condition("Broken"));
 			}
-*/
+
+
 			// SubLocation table ei ole käytössä 
 			/* 
 			SubLocation sublocnone = new SubLocation("No Sub-location");
@@ -74,25 +65,16 @@ public class StufflogApplication {
 				subLocNames.forEach(sublname -> subLocRepository.save(new SubLocation(sublname)));
 			}
 				*/
-			System.out.println("alustetaan lokaatiot");
-			Location loc1 = locRepository.save(new Location("No location"));
-			Location loc2 = locRepository.save(new Location("Study"));
-			Location loc3 = locRepository.save(new Location("Living room"));
-			Location loc4 = locRepository.save(new Location("Master bedroom"));
-			Location loc5 = locRepository.save(new Location("Hall"));
-			Location loc6 = locRepository.save( new Location("Storage"));
-			System.out.println("tallennetaan lokaaiota");
-			/*
-			if (locRepository.count() == 0) {
-				locRepository.save(loc1);
-				locRepository.save(loc2);
-				locRepository.save(loc3);
-				locRepository.save(loc4);
-				locRepository.save(loc5);
-				locRepository.save(loc6);
-				System.out.println("!!! lokaatiota tallenneetiin !!!");
+			if (locRepository.count() == 0){
+				System.out.println("alustetaan lokaatiot");
+				Location loc1 = locRepository.save(new Location("No location"));
+				Location loc2 = locRepository.save(new Location("Study"));
+				Location loc3 = locRepository.save(new Location("Living room"));
+				Location loc4 = locRepository.save(new Location("Master bedroom"));
+				Location loc5 = locRepository.save(new Location("Hall"));
+				Location loc6 = locRepository.save( new Location("Storage"));
+				System.out.println("tallennetaan lokaaiota");
 			}
-			 */
 
 			List<String> sizeNames = Arrays.asList(
 					 "NONE", "XXXS", "XXS","XS","S","M", "L",  "XL", "XXL","XXXL", "20", "21", "22", "23",
@@ -138,12 +120,15 @@ public class StufflogApplication {
 
 			log.info("save few items");
 
-			Category cattosave = catRepository.save(new Category(categories.get(11)));
-			SizeOf sizeOf = sRepository.save(new SizeOf(sizeNames.get(0)));
-			Condition condition = condRepository.save(new Condition(conditions.get(1)));
-			State state = stateRepository.save(new State(statesnew.get(3)));
-			State stateforsale = stateRepository.save(new State(statesnew.get(1)));
+			Category cattosave = catRepository.findOneByCategoryName(categories.get(11));
+			SizeOf sizeOf = sRepository.findOneBySizeName(sizeNames.get(0));
+			Condition condition = condRepository.findOneByConditionName(conditions.get(1));
+			State state = stateRepository.findOneByStateName(statesnew.get(3));
+			State stateforsale = stateRepository.findOneByStateName(statesnew.get(1));
 			System.out.println("tässä kohti vielä toimii 3");
+			Location locstorage = locRepository.findByLocationName("Storage");
+			Location locnone = locRepository.findByLocationName("No location");
+			Location locstudy = locRepository.findByLocationName("Study");
 
 			UserAccount adminuser = new UserAccount("admin", "$2a$10$Xl187lOiHVJgG8cLRrRUveuQzOZx5InzgJB6u.iAY0KkJ7oDiD8Zi", "Timo", "Lampinen","lampinen.timo@gmail.com","ADMIN");
 			UserAccount regularuser = new UserAccount("user", "$2y$10$I0SGrzr25KfMLIH96VS7rOjHH0ugfkC9/UW9Y6l44qDh2EQSVB5A.", "Satu", "Lampinen","satu.lampinen81@gmail.com","USER");
@@ -175,23 +160,23 @@ public class StufflogApplication {
 
 			if (iRepository.count() == 0 ){
 
-				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, "Green closet",adminuser, cattosave, loc6, sizeOf, condition, state ));
+				iRepository.save(new Item("Märkäimuri","Hyvä laite. Kärcher", 200.0, 100.0, 30.0, "Green closet",adminuser, cattosave, locstorage, sizeOf, condition, state ));
 				System.out.println("tässä kohti vielä toimii - siis saatiin tää uus märkäimuri tallennettua");
 				iRepository.save(new Item("Soccer ball", adminuser));
 				System.out.println("Soccer ball tallennettu");
-				iRepository.save(new Item("Drill", adminuser, loc2));
+				iRepository.save(new Item("Drill", adminuser, locstudy));
 				System.out.println("Drill tallennettu");
-				iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, loc1));
+				iRepository.save(new Item("Hockey Stick", "Farrow flex60", adminuser, locnone));
 				iRepository.save(new Item("Vacuum cleaner", "Quiet hoover",30.0,regularuser,state));
 				iRepository.save(new Item("Sewing machine", "Simens",20.0,regularuser,state));
 				iRepository.save(new Item("Full Face bicycle helmet", "Bell, kids size",170.0, 80.0 ,regularuser, condition, stateforsale));
 				iRepository.save(new Item("Tent","4 people, all weather",35.0,testuser,state));
 				iRepository.save(new Item("Packraft","2 people, MRS-packraft with 2 paddles",1450.0,999.0,testuser, condition,stateforsale));
-				iRepository.save(new Item("Ice Skates","size 36",testuser,loc6));
-				iRepository.save(new Item("Ice Skates","size 37",testuser,loc6));
-				iRepository.save(new Item("Ice Skates","size 38",testuser,loc6));
-				iRepository.save(new Item("Ice Skates","size 39",testuser,loc6));
-				iRepository.save(new Item("Ice Skates","size 40",testuser,loc6));
+				iRepository.save(new Item("Ice Skates","size 36",testuser,locstorage));
+				iRepository.save(new Item("Ice Skates","size 37",testuser,locstorage));
+				iRepository.save(new Item("Ice Skates","size 38",testuser,locstorage));
+				iRepository.save(new Item("Ice Skates","size 39",testuser,locstorage));
+				iRepository.save(new Item("Ice Skates","size 40",testuser,locstorage));
 			}
 
 			System.out.println(" --- ITEM TIEDOT LADATTU ONNISTUNEESTI ---");
