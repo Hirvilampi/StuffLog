@@ -399,11 +399,11 @@ public class ItemController {
             Category catname = new Category(parsenimi);
             savedcat = cRepository.save(catname);
             System.out.println("tallenneetiin uusi kategoria:" + parsenimi);
+            return ResponseEntity.ok(savedcat);
         } else {
             System.out.println("NIMI ON JO KÄYTÖSSÄ");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No duplicate names allowed");
         }
-        return ResponseEntity.ok(savedcat);
     }
 
     @PostMapping("/addSubCategory")
@@ -425,11 +425,12 @@ public class ItemController {
             SubCategory subcat = new SubCategory(parsenimi);
             savedSub = subCatRepository.save(subcat);
             System.out.println("tallenneetiin uusi sub kategoria:" + parsenimi);
+            return ResponseEntity.ok(savedSub);
         } else {
             System.out.println("NIMI ON JO KÄYTÖSSÄ");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No duplicate names allowed");
         }
-        return ResponseEntity.ok(savedSub);
+        
     }
 
     @PostMapping("/addLocation")
@@ -451,11 +452,12 @@ public class ItemController {
             Location locname = new Location(parsenimi);
             savedloc = locRepository.save(locname);
             System.out.println("tallenneetiin uusi kategoria:" + parsenimi);
+            return ResponseEntity.ok(savedloc);
         } else {
             System.out.println("NIMI ON JO KÄYTÖSSÄ");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No duplicate names allowed");
         }
-        return ResponseEntity.ok(savedloc);
+        
     }
 
 
