@@ -9,9 +9,6 @@
     <!-- Bootstrap CSS -->
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
 
-    <!-- Bootstrap CSS from CDN
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-     -->
     <style>
         form {
             margin: 1px;
@@ -22,10 +19,9 @@
             margin: 1px;
             margin-left: 5px;
         }
-
     </style>
-    <script>
 
+    <script>
         function addSubCategory() {
             let subCatName = document.getElementById("newSubCatName").value;
             if (!subCatName) return; // Prevent empty input
@@ -91,15 +87,12 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
-        
-
     </script>
 
 </head>
 
 <body>
     <div class="container" style="width: 85%; min-width: 800px; margin-top:15px; padding: 20px; border: 2px solid #000">
-        
 
         <form th:action="@{/save/{id}(id=${userId})}" th:object="${item}" method="post">
             <h2>Add a new item</h2>
@@ -109,11 +102,9 @@
                         <td>
                             Name&nbsp
                         </td>
-
                         <td>
                             <input type="text" size="30" required placeholder="item name" th:field="*{itemName}" />
                         </td>
-
                     </tr>
                     <tr>
                         <td>
@@ -147,7 +138,7 @@
                         <td>
                             Category selection&nbsp
                         <td>
-                            <select id="categorylist" th:field="*{category}"  class="form-control">
+                            <select id="categorylist" th:field="*{category}" class="form-control">
                                 <option value="" disabled selected>Select category</option>
                                 <option th:each="category : ${categories}" th:value="${category.categoryId}"
                                     th:text="${category.categoryName}">
@@ -171,10 +162,8 @@
                             <input type="text" size="12" id="newSubCatName" placeholder="Enter new sub-category">
                             <button type="button" onclick="addSubCategory()">Add</button>
                         </td>
-                   
                     </tr>
                     <tr>
-
                         <td>Location&nbsp</td>
                         <td>
                             <select id="locationlist" th:field="*{location}" class="form-control">
@@ -194,7 +183,6 @@
                         <td>
                             <input size="30" type="text" th:field="*{locationinfo}" />
                             <div th:if="${#fields.hasErrors('locationinfo')}" th:errors="*{locationinfo}">Error</div>
-
                         </td>
                     </tr>
                     <tr>
@@ -228,13 +216,6 @@
                             <div th:if="${#fields.hasErrors('rentalprice')}" th:errors="*{rentalprice}">Error</div>
                         </td>
                     </tr>
-
-
-
-
-
-
-
                 </table>
             </div>
             <th>
@@ -245,10 +226,9 @@
             </th>
             <br>
             <input type="submit" class="btn btn-success" value="Add Item" />
-            &nbsp<a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back without saving </a>
+            &nbsp<a class="btn btn-outline-primary" th:href="@{'/stufflistuser/{id}'(id=${userId})}">Back without saving
+            </a>
         </form>
-
-
     </div>
 
 
