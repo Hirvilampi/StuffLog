@@ -50,14 +50,15 @@ public class RestTest {
 
     @Test
     public void statusOk() throws Exception {
-        mockMvc.perform(get("items")).andExpect(status().isOk());
+        mockMvc.perform(get("/api/items")).andExpect(status().isOk());
         
     }
 
     @Test
     public void responseTypeApplicationJson() throws Exception {
-        mockMvc.perform(get("/items"))
+        mockMvc.perform(get("/api/rentitems"))   
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+          //     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))   
         // .andExpect(content().contentType(MediaType.APPLICATION_ATOM_XML_VALUE))
         .andExpect(status().isOk());
     }    
